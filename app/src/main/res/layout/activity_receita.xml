@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme">
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/textInputLayoutValorReceita"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:layout_gravity="top"
+        app:layout_anchorGravity="top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R$"
+            android:textColor="@android:color/white"
+            android:textSize="32sp" />
+
+        <EditText
+            android:id="@+id/campo_valor_receita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:hint="Valor"
+            android:inputType="numberDecimal|text"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/white"
+            android:textSize="32sp" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center|bottom"
+        android:fillViewport="true"
+        app:layout_anchor="@id/textInputLayoutValorReceita"
+        app:layout_anchorGravity="bottom|center_horizontal">
+
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/layout_dados_receita"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            android:fitsSystemWindows="true">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/campo_spinner_receita"
+                android:layout_width="0dp"
+                android:layout_height="41dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:focusable="true"
+                android:theme="@style/SpinnerCustom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="@+id/textInputLayoutDescricaoReceita"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDescricaoReceita"
+                app:layout_constraintVertical_bias="0.23000002" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/campo_data_receita"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/campo_spinner_receita"
+                app:layout_constraintEnd_toEndOf="@+id/textInputLayoutDescricaoReceita"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toTopOf="@+id/campo_spinner_receita" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textInputLayoutDescricaoReceita"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.060000002">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/campo_descricao_receita"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Descrição (max 30 caracteres)"
+                    android:inputType="textCapSentences"
+                    android:maxLength="30"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.57" />
+
+            <TextView
+                android:id="@+id/text_categoria_receita"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categoria"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/campo_spinner_receita"
+                app:layout_constraintStart_toStartOf="@+id/campo_spinner_receita" />
+
+            <TextView
+                android:id="@+id/text_data_receita"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Data"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/campo_data_receita"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toTopOf="@+id/textView" />
+
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_salvar_receita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/textInputLayoutValorReceita"
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@drawable/fab_add" />
+
+
+</android.support.design.widget.CoordinatorLayout>

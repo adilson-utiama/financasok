@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:padding="10dp">
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/valor_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="Total de Despesas: "
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/valor_disponivel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Valor Disponível: "
+                    android:textColor="@android:color/white" />
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spinner_resumoMes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dropdown"
+                    android:textAlignment="textEnd"
+                    android:theme="@style/ThemeOverlay.AppCompat.Light"/>
+
+
+            </android.support.v7.widget.LinearLayoutCompat>
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:fitsSystemWindows="true">
+
+            <TextView
+                android:id="@+id/despesaCategoriaSelecao"
+                android:padding="5dp"
+                android:textColor="@android:color/holo_purple"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v7.widget.LinearLayoutCompat>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+
+</android.support.v7.widget.LinearLayoutCompat>
+

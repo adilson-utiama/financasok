@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">WalletOk</string>
+    <string name="action_settings">Settings</string>
+    <string name="financas_preferences">financas_preferences</string>
+    <string name="primeiro_uso">first_time</string>
+    <string name="manter_conectado">manter_conectado</string>
+    <string name="adiciona_despesa">Adiciona Despesa</string>
+    <string name="adiciona_receita">Adiciona Receita</string>
+    <string name="adiciona_categoria">Adiciona Categoria</string>
+
+    <string-array name="perguntas">
+        <item>Nome do primeiro animal de estimação?</item>
+        <item>Marca do seu primeiro carro?</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="material_calendar_monday">S</string>
+    <string name="material_calendar_tuesday">T</string>
+    <string name="material_calendar_wednesday">Q</string>
+    <string name="material_calendar_thursday">Q</string>
+    <string name="material_calendar_friday">S</string>
+    <string name="material_calendar_saturday">S</string>
+    <string name="material_calendar_sunday">D</string>
+
+    <array name="material_calendar_months_array">
+        <item>Janeiro</item>
+        <item>Fevereiro</item>
+        <item>Março</item>
+        <item>Abril</item>
+        <item>Maio</item>
+        <item>Junho</item>
+        <item>Julho</item>
+        <item>Agosto</item>
+        <item>Setembro</item>
+        <item>Outubro</item>
+        <item>Novembro</item>
+        <item>Dezembro</item>
+    </array>
+
+    <string name="material_calendar_today_button">Hoje</string>
+    <string name="material_calendar_positive_button">OK</string>
+    <string name="material_calendar_negative_button">Cancel</string>
+    <string name="open_drawer">open</string>
+    <string name="close_drawer">close</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/colorPrimaryDark">
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spinner_mes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:textAlignment="textEnd"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_receita"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="75dp"/>
+
+</android.support.v7.widget.LinearLayoutCompat>
