@@ -8,12 +8,15 @@
     tools:context=".fragments.ListaVaziaFragment">
 
     <ImageView
+        android:id="@+id/iconListaVazia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_happy"/>
     <TextView
+        android:id="@+id/textview_listaVazia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="18sp"
         android:text="Nenhuma Despesa" />
 
 </android.support.v7.widget.LinearLayoutCompat>

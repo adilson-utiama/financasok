@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.DespesaDAO;
 import com.asuprojects.walletok.model.Despesa;
+import com.asuprojects.walletok.model.Tipo;
 import com.asuprojects.walletok.util.StringUtils;
 
 import java.util.Calendar;
@@ -78,6 +79,7 @@ public class DespesasFragment extends Fragment
         FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
         if(despesas.isEmpty()){
             ListaVaziaFragment listaVaziaFragment = new ListaVaziaFragment();
+            listaVaziaFragment.setTipo(Tipo.DESPESA);
             tx.replace(R.id.frameLayoutDespesa, listaVaziaFragment);
             tx.commit();
         } else {

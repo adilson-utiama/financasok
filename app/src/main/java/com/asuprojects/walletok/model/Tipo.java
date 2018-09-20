@@ -3,7 +3,9 @@ package com.asuprojects.walletok.model;
 public enum Tipo {
 
     RECEITA(1, "Receita"),
-    DESPESA(2, "Despesa");
+    DESPESA(2, "Despesa"),
+    GRAFICO(3, "Grafico"),
+    NENHUM(4, "Nenhum");
 
     private int codigo;
     private String descricao;
