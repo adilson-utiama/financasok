@@ -42,11 +42,11 @@ public class ListaVaziaFragment extends Fragment {
                 texto.setText("Nenhuma Despesa");
                 break;
             case 3:
-                imageView.setImageResource(R.drawable.ic_sem_reistro);
+                imageView.setImageResource(R.drawable.ic_sem_registro);
                 texto.setText("Sem registro de dados");
                 break;
             default:
-                imageView.setImageResource(R.drawable.ic_sem_reistro);
+                imageView.setImageResource(R.drawable.ic_sem_registro);
                 texto.setText("Vazio");
                 break;
         }

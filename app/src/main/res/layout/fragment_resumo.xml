@@ -61,38 +61,10 @@
 
     </android.support.v7.widget.LinearLayoutCompat>
 
-    <android.support.v4.widget.NestedScrollView
+    <FrameLayout
+        android:id="@+id/frameLayoutGrafico"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:fitsSystemWindows="true">
-
-        <android.support.v7.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:fitsSystemWindows="true">
-
-            <TextView
-                android:id="@+id/despesaCategoriaSelecao"
-                android:padding="5dp"
-                android:textColor="@android:color/holo_purple"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChart"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="60dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </android.support.v7.widget.LinearLayoutCompat>
-
-    </android.support.v4.widget.NestedScrollView>
-
-
+        android:layout_height="match_parent" />
 
 </android.support.v7.widget.LinearLayoutCompat>
 

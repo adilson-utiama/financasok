@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.asuprojects.walletok.dao.DespesaDAO;
 import com.asuprojects.walletok.dao.ReceitaDAO;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
+import com.asuprojects.walletok.model.Tipo;
 import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.asuprojects.walletok.util.StringUtils;
 import com.github.mikephil.charting.charts.PieChart;
@@ -41,26 +43,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ResumoFragment extends Fragment
-        implements OnChartValueSelectedListener, AdapterView.OnItemSelectedListener {
+public class ResumoFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    private PieChart chart;
 
     private TextView valorTotal;
     private TextView valorDisponivel;
 
     private AppCompatSpinner spinnerMes;
 
+    private String mesSelecao;
+
     private DespesaDAO daoDespesa;
     private ReceitaDAO daoReceita;
 
-    private TextView despesaCategoriaSelecao;
-
-    private String mesSelecao;
     private List<Despesa> despesasDoMes;
     private List<Receita> receitasDoMes;
-
-    private List<PieEntry> entries;
 
     public ResumoFragment() {
         // Required empty public constructor
@@ -77,7 +74,6 @@ public class ResumoFragment extends Fragment
 
         valorTotal = view.findViewById(R.id.valor_total);
         valorDisponivel = view.findViewById(R.id.valor_disponivel);
-        despesaCategoriaSelecao = view.findViewById(R.id.despesaCategoriaSelecao);
 
         spinnerMes = view.findViewById(R.id.spinner_resumoMes);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -93,79 +89,28 @@ public class ResumoFragment extends Fragment
         despesasDoMes = daoDespesa.getAllTarefasFrom(mesSelecao);
         receitasDoMes = daoReceita.getAllReceitasFrom(mesSelecao);
 
-        chart = view.findViewById(R.id.pieChart);
-
         calculaValorTotal();
 
-        gerarGrafico();
-
-//        entries = new ArrayList<>();
-//        entries.add(new PieEntry(15L, "Compras"));
+        trocaFragment(despesasDoMes);
 
         return view;
     }
 
-    private void gerarGrafico() {
-        chart.removeAllViews();
-        entries = preencherValoresGrafico(despesasDoMes);
-        configuraSetaValoresGrafico(entries);
-        chart.refreshDrawableState();
-        if(despesasDoMes.size() == 0){
-            despesaCategoriaSelecao.setText("");
-            Toast.makeText(getContext(), "Não há dados para visualizar", Toast.LENGTH_LONG).show();
+    private void trocaFragment(List<Despesa> lista){
+        FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
+        if(lista.isEmpty()){
+            ListaVaziaFragment listaVaziaFragment = new ListaVaziaFragment();
+            listaVaziaFragment.setTipo(Tipo.GRAFICO);
+            tx.replace(R.id.frameLayoutGrafico, listaVaziaFragment);
+            tx.commit();
+        } else {
+            GraficoFragment graficoFragment = new GraficoFragment();
+            graficoFragment.carregaLista(lista);
+            tx.replace(R.id.frameLayoutGrafico, graficoFragment);
+            tx.commit();
         }
     }
 
-    private void configuraSetaValoresGrafico(List<PieEntry> entries) {
-        PieDataSet dataSet = new PieDataSet(entries, "Despesas");
-        dataSet.setColors(gerarCores());
-
-        PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextColor(Color.WHITE);
-
-        chart.setData(data);
-        chart.setOnChartValueSelectedListener(this);
-        chart.setDrawHoleEnabled(false);
-        chart.setUsePercentValues(true);
-        chart.setCenterTextColor(Color.WHITE);
-        chart.setRotationEnabled(false);
-//        chart.setCenterText("Despesas");
-//        chart.setCenterTextColor(android.R.color.white);
-//        chart.setHoleColor(R.color.backgroud);
-//        chart.setHoleRadius(0);
-        chart.setEntryLabelColor(Color.rgb(89,89,89));
-
-        Legend l = chart.getLegend();
-        l.setEnabled(false);
-//        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-//        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-//        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-//        l.setXEntrySpace(7f);
-//        l.setYEntrySpace(0f);
-//        l.setYOffset(5f);
-
-        Description description = chart.getDescription();
-        description.setText("Despesas");
-        description.setEnabled(false);
-    }
-
-    private List<PieEntry> preencherValoresGrafico(List<Despesa> lista) {
-        List<PieEntry> entradas = new ArrayList<>();
-        Map<String, Float> valores = new HashMap<>();
-        for(Despesa d : lista){
-            if(valores.get(d.getCategoriaDespesa().getDescricao()) != null){
-                valores.put(d.getCategoriaDespesa().getDescricao(),
-                        valores.get(d.getCategoriaDespesa().getDescricao()).floatValue() + d.getValor().floatValue());
-            }else{
-                valores.put(d.getCategoriaDespesa().getDescricao(), d.getValor().floatValue());
-            }
-        }
-        for(Map.Entry<String, Float> v : valores.entrySet()){
-            entradas.add(new PieEntry(v.getValue(), v.getKey()));
-        }
-        return entradas;
-    }
 
     private void calculaValorTotal() {
         BigDecimal totalDespesas = totalFromDespesas(despesasDoMes);
@@ -202,59 +147,17 @@ public class ResumoFragment extends Fragment
         return total;
     }
 
-    private List<Integer> gerarCores(){
-        List<Integer> cores = new ArrayList<>();
-        int azul = Color.rgb(95,170,255);
-        int verde = Color.rgb(92, 196, 114);
-        int caqui = Color.rgb(185, 196, 92);
-        int laranja = Color.rgb(240, 195, 90);
-        int vermelho = Color.rgb(235, 70, 70);
-        int roxo = Color.rgb(215, 150, 250);
-        int rosa = Color.rgb(250, 150, 215);
-        int amarelo = Color.rgb(230, 220, 50);
-        cores.addAll(Arrays.asList(azul, verde, laranja, vermelho, roxo, rosa, amarelo, caqui));
-        return cores;
-    }
-
-    @Override
-    public void onValueSelected(Entry e, Highlight h) {
-
-        String label = ((PieEntry) e).getLabel();
-        float value = ((PieEntry) e).getValue();
-        String valorFormatadado = BigDecimalConverter.toStringFormatado(value);
-        //TODO corrigir problema de formatacao - long para double
-
-        despesaCategoriaSelecao.setText(label + " : " + valorFormatadado);
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mesSelecao = StringUtils.mesParaString(position + 1);
         despesasDoMes = daoDespesa.getAllTarefasFrom(mesSelecao);
         receitasDoMes = daoReceita.getAllReceitasFrom(mesSelecao);
         calculaValorTotal();
-        gerarGrafico();
-    }
-
-    @Override
-    public void onNothingSelected() {
-        despesaCategoriaSelecao.setText("");
+        trocaFragment(despesasDoMes);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) { }
 
-//    @Override
-//    public void onDetach() {
-//        daoDespesa.close();
-//        daoReceita.close();
-//        super.onDetach();
-//    }
 
-    //    @Override
-//    public void onDestroy() {
-//        daoDespesa.close();
-//        daoReceita.close();
-//        super.onDestroy();
-//    }
 }
