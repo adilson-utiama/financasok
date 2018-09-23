@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.DatePicker;
@@ -64,7 +65,6 @@ public class ReceitaActivity extends AppCompatActivity {
 
         valor = findViewById(R.id.campo_valor_receita);
         valor.addTextChangedListener(new TextWatcher() {
-            DecimalFormat fm = new DecimalFormat("#,###,##0.00");
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -75,7 +75,7 @@ public class ReceitaActivity extends AppCompatActivity {
                     valor.removeTextChangedListener(this);
                     String cleanString = s.toString().replaceAll("[R$,.]", "");
                     double parsed = Double.parseDouble(cleanString);
-                    String formatted = fm.format((parsed/100));
+                    String formatted = MoneyUtil.formatar((parsed/100));
                     Log.i("TEXT_WATCH", "onTextChanged: " + formatted);
                     String emDouble = MoneyUtil.valorEmDouble(formatted);
                     Log.i("TEXT_WATCH", "onTextChanged: " + emDouble);
@@ -111,25 +111,25 @@ public class ReceitaActivity extends AppCompatActivity {
                     receita = new Receita();
                 }
 
-                String dataBtn = btnData.getText().toString();
-                String[] split = dataBtn.split("/");
-                int dia = Integer.parseInt(split[0]);
-                int mes = Integer.parseInt(split[1]) - 1;
-                int ano = Integer.parseInt(split[2]);
-                Calendar dt = Calendar.getInstance();
-                dt.set(ano, mes, dia);
+                if(valorEhValido()){
+                    String dataBtn = btnData.getText().toString();
+                    String[] split = dataBtn.split("/");
+                    int dia = Integer.parseInt(split[0]);
+                    int mes = Integer.parseInt(split[1]) - 1;
+                    int ano = Integer.parseInt(split[2]);
+                    Calendar dt = Calendar.getInstance();
+                    dt.set(ano, mes, dia);
+                    receita.setData(dt);
+                    receita.setDescricao(campoDescricao.getText().toString());
+                    receita.setValor(BigDecimal.valueOf(valorDecimal));
+                    int position = spinnerReceita.getSelectedItemPosition();
+                    receita.setCategoriaReceita(CategoriaReceita.toEnum(listaCategorias.get(position)));
 
-                Log.i("T", "onClick: " + dt.getTime());
+                    dao.insertOrUpdate(receita);
 
-                receita.setData(dt);
-                receita.setDescricao(campoDescricao.getText().toString());
-                receita.setValor(BigDecimal.valueOf(valorDecimal));
-                int position = spinnerReceita.getSelectedItemPosition();
-                receita.setCategoriaReceita(CategoriaReceita.toEnum(listaCategorias.get(position)));
+                    startActivity(new Intent(ReceitaActivity.this, MainActivity.class));
+                }
 
-                dao.insertOrUpdate(receita);
-
-                startActivity(new Intent(ReceitaActivity.this, MainActivity.class));
             }
         });
 
@@ -162,11 +162,22 @@ public class ReceitaActivity extends AppCompatActivity {
             int index = listaCategorias.indexOf(receita.getCategoriaReceita().getDescricao());
             spinnerReceita.setSelection(index, true);
 
-            //btnSalvar.setText("Atualizar");
             getSupportActionBar().setTitle("Edição");
         }
 
 
+    }
+
+    private boolean valorEhValido() {
+        if(valor.getText().toString().isEmpty()){
+            Toast.makeText(ReceitaActivity.this, "Valor está em Branco", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(valorDecimal < 1.0){
+            Toast.makeText(ReceitaActivity.this, "Valor muito baixo", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void setDataAtual() {

@@ -24,17 +24,16 @@ import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
 import com.asuprojects.walletok.MainActivity;
 import com.asuprojects.walletok.R;
+import com.asuprojects.walletok.dao.DespesaDAO;
+import com.asuprojects.walletok.helper.CategoriaUtil;
 import com.asuprojects.walletok.helper.MoneyUtil;
+import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.enums.CategoriaDespesa;
 import com.asuprojects.walletok.model.enums.Pagamento;
 import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.asuprojects.walletok.util.CalendarConverter;
-import com.asuprojects.walletok.dao.DespesaDAO;
-import com.asuprojects.walletok.helper.CategoriaUtil;
-import com.asuprojects.walletok.model.Despesa;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -77,8 +76,6 @@ public class DespesaActivity extends AppCompatActivity {
         valor = findViewById(R.id.campo_valor_receita);
         valor.addTextChangedListener(new TextWatcher() {
 
-            DecimalFormat fm = new DecimalFormat("#,###,##0.00");
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -89,17 +86,12 @@ public class DespesaActivity extends AppCompatActivity {
                     valor.removeTextChangedListener(this);
 
                     String cleanString = s.toString().replaceAll("[R$,.]", "");
-
                     double parsed = Double.parseDouble(cleanString);
-                    String formatted = fm.format((parsed/100));
-
+                    String formatted =  MoneyUtil.formatar((parsed/100));
                     Log.i("TEXT_WATCH", "onTextChanged: " + formatted);
-
                     String emDouble = MoneyUtil.valorEmDouble(formatted);
-
                     Log.i("TEXT_WATCH", "onTextChanged: " + emDouble);
                     valorDecimal = Double.parseDouble(emDouble);
-
                     current = formatted;
                     valor.setText(formatted);
                     valor.setSelection(formatted.length());
@@ -136,26 +128,27 @@ public class DespesaActivity extends AppCompatActivity {
 
                 despesa.setDescricao(descricao.getText().toString());
 
-                String dataBtn = btnData.getText().toString();
-                String[] split = dataBtn.split("/");
-                int dia = Integer.parseInt(split[0]);
-                int mes = Integer.parseInt(split[1]) - 1;
-                int ano = Integer.parseInt(split[2]);
-                Calendar dt = Calendar.getInstance();
-                dt.set(ano, mes, dia);
+                if(valorEhValido()){
+                    String dataBtn = btnData.getText().toString();
+                    String[] split = dataBtn.split("/");
+                    int dia = Integer.parseInt(split[0]);
+                    int mes = Integer.parseInt(split[1]) - 1;
+                    int ano = Integer.parseInt(split[2]);
+                    Calendar dt = Calendar.getInstance();
+                    dt.set(ano, mes, dia);
 
-                Log.i("T", "onClick: " + dt.getTime());
+                    despesa.setData(dt);
+                    int position = spinner.getSelectedItemPosition();
+                    despesa.setCategoriaDespesa(CategoriaUtil.getCategoriaFrom(listaCategorias.get(position)));
+                    despesa.setValor(BigDecimal.valueOf(valorDecimal));
+                    despesa.setPagamento(pagamento);
 
-                despesa.setData(dt);
-                int position = spinner.getSelectedItemPosition();
-                despesa.setCategoriaDespesa(CategoriaUtil.getCategoriaFrom(listaCategorias.get(position)));
-                despesa.setValor(BigDecimal.valueOf(valorDecimal));
-                despesa.setPagamento(pagamento);
+                    dao.insertOrUpdate(despesa);
 
-                dao.insertOrUpdate(despesa);
+                    Intent intent = new Intent(DespesaActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
 
-                Intent intent = new Intent(DespesaActivity.this, MainActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -177,8 +170,6 @@ public class DespesaActivity extends AppCompatActivity {
 
             int index = listaCategorias.indexOf(despesa.getCategoriaDespesa().getDescricao());
             spinner.setSelection(index, true);
-
-            //btnSalvar.setText("Atualizar");
             getSupportActionBar().setTitle("Edição");
         }
 
@@ -197,6 +188,18 @@ public class DespesaActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean valorEhValido() {
+        if(valor.getText().toString().isEmpty()){
+            Toast.makeText(DespesaActivity.this, "Valor está em Branco", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(valorDecimal < 1.0){
+            Toast.makeText(DespesaActivity.this, "Valor muito baixo", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     public void onRadioButtonClicked(View view) {

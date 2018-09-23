@@ -1,6 +1,6 @@
 package com.asuprojects.walletok.helper;
 
-import android.util.Log;
+import java.text.DecimalFormat;
 
 public class MoneyUtil {
 
@@ -11,6 +11,11 @@ public class MoneyUtil {
             formatedValue = changedString.replaceFirst("[.]", "");
         }
         return formatedValue;
+    }
+
+    public static String formatar(double valor){
+        DecimalFormat fm = new DecimalFormat("#,###,##0.00");
+        return fm.format(valor);
     }
 
 }
