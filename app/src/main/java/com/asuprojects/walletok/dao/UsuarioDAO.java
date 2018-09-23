@@ -27,8 +27,15 @@ public class UsuarioDAO {
         values.put(TabelaUsuario.COLUNA_PERGUNTA, usuario.getPergunta());
         values.put(TabelaUsuario.COLUNA_RESPOSTA, usuario.getResposta());
 
-        long idSalvo = db.insertOrThrow(TabelaUsuario.NOME_TABELA, null, values);
-        return idSalvo;
+        Usuario usuarioEncontrado = findBy(usuario.getUsuario());
+        if(usuarioEncontrado != null){
+            if(usuario.getUsuario().equals(usuarioEncontrado.getUsuario())){
+                db.update(TabelaUsuario.NOME_TABELA, values, null, null);
+            }
+        } else {
+            return db.insertOrThrow(TabelaUsuario.NOME_TABELA, null, values);
+        }
+        return 0;
 
     }
 

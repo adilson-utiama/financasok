@@ -1,17 +1,21 @@
 package com.asuprojects.walletok.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.asuprojects.walletok.MainActivity;
@@ -29,8 +33,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private AppCompatButton btnLogin;
     private AppCompatCheckBox checkbox;
-
-    private boolean manterConectado;
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -56,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO logar usuario fazendo validacao
                 boolean logado = logarUsuario();
 
                 if(logado){
@@ -74,17 +75,42 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public void esqueciSenha(View view){
+        String usuarioNome = preferences.getString(getString(R.string.usuario), "");
+        Usuario user = dao.findBy(usuarioNome);
+        mostrarDialogPerguntaSecreta(user);
+    }
+
+    private void mostrarDialogPerguntaSecreta(final Usuario user) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_pergunta_secreta_view, null);
+        final TextView pergunta = view.findViewById(R.id.textView_pergunta);
+        final EditText resposta = view.findViewById(R.id.editText_resposta);
+        pergunta.setText(user.getPergunta());
+        dialog.setView(view);
+        dialog.setTitle("Pergunta Secreta");
+        dialog.setPositiveButton("Verficar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               if(user.getResposta().equalsIgnoreCase(resposta.getText().toString())){
+                   startActivity(new Intent(LoginActivity.this, FirstTimeActivity.class));
+                   finish();
+               } else {
+                   Toast.makeText(LoginActivity.this, "Resposta Inválida.", Toast.LENGTH_SHORT).show();
+               }
+            }
+        });
+        dialog.setNegativeButton("Cancelar", null);
+        dialog.show();
+
+    }
+
     private boolean logarUsuario() {
         String usuario = inputUser.getText().toString();
         String senha = inputPassword.getText().toString();
-        StringBuilder builder = new StringBuilder();
-        builder.append("USER: ").append(usuario)
-                .append(" PASSWORD: ").append(senha)
-                .append(" MANTER_CONECTADO: ").append(manterConectado);
-        Log.i("LOGIN -> ", builder.toString());
 
         Usuario user = dao.findBy(usuario);
-         if(user != null && user.getSenha().equals(senha)){
+         if(user != null && user.getSenha().trim().equals(senha)){
             return true;
         }
         return false;

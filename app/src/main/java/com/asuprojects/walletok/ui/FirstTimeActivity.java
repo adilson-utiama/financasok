@@ -1,6 +1,5 @@
 package com.asuprojects.walletok.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -51,10 +50,18 @@ public class FirstTimeActivity extends AppCompatActivity implements AdapterView.
 
         inputLayoutUsuario = findViewById(R.id.first_input_layout_user);
         inputEditTextUsuario = findViewById(R.id.first_input_user);
+        String usuarioNome = preferences.getString(getString(R.string.usuario), "");
+        if(!usuarioNome.isEmpty() || !usuarioNome.equals("")){
+            inputEditTextUsuario.setText(usuarioNome);
+            inputEditTextUsuario.setEnabled(false);
+        }
+
         inputLayoutSenha = findViewById(R.id.first_input_layout_password);
         inputEditTextSenha = findViewById(R.id.first_input_password);
+
         inputLayoutRepeteSenha = findViewById(R.id.first_input_layout_password_repeat);
         inputEditTextRepeteSenha = findViewById(R.id.first_input_password_repeat);
+
         inputEditTextRespostaPergunta = findViewById(R.id.input_pergunta_resposta);
         spinnerPergunta = findViewById(R.id.spinner_pergunta);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -70,9 +77,11 @@ public class FirstTimeActivity extends AppCompatActivity implements AdapterView.
                 primeiraVez = false;
                 editor = preferences.edit();
                 editor.putBoolean(getString(R.string.primeiro_uso), primeiraVez);
+                editor.putString(getString(R.string.usuario), inputEditTextUsuario.getText().toString());
                 editor.apply();
 
-                //TODO salvar usuario no banco
+                //TODO validacao de entrada de dados do usuario
+
                 Usuario usuario = new Usuario();
                 usuario.setUsuario(inputEditTextUsuario.getText().toString());
                 usuario.setSenha(inputEditTextSenha.getText().toString());

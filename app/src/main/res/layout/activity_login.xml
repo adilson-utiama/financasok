@@ -17,9 +17,9 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.LoginActivity"
             android:background="@color/background_light"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            tools:context=".ui.LoginActivity">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_user"
@@ -27,21 +27,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/logo_login"
-                app:layout_constraintVertical_bias="0.04000002">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.19999999">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/input_text_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Login"
                     android:background="@color/background_edit_text"
-                    android:padding="8dp"
-                    android:inputType="text" />
+                    android:hint="Digite seu Nome"
+                    android:inputType="text"
+                    android:padding="8dp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -49,9 +49,9 @@
                 android:id="@+id/input_layout_password"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="15dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
+                android:layout_marginTop="15dp"
                 app:layout_constraintEnd_toEndOf="@+id/input_layout_user"
                 app:layout_constraintStart_toStartOf="@+id/input_layout_user"
                 app:layout_constraintTop_toBottomOf="@+id/input_layout_user">
@@ -61,9 +61,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#dfffdb"
-                    android:padding="8dp"
-                    android:hint="Password"
-                    android:inputType="textPassword" />
+                    android:hint="Digite a Senha"
+                    android:inputType="textPassword"
+                    android:padding="8dp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -74,48 +74,42 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/colorPrimary"
-                android:text="Login"
+                android:text="Acessar"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.502"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_password"
-                app:layout_constraintVertical_bias="0.65" />
-
-            <ImageView
-                android:id="@+id/logo_login"
-                android:layout_width="202dp"
-                android:layout_height="175dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.120000005"
-                app:srcCompat="@mipmap/ic_launcher" />
+                app:layout_constraintTop_toBottomOf="@+id/checkBox_manter_conectado"
+                app:layout_constraintVertical_bias="0.19" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/checkBox_manter_conectado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Manter Conectado"
-                app:layout_constraintBottom_toTopOf="@+id/btn_login"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@+id/input_layout_password"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_password"
-                app:layout_constraintVertical_bias="0.06999999" />
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_password" />
 
             <TextView
                 android:id="@+id/textView_esqueciSenha"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_height="15dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:onClick="esqueciSenha"
                 android:text="esqueci a senha"
-                app:layout_constraintEnd_toEndOf="@+id/input_layout_password"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_password" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/btn_login"
+                app:layout_constraintStart_toStartOf="@+id/btn_login"
+                app:layout_constraintTop_toBottomOf="@+id/btn_login"
+                app:layout_constraintVertical_bias="0.0" />
 
         </android.support.constraint.ConstraintLayout>
 
