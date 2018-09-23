@@ -1,7 +1,10 @@
 package com.asuprojects.walletok;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -9,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -26,6 +30,10 @@ import com.asuprojects.walletok.ui.DespesaActivity;
 import com.asuprojects.walletok.ui.ReceitaActivity;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+
+import java.util.prefs.Preferences;
+
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -117,13 +125,34 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.item_configuracoes) {
-            startActivity(new Intent(this, ConfiguracoesActivity.class));
-            return true;
+        switch(item.getItemId()){
+            case R.id.item_configuracoes:
+                startActivity(new Intent(this, ConfiguracoesActivity.class));
+                return true;
+            case R.id.item_sair:
+                mostrarDialogSair();
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void mostrarDialogSair() {
+        AlertDialog.Builder dialogSair = new AlertDialog.Builder(this);
+        dialogSair.setMessage("Deseja sair/deslogar do App?")
+                .setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences pref = PreferenceManager
+                                .getDefaultSharedPreferences(MainActivity.this);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putBoolean(getString(R.string.manter_conectado), false);
+                        editor.commit();
+
+                        finishAffinity();
+                    }
+                })
+                .setNegativeButton("NÂO", null)
+                .show();
     }
 
     @Override
