@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.DespesaDAO;
+import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Tipo;
 import com.asuprojects.walletok.util.StringUtils;
@@ -23,7 +25,7 @@ import java.util.List;
 public class DespesasFragment extends Fragment
                 implements AdapterView.OnItemSelectedListener {
 
-
+    private TextView totalDespesas;
 
     private AppCompatSpinner spinnerMes;
 
@@ -47,6 +49,9 @@ public class DespesasFragment extends Fragment
         String mes = StringUtils.mesParaString(Calendar.getInstance().get(Calendar.MONTH) + 1);
         despesas = daoDespesa.getAllTarefasFrom(mes);
 
+        totalDespesas = view.findViewById(R.id.textview_total_receita);
+        totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
+
         spinnerMes = view.findViewById(R.id.spinner_mes);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.meses, R.layout.spinner_item);
@@ -63,10 +68,10 @@ public class DespesasFragment extends Fragment
     }
 
 
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         despesas = daoDespesa.getAllTarefasFrom(StringUtils.mesParaString(position + 1));
+        totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
         trocaFragment(despesas);
     }
 

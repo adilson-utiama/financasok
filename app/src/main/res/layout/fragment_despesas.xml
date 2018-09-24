@@ -1,28 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@color/colorPrimaryDark"
         android:padding="10dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:gravity="center">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <TextView
+            android:id="@+id/text_total_receita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Total: "
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textview_total_receita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R$ 15,00"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/text_total_receita"
+            app:layout_constraintStart_toEndOf="@+id/text_total_receita"
+            app:layout_constraintTop_toTopOf="@+id/text_total_receita" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/spinner_mes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:spinnerMode="dropdown"
             android:textAlignment="textEnd"
-            android:theme="@style/ThemeOverlay.AppCompat.Light"/>
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.v7.widget.LinearLayoutCompat>
+    </android.support.constraint.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/frameLayoutDespesa"

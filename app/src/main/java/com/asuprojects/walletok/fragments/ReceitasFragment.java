@@ -1,6 +1,7 @@
 package com.asuprojects.walletok.fragments;
 
 
+import android.media.tv.TvView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.ReceitaDAO;
+import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.model.Tipo;
 import com.asuprojects.walletok.util.StringUtils;
@@ -22,6 +25,8 @@ import java.util.List;
 
 public class ReceitasFragment extends Fragment
         implements AdapterView.OnItemSelectedListener {
+
+    private TextView valorTotalReceita;
 
     private AppCompatSpinner spinnerMes;
 
@@ -45,6 +50,9 @@ public class ReceitasFragment extends Fragment
 
         String mes = StringUtils.mesParaString(Calendar.getInstance().get(Calendar.MONTH) + 1);
         receitas = dao.getAllReceitasFrom(mes);
+
+        valorTotalReceita = view.findViewById(R.id.textview_total_receita);
+        valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
 
         spinnerMes = view.findViewById(R.id.spinner_mes);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -80,6 +88,7 @@ public class ReceitasFragment extends Fragment
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         receitas = dao.getAllReceitasFrom(StringUtils.mesParaString(position + 1));
+        valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
         trocaFragment(receitas);
     }
 
