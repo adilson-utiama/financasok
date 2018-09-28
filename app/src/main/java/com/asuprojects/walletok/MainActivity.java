@@ -28,6 +28,7 @@ import com.asuprojects.walletok.fragments.ResumoFragment;
 import com.asuprojects.walletok.ui.ConfiguracoesActivity;
 import com.asuprojects.walletok.ui.DespesaActivity;
 import com.asuprojects.walletok.ui.ReceitaActivity;
+import com.asuprojects.walletok.ui.SobreActivity;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity
         ResumoFragment resumoFragment = new ResumoFragment();
 
         TabAdapter abasAdapter = new TabAdapter(getSupportFragmentManager());
-        //TODO adicionar fragents aqui, pagerview
         abasAdapter.adicionar(despesasFragment, "Despesas");
         abasAdapter.adicionar(receitasFragment, "Receitas");
         abasAdapter.adicionar(resumoFragment, "Resumo");
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.menu_sobre: {
-                Toast.makeText(this, "Menu Sobre selecionado...", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, SobreActivity.class));
                 break;
             }
         }

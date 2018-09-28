@@ -49,6 +49,9 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ui.ReceitaActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ui.SobreActivity"
             android:parentActivityName=".MainActivity"></activity>
     </application>
 

@@ -47,4 +47,5 @@
     <string name="close_drawer">close</string>
     <string name="sair">Sair/Deslogar</string>
     <string name="usuario">usuario_nome</string>
+    <string name="sobre">Sobre</string>
 </resources>
