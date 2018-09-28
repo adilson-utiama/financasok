@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.asuprojects.walletok.adapters.TabAdapter;
@@ -173,7 +174,27 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.menu_backup: {
-                Toast.makeText(this, "Menu Backup selecionado...", Toast.LENGTH_SHORT).show();
+                ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter
+                        .createFromResource(this, R.array.backup_options,
+                                android.R.layout.select_dialog_singlechoice);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("Selecione o formato")
+                        .setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int selecao) {
+                                switch(selecao) {
+                                    case 0:
+                                        Toast.makeText(MainActivity.this, "CSV escolhido", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case 1:
+                                        Toast.makeText(MainActivity.this, "HTML escolhido", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case 2:
+                                        Toast.makeText(MainActivity.this, "TXT escolhido", Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            }
+                        }).show();
                 break;
             }
             case R.id.menu_sobre: {

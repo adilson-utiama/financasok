@@ -19,4 +19,9 @@
         <item>#FF00FF00</item>
         <item>#FF0000FF</item>
     </array>
+    <array name="backup_options">
+        <item>Exportar em .csv</item>
+        <item>Exportar em .html</item>
+        <item>Exportar em .txt</item>
+    </array>
 </resources>
