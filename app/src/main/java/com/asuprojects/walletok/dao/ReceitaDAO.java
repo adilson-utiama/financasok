@@ -128,11 +128,6 @@ public class ReceitaDAO {
         }
         return total;
     }
-    //TODO Listar receitas
-
-    //TODO pegar receita pelo id
-
-    //TODO listar receitas de acordo com a categoria
 
     public void close(){
         banco.close();
@@ -173,4 +168,5 @@ public class ReceitaDAO {
 
         return idDeletado;
     }
+
 }

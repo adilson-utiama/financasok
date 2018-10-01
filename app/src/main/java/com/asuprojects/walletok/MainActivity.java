@@ -23,6 +23,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.asuprojects.walletok.adapters.TabAdapter;
+import com.asuprojects.walletok.dao.DespesaDAO;
+import com.asuprojects.walletok.dao.ReceitaDAO;
 import com.asuprojects.walletok.fragments.DespesasFragment;
 import com.asuprojects.walletok.fragments.ReceitasFragment;
 import com.asuprojects.walletok.fragments.ResumoFragment;
@@ -30,9 +32,11 @@ import com.asuprojects.walletok.ui.ConfiguracoesActivity;
 import com.asuprojects.walletok.ui.DespesaActivity;
 import com.asuprojects.walletok.ui.ReceitaActivity;
 import com.asuprojects.walletok.ui.SobreActivity;
+import com.asuprojects.walletok.util.FilesUtil;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.io.IOException;
 import java.util.prefs.Preferences;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
@@ -174,27 +178,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.menu_backup: {
-                ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter
-                        .createFromResource(this, R.array.backup_options,
-                                android.R.layout.select_dialog_singlechoice);
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                dialog.setTitle("Selecione o formato")
-                        .setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int selecao) {
-                                switch(selecao) {
-                                    case 0:
-                                        Toast.makeText(MainActivity.this, "CSV escolhido", Toast.LENGTH_SHORT).show();
-                                        break;
-                                    case 1:
-                                        Toast.makeText(MainActivity.this, "HTML escolhido", Toast.LENGTH_SHORT).show();
-                                        break;
-                                    case 2:
-                                        Toast.makeText(MainActivity.this, "TXT escolhido", Toast.LENGTH_SHORT).show();
-                                        break;
-                                }
-                            }
-                        }).show();
+                mostrarDialogBackup();
                 break;
             }
             case R.id.menu_sobre: {
@@ -206,5 +190,25 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    private void mostrarDialogBackup() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Backup").setMessage("O backup sera realizado no formato .csv")
+                .setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FilesUtil util = new FilesUtil();
+                        try {
+                            util.gravarBackupDespesas("despesa", new DespesaDAO(MainActivity.this));
+                            util.gravarBackupReceitas("receitas'", new ReceitaDAO(MainActivity.this));
+
+                            Toast.makeText(MainActivity.this, "Backup realizado com Sucesso!", Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                      }
+                })
+                .setNegativeButton("NÂO", null).show();
     }
 }
