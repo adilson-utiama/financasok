@@ -18,7 +18,7 @@ import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.UsuarioDAO;
 import com.asuprojects.walletok.model.Usuario;
 
-public class FirstTimeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class CadastroSenhaActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private TextInputLayout inputLayoutUsuario;
     private TextInputEditText inputEditTextUsuario;
@@ -32,21 +32,17 @@ public class FirstTimeActivity extends AppCompatActivity implements AdapterView.
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
-    private boolean primeiraVez = true;
 
     private UsuarioDAO dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first_time);
+        setContentView(R.layout.activity_cadastro_senha);
 
         dao = new UsuarioDAO(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
-        editor.putBoolean(getString(R.string.primeiro_uso), primeiraVez);
-        editor.apply();
 
         inputLayoutUsuario = findViewById(R.id.first_input_layout_user);
         inputEditTextUsuario = findViewById(R.id.first_input_user);
@@ -74,9 +70,7 @@ public class FirstTimeActivity extends AppCompatActivity implements AdapterView.
         btnCadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                primeiraVez = false;
                 editor = preferences.edit();
-                editor.putBoolean(getString(R.string.primeiro_uso), primeiraVez);
                 editor.putString(getString(R.string.usuario), inputEditTextUsuario.getText().toString());
                 editor.apply();
 
@@ -90,7 +84,7 @@ public class FirstTimeActivity extends AppCompatActivity implements AdapterView.
 
                 dao.insert(usuario);
 
-                Intent intent = new Intent(FirstTimeActivity.this, LoginActivity.class);
+                Intent intent = new Intent(CadastroSenhaActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -50,4 +50,5 @@
     <string name="sobre">Sobre</string>
     <string name="desativa_tela_abertura">desativar_tela_abertura</string>
     <string name="desativa_tela_abertura_title">Desativar Tela de Abertura</string>
+    <string name="protecao_por_senha">protecao_por_senha</string>
 </resources>

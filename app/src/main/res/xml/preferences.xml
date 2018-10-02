@@ -11,4 +11,9 @@
         android:summary="Se ativada, não mostra tela de abertura."
         android:title="@string/desativa_tela_abertura_title" />
 
+    <CheckBoxPreference
+        android:key="@string/protecao_por_senha"
+        android:summary="Se ativada, sera exigido senha ao iniciar app."
+        android:title="Proteção por Senha" />
+
 </PreferenceScreen>

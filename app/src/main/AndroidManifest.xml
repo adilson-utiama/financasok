@@ -35,7 +35,7 @@
             android:name=".ui.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".ui.FirstTimeActivity"
+            android:name=".ui.CadastroSenhaActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.SplahScreenActivity"
