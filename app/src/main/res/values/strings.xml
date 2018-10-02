@@ -48,4 +48,6 @@
     <string name="sair">Sair/Deslogar</string>
     <string name="usuario">usuario_nome</string>
     <string name="sobre">Sobre</string>
+    <string name="desativa_tela_abertura">desativar_tela_abertura</string>
+    <string name="desativa_tela_abertura_title">Desativar Tela de Abertura</string>
 </resources>
