@@ -2,11 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
-        android:key="@string/manter_conectado"
-        android:summary="Manter login ativo."
-        android:title="@string/manter_conectado" />
-
-    <CheckBoxPreference
         android:key="@string/desativa_tela_abertura"
         android:summary="Se ativada, não mostra tela de abertura."
         android:title="@string/desativa_tela_abertura_title" />

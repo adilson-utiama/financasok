@@ -2,10 +2,9 @@ package com.asuprojects.walletok.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceFragment;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.support.v7.app.AppCompatActivity;
 
 import com.asuprojects.walletok.R;
 
@@ -29,7 +28,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     public static class ConfiguracoesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
 
         @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
+        public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
             getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);

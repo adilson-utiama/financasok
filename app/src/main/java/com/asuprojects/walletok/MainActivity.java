@@ -109,15 +109,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        FloatingActionButton fabCategoria = findViewById(R.id.fab_adiciona_categoria);
-        /*fabMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, DespesaActivity.class);
-                startActivity(intent);
-            }
-        });*/
-
     }
 
 

@@ -104,17 +104,6 @@
             fab:fab_size="mini" />
 
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_adiciona_categoria"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_categoria"
-            fab:fab_colorNormal="@color/receita"
-            fab:fab_colorPressed="#2945fc"
-            fab:fab_colorRipple="#3216e2"
-            fab:fab_label="@string/adiciona_categoria"
-            fab:fab_size="mini" />
-
     </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>
