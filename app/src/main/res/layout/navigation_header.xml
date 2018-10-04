@@ -5,7 +5,7 @@
     android:layout_height="160dp"
     android:padding="16dp"
     android:gravity="bottom"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/financas_bkg"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
