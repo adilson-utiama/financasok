@@ -47,7 +47,7 @@ public class DespesasFragment extends Fragment
         daoDespesa = new DespesaDAO(getContext());
 
         String mes = StringUtils.mesParaString(Calendar.getInstance().get(Calendar.MONTH) + 1);
-        despesas = daoDespesa.getAllTarefasFrom(mes);
+        despesas = daoDespesa.getAllDespesasFrom(mes);
 
         totalDespesas = view.findViewById(R.id.textview_total_receita);
         totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
@@ -70,7 +70,7 @@ public class DespesasFragment extends Fragment
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        despesas = daoDespesa.getAllTarefasFrom(StringUtils.mesParaString(position + 1));
+        despesas = daoDespesa.getAllDespesasFrom(StringUtils.mesParaString(position + 1));
         totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
         trocaFragment(despesas);
     }

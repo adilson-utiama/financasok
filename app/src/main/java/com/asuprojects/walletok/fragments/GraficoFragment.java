@@ -1,8 +1,10 @@
 package com.asuprojects.walletok.fragments;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,15 +39,14 @@ import java.util.Map;
 public class GraficoFragment extends Fragment
         implements OnChartValueSelectedListener {
 
-    private DespesaDAO daoDespesa;
-    private ReceitaDAO daoReceita;
-
     private TextView despesaCategoriaSelecao;
     private PieChart chart;
-    private String mesSelecao;
     private List<Despesa> despesasDoMes;
 
     private List<PieEntry> entries;
+
+    private DespesaDAO dao;
+    private String mesSelecao;
 
     public GraficoFragment() {
         // Required empty public constructor
@@ -56,17 +58,31 @@ public class GraficoFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grafico, container, false);
 
-        despesaCategoriaSelecao = view.findViewById(R.id.despesaCategoriaSelecao);
+        dao = new DespesaDAO(getContext());
 
+        if(savedInstanceState != null){
+            mesSelecao = (String) savedInstanceState.getSerializable("MES");
+        }
+
+        despesaCategoriaSelecao = view.findViewById(R.id.despesaCategoriaSelecao);
         chart = view.findViewById(R.id.pieChart);
+
+        this.despesasDoMes = dao.getAllDespesasFrom(mesSelecao);
 
         gerarGrafico();
 
         return view;
     }
 
-    public void carregaLista(List<Despesa> lista) {
-        this.despesasDoMes = lista;
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable("MES", mesSelecao);
+        super.onSaveInstanceState(outState);
+    }
+
+    public void carregaLista(String mes) {
+        this.mesSelecao = mes;
+
     }
 
     private void gerarGrafico() {

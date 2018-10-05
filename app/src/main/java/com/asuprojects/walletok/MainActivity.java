@@ -1,8 +1,10 @@
 package com.asuprojects.walletok;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,6 +12,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private static final int LOAD_FILE = 200;
+    private static final int WRITE_FILE = 100;
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
@@ -176,15 +181,19 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_importar: {
+
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, LOAD_FILE);
                 File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                 Uri uri = Uri.fromFile(directory);
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT, uri);
-                intent.setType("text/csv");
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
 
                 if(intent.resolveActivity(getPackageManager()) != null){
                     startActivityForResult(intent, LOAD_FILE);
                 }
+
                 break;
             }
             case R.id.menu_configuracoes: {
@@ -192,7 +201,23 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.menu_backup: {
-                mostrarDialogBackup();
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED){
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+
+                    } else {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_FILE);
+
+                    }
+
+                } else {
+                    mostrarDialogBackup();
+                }
                 break;
             }
             case R.id.menu_sobre: {
@@ -204,6 +229,26 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case WRITE_FILE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    mostrarDialogBackup();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+        }
     }
 
     private void mostrarDialogBackup() {

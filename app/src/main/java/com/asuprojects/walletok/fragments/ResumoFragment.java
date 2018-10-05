@@ -4,6 +4,7 @@ package com.asuprojects.walletok.fragments;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatSpinner;
@@ -69,6 +70,12 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_resumo, container, false);
 
+        if(savedInstanceState != null) {
+            if(savedInstanceState.getSerializable("MES") != null){
+                mesSelecao = (String) savedInstanceState.getSerializable("MES");
+            }
+        }
+
         daoDespesa = new DespesaDAO(getContext());
         daoReceita = new ReceitaDAO(getContext());
 
@@ -86,14 +93,23 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         mesSelecao = StringUtils.mesParaString(mes + 1);
         spinnerMes.setSelection(mes);
 
-        despesasDoMes = daoDespesa.getAllTarefasFrom(mesSelecao);
+        despesasDoMes = daoDespesa.getAllDespesasFrom(mesSelecao);
         receitasDoMes = daoReceita.getAllReceitasFrom(mesSelecao);
 
         calculaValorTotal();
 
-        trocaFragment(despesasDoMes);
+        Log.i("LISTA", "onCreateView: " + despesasDoMes);
+        if(despesasDoMes != null){
+            trocaFragment(despesasDoMes);
+        }
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable("MES", mesSelecao);
+        super.onSaveInstanceState(outState);
     }
 
     private void trocaFragment(List<Despesa> lista){
@@ -105,7 +121,7 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
             tx.commit();
         } else {
             GraficoFragment graficoFragment = new GraficoFragment();
-            graficoFragment.carregaLista(lista);
+            graficoFragment.carregaLista(mesSelecao);
             tx.replace(R.id.frameLayoutGrafico, graficoFragment);
             tx.commit();
         }
@@ -150,7 +166,7 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mesSelecao = StringUtils.mesParaString(position + 1);
-        despesasDoMes = daoDespesa.getAllTarefasFrom(mesSelecao);
+        despesasDoMes = daoDespesa.getAllDespesasFrom(mesSelecao);
         receitasDoMes = daoReceita.getAllReceitasFrom(mesSelecao);
         calculaValorTotal();
         trocaFragment(despesasDoMes);

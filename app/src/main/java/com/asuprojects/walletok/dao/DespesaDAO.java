@@ -30,7 +30,7 @@ public class DespesaDAO {
         this.banco = new BancoSQLite3(context);
     }
 
-    public List<Despesa> getAllTarefasFrom(String mes){
+    public List<Despesa> getAllDespesasFrom(String mes){
         SQLiteDatabase db = banco.getReadableDatabase();
         List<Despesa> despesas = new ArrayList<>();
 
