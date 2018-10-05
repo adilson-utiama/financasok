@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         FilesUtil util = new FilesUtil();
                         try {
-                            util.exportarDados(MainActivity.this);
+                            util.exportarDados("backup", MainActivity.this);
                             Toast.makeText(MainActivity.this, "Backup realizado com Sucesso!", Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();

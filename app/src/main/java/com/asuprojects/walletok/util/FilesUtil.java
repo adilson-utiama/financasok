@@ -11,6 +11,7 @@ import com.asuprojects.walletok.database.TabelaDespesa;
 import com.asuprojects.walletok.database.TabelaReceita;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
+import com.asuprojects.walletok.service.DBService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,8 +24,11 @@ import java.util.List;
 
 public class FilesUtil {
 
+    private DBService service;
+
     private String separador = ",";
     private String extensao = ".csv";
+
 
     public void importarDados(Context context, Uri dataUri){
 
@@ -57,67 +61,35 @@ public class FilesUtil {
 
     }
 
-    public void exportarDados(Context context) throws IOException {
+    public void exportarDados(String fileName, Context context) throws IOException {
 
-        gravarBackupDespesas("despesas", context);
-        gravarBackupReceitas("receitas", context);
-
-
-        //TODO Unificar desepsas, receitas no mesmo arquivo .csv
-
-        //TODO Determinar conteudo no arquivo .csv
-    }
-
-    public void gravarBackupDespesas(String nome, Context context) throws IOException {
-
-        DespesaDAO dao = new DespesaDAO(context);
+        service = new DBService(context);
+        List<Despesa> despesas = service.getDespesaDAO().getAll();
+        List<Receita> receitas = service.getReceitaDAO().listAll();
 
         if(isExternalStorageWritable()){
-            List<Despesa> despesas = dao.getAll();
-            String nomeComExtensao = nome + extensao;
+            String nomeComExtensao = fileName + extensao;
 
             File file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS), nomeComExtensao);
 
             FileOutputStream outputStream = new FileOutputStream(file);
             PrintStream ps = new PrintStream(outputStream);
-            ps.println(colunasDespesa());
 
+            ps.println(colunasDespesa());
             for (Despesa d : despesas){
                 ps.println(despesaLinha(d));
             }
+            ps.println(colunasReceita());
+            for (Receita r : receitas) {
+                ps.println(receitaLinha(r));
+            }
+
             outputStream.close();
             ps.close();
         } else {
             throw new RuntimeException("Falha ao realizar backup");
         }
-
-
-    }
-
-    public void gravarBackupReceitas(String nome, Context context) throws IOException {
-
-        ReceitaDAO dao = new ReceitaDAO(context);
-        if(isExternalStorageWritable()){
-            List<Receita> receitas = dao.listAll();
-            String nomeComExtensao = nome + extensao;
-
-            File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS), nomeComExtensao);
-
-            FileOutputStream outputStream = new FileOutputStream(file);
-            PrintStream ps = new PrintStream(outputStream);
-            ps.println(colunasReceita());
-
-            for (Receita r : receitas){
-                ps.println(receitaLinha(r));
-            }
-            outputStream.close();
-            ps.close();
-        } else {
-            throw new RuntimeException("falha ao realizar backup");
-        }
-
 
     }
 
@@ -132,7 +104,8 @@ public class FilesUtil {
 
     private String colunasDespesa() {
         StringBuilder builder = new StringBuilder();
-        builder.append(TabelaDespesa.COLUNA_DATA).append(separador)
+        builder.append("DESPESAS").append(separador)
+                .append(TabelaDespesa.COLUNA_DATA).append(separador)
                 .append(TabelaDespesa.COLUNA_CATEGORIA).append(separador)
                 .append(TabelaDespesa.COLUNA_DESCRICAO).append(separador)
                 .append(TabelaDespesa.COLUNA_PAGAMENTO).append(separador)
@@ -142,7 +115,8 @@ public class FilesUtil {
 
     private String colunasReceita() {
         StringBuilder builder = new StringBuilder();
-        builder.append(TabelaReceita.COLUNA_DATA).append(separador)
+        builder.append("RECEITAS").append(separador)
+                .append(TabelaReceita.COLUNA_DATA).append(separador)
                 .append(TabelaReceita.COLUNA_CATEGORIA).append(separador)
                 .append(TabelaReceita.COLUNA_DESCRICAO).append(separador)
                 .append(TabelaReceita.COLUNA_VALOR);
