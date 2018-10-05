@@ -19,7 +19,5 @@ public class DespesaService {
         return dao;
     }
 
-//    public List<Despesa> getDespesasDoMes(int mes){
-//        dao.getAll()
-//    }
+
 }

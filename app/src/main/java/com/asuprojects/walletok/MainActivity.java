@@ -3,7 +3,9 @@ package com.asuprojects.walletok;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -15,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +39,15 @@ import com.asuprojects.walletok.util.FilesUtil;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.prefs.Preferences;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
@@ -45,7 +56,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
 
-
+    private static final int LOAD_FILE = 200;
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
@@ -164,6 +175,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_importar: {
+                File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                Uri uri = Uri.fromFile(directory);
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT, uri);
+                intent.setType("text/csv");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+                if(intent.resolveActivity(getPackageManager()) != null){
+                    startActivityForResult(intent, LOAD_FILE);
+                }
+                break;
+            }
             case R.id.menu_configuracoes: {
                 startActivity(new Intent(MainActivity.this, ConfiguracoesActivity.class));
                 break;
@@ -191,9 +214,7 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         FilesUtil util = new FilesUtil();
                         try {
-                            util.gravarBackupDespesas("despesa", new DespesaDAO(MainActivity.this));
-                            util.gravarBackupReceitas("receitas'", new ReceitaDAO(MainActivity.this));
-
+                            util.exportarDados(MainActivity.this);
                             Toast.makeText(MainActivity.this, "Backup realizado com Sucesso!", Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -201,5 +222,16 @@ public class MainActivity extends AppCompatActivity
                       }
                 })
                 .setNegativeButton("NÂO", null).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            if(requestCode == LOAD_FILE){
+                Uri dataUri = data.getData();
+                new FilesUtil().importarDados(MainActivity.this, dataUri);
+                Log.i("RESULT", "onActivityResult: " + dataUri);
+            }
+        }
     }
 }

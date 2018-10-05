@@ -1,7 +1,9 @@
 package com.asuprojects.walletok.util;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 
 import com.asuprojects.walletok.dao.DespesaDAO;
 import com.asuprojects.walletok.dao.ReceitaDAO;
@@ -10,9 +12,12 @@ import com.asuprojects.walletok.database.TabelaReceita;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -21,7 +26,51 @@ public class FilesUtil {
     private String separador = ",";
     private String extensao = ".csv";
 
-    public void gravarBackupDespesas(String nome, DespesaDAO dao) throws IOException {
+    public void importarDados(Context context, Uri dataUri){
+
+        //TODO Fazer a leitura do arquivo e gravar dados no banco
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(dataUri);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String linha = reader.readLine();
+            Log.i("READER", "importarDados: " + linha);
+            while(linha != null) {
+                linha = reader.readLine();
+                if(linha != null) {
+                    String[] valores = linha.split(",");
+                    for(int i = 0; i < valores.length; i++){
+                        Log.i("READER", "importarDados: " + valores[i]);
+                        //TODO preencher objeto com os dados
+                    }
+                }
+
+            }
+
+            reader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        //TODO conferir se dados ja exstem no banco
+
+    }
+
+    public void exportarDados(Context context) throws IOException {
+
+        gravarBackupDespesas("despesas", context);
+        gravarBackupReceitas("receitas", context);
+
+
+        //TODO Unificar desepsas, receitas no mesmo arquivo .csv
+
+        //TODO Determinar conteudo no arquivo .csv
+    }
+
+    public void gravarBackupDespesas(String nome, Context context) throws IOException {
+
+        DespesaDAO dao = new DespesaDAO(context);
 
         if(isExternalStorageWritable()){
             List<Despesa> despesas = dao.getAll();
@@ -46,8 +95,9 @@ public class FilesUtil {
 
     }
 
-    public void gravarBackupReceitas(String nome, ReceitaDAO dao) throws IOException {
+    public void gravarBackupReceitas(String nome, Context context) throws IOException {
 
+        ReceitaDAO dao = new ReceitaDAO(context);
         if(isExternalStorageWritable()){
             List<Receita> receitas = dao.listAll();
             String nomeComExtensao = nome + extensao;
