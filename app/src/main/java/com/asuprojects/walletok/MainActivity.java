@@ -26,12 +26,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.asuprojects.walletok.adapters.TabAdapter;
-import com.asuprojects.walletok.dao.DespesaDAO;
-import com.asuprojects.walletok.dao.ReceitaDAO;
 import com.asuprojects.walletok.fragments.DespesasFragment;
 import com.asuprojects.walletok.fragments.ReceitasFragment;
 import com.asuprojects.walletok.fragments.ResumoFragment;
@@ -43,18 +40,8 @@ import com.asuprojects.walletok.util.FilesUtil;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.prefs.Preferences;
-
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -200,7 +187,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, ConfiguracoesActivity.class));
                 break;
             }
-            case R.id.menu_backup: {
+            case R.id.menu_exportar: {
                 if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED){

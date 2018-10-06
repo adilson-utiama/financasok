@@ -9,9 +9,9 @@
             android:icon="@drawable/ic_importar" />
 
         <item
-            android:title="Backup"
-            android:id="@+id/menu_backup"
-            android:icon="@drawable/ic_backup" />
+            android:title="Exportar"
+            android:id="@+id/menu_exportar"
+            android:icon="@drawable/ic_exportar" />
 
         <item
             android:title="Configurações"

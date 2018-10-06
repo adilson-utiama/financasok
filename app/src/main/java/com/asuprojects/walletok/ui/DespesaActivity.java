@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
