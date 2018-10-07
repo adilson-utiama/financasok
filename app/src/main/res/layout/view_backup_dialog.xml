@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/nome_arquivo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite nome do arquivo"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecione formato do arquivo"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/csv_format"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/csv_format"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=".CSV"/>
+
+        <RadioButton
+            android:id="@+id/json_format"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=".JSON"/>
+    </RadioGroup>
+
+
+</android.support.v7.widget.LinearLayoutCompat>

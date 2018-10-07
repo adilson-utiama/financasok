@@ -26,12 +26,15 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.asuprojects.walletok.adapters.TabAdapter;
 import com.asuprojects.walletok.fragments.DespesasFragment;
 import com.asuprojects.walletok.fragments.ReceitasFragment;
 import com.asuprojects.walletok.fragments.ResumoFragment;
+import com.asuprojects.walletok.model.enums.Extensao;
 import com.asuprojects.walletok.ui.ConfiguracoesActivity;
 import com.asuprojects.walletok.ui.DespesaActivity;
 import com.asuprojects.walletok.ui.ReceitaActivity;
@@ -239,21 +242,40 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void mostrarDialogBackup() {
+        View view = getLayoutInflater().inflate(R.layout.view_backup_dialog, null);
+        final TextView nomeArquivo = view.findViewById(R.id.nome_arquivo);
+        final RadioGroup formatos = view.findViewById(R.id.radioGroup);
+
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Backup").setMessage("O backup sera realizado no formato .csv")
-                .setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+        dialog.setTitle("Exportar dados")
+                //.setMessage("O backup sera realizado no formato .csv")
+                .setView(view)
+                .setPositiveButton("EXPORTAR", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         FilesUtil util = new FilesUtil();
+                        Extensao ext = null;
                         try {
-                            util.exportarDados("backup", MainActivity.this);
-                            Toast.makeText(MainActivity.this, "Backup realizado com Sucesso!", Toast.LENGTH_SHORT).show();
+
+                            String arquivo = nomeArquivo.getText().toString();
+                            int checkedRadioButtonId = formatos.getCheckedRadioButtonId();
+                            if(checkedRadioButtonId == R.id.csv_format){
+                                ext = Extensao.CSV;
+                            }
+                            if(checkedRadioButtonId == R.id.json_format){
+                                ext = Extensao.JSON;
+                            }
+
+                            //TODO implementar nome arquivo e determinar formato de saida para metodos seguinte
+
+                            util.exportarDados(arquivo, ext, MainActivity.this);
+                            Toast.makeText(MainActivity.this, "Backup realizado com Sucesso! \n" + arquivo, Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                       }
                 })
-                .setNegativeButton("NÂO", null).show();
+                .setNegativeButton("CANCELAR", null).show();
     }
 
     @Override

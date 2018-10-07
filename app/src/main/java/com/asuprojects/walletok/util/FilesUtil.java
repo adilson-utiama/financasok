@@ -5,13 +5,13 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.asuprojects.walletok.dao.DespesaDAO;
-import com.asuprojects.walletok.dao.ReceitaDAO;
 import com.asuprojects.walletok.database.TabelaDespesa;
 import com.asuprojects.walletok.database.TabelaReceita;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
+import com.asuprojects.walletok.model.enums.Extensao;
 import com.asuprojects.walletok.service.DBService;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,15 +20,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FilesUtil {
 
     private DBService service;
 
-    private String separador = ",";
-    private String extensao = ".csv";
+    public static final String JSON = ".json";
+    public static final String CSV = ".csv";
 
+    private String separador = ",";
 
     public void importarDados(Context context, Uri dataUri){
 
@@ -41,11 +44,11 @@ public class FilesUtil {
             while(linha != null) {
                 linha = reader.readLine();
                 if(linha != null) {
-                    String[] valores = linha.split(",");
-                    for(int i = 0; i < valores.length; i++){
-                        Log.i("READER", "importarDados: " + valores[i]);
+//                    String[] valores = linha.split(",");
+//                    for(int i = 0; i < valores.length; i++){
+                        Log.i("READER", "importarDados: " + linha);
                         //TODO preencher objeto com os dados
-                    }
+//                    }
                 }
 
             }
@@ -61,37 +64,65 @@ public class FilesUtil {
 
     }
 
-    public void exportarDados(String fileName, Context context) throws IOException {
+    public void exportarDados(String fileName, Extensao extensao, Context context) throws IOException {
 
         service = new DBService(context);
         List<Despesa> despesas = service.getDespesaDAO().getAll();
         List<Receita> receitas = service.getReceitaDAO().listAll();
 
         if(isExternalStorageWritable()){
-            String nomeComExtensao = fileName + extensao;
 
-            File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS), nomeComExtensao);
+            if(extensao.equals(Extensao.CSV)){
 
-            FileOutputStream outputStream = new FileOutputStream(file);
-            PrintStream ps = new PrintStream(outputStream);
+                fileName += extensao.getExtensao();
 
-            ps.println(colunasDespesa());
-            for (Despesa d : despesas){
-                ps.println(despesaLinha(d));
+                File file = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS), fileName);
+
+                FileOutputStream outputStream = new FileOutputStream(file);
+                PrintStream ps = new PrintStream(outputStream);
+
+                ps.println(colunasDespesa());
+                for (Despesa d : despesas){
+                    ps.println(despesaLinha(d));
+                }
+                ps.println(colunasReceita());
+                for (Receita r : receitas) {
+                    ps.println(receitaLinha(r));
+                }
+
+                outputStream.close();
+                ps.close();
             }
-            ps.println(colunasReceita());
-            for (Receita r : receitas) {
-                ps.println(receitaLinha(r));
+
+            if(extensao.equals(Extensao.JSON)){
+                Map<String, List<?>> mapa = new HashMap<>();
+                mapa.put("Despesas", despesas);
+                mapa.put("Receitas", receitas);
+
+                fileName += extensao.getExtensao();
+                File file = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS), fileName);
+                FileOutputStream outputStream = new FileOutputStream(file);
+                PrintStream ps = new PrintStream(outputStream);
+
+                Gson gson = new Gson();
+                String dados = gson.toJson(mapa);
+
+                ps.println(dados);
+
+                outputStream.close();
+                ps.close();
+
             }
 
-            outputStream.close();
-            ps.close();
+
         } else {
             throw new RuntimeException("Falha ao realizar backup");
         }
 
     }
+
 
     private String receitaLinha(Receita r) {
         StringBuilder builder = new StringBuilder();
