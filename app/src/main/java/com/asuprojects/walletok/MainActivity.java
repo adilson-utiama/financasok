@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -43,7 +42,6 @@ import com.asuprojects.walletok.util.FilesUtil;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
@@ -172,17 +170,8 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.menu_importar: {
 
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, LOAD_FILE);
-                File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                Uri uri = Uri.fromFile(directory);
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT, uri);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
+                mostrarDialogImportarDados();
 
-                if(intent.resolveActivity(getPackageManager()) != null){
-                    startActivityForResult(intent, LOAD_FILE);
-                }
 
                 break;
             }
@@ -221,6 +210,26 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void mostrarDialogImportarDados() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Importar Dados")
+                .setMessage("Este procedimento ira apagar todos os dados atualmente gravados\n Continuar?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.setType("*/*");
+
+                        if(intent.resolveActivity(getPackageManager()) != null){
+                            startActivityForResult(intent, LOAD_FILE);
+                        }
+                    }
+                })
+                .setNegativeButton("CANCELAR", null)
+                .show();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -242,7 +251,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void mostrarDialogBackup() {
-        View view = getLayoutInflater().inflate(R.layout.view_backup_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.view_exportar_dados_dialog, null);
         final TextView nomeArquivo = view.findViewById(R.id.nome_arquivo);
         final RadioGroup formatos = view.findViewById(R.id.radioGroup);
 
