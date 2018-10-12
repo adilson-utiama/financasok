@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -42,6 +43,7 @@ import com.asuprojects.walletok.util.FilesUtil;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int LOAD_FILE = 200;
     private static final int WRITE_FILE = 100;
+    private static final int SAVE_FILE = 300;
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
@@ -168,11 +171,27 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_importar: {
+            case R.id.menu_backup: {
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED){
 
-                mostrarDialogImportarDados();
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
+                    } else {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_FILE);
 
+                    }
+
+                } else {
+                    mostrarDialogBackup();
+                }
+                break;
+            }
+            case R.id.menu_restaurar: {
+                mostrarDialogRestaurarDados();
                 break;
             }
             case R.id.menu_configuracoes: {
@@ -187,7 +206,6 @@ public class MainActivity extends AppCompatActivity
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-
                     } else {
                         ActivityCompat.requestPermissions(this,
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_FILE);
@@ -195,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                     }
 
                 } else {
-                    mostrarDialogBackup();
+                    mostrarDialogExportar();
                 }
                 break;
             }
@@ -210,11 +228,37 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void mostrarDialogImportarDados() {
+    private void mostrarDialogBackup() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Backup")
+                .setMessage("Este procedimento ira realizar backup dos dados.\nContinuar?")
+                .setPositiveButton("Prosseguir", new DialogInterface.OnClickListener() {
+
+                    String caminhoArquivo = null;
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            caminhoArquivo = new FilesUtil().realizarBackup(MainActivity.this);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(MainActivity.this, "Erro ao realizar o Backup", Toast.LENGTH_LONG).show();
+                        }
+
+                        Toast.makeText(MainActivity.this,
+                                "Backup Realizado com Sucesso!\nSalvo em: " + caminhoArquivo,
+                                Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void mostrarDialogRestaurarDados() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Importar Dados")
                 .setMessage("Este procedimento ira apagar todos os dados atualmente gravados\n Continuar?")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Prosseguir", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -222,11 +266,11 @@ public class MainActivity extends AppCompatActivity
                         intent.setType("*/*");
 
                         if(intent.resolveActivity(getPackageManager()) != null){
-                            startActivityForResult(intent, LOAD_FILE);
+                            startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo"), LOAD_FILE);
                         }
                     }
                 })
-                .setNegativeButton("CANCELAR", null)
+                .setNegativeButton("Cancelar", null)
                 .show();
     }
 
@@ -237,7 +281,7 @@ public class MainActivity extends AppCompatActivity
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    mostrarDialogBackup();
+                    mostrarDialogExportar();
 
                 } else {
 
@@ -250,14 +294,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void mostrarDialogBackup() {
+    private void mostrarDialogExportar() {
         View view = getLayoutInflater().inflate(R.layout.view_exportar_dados_dialog, null);
         final TextView nomeArquivo = view.findViewById(R.id.nome_arquivo);
         final RadioGroup formatos = view.findViewById(R.id.radioGroup);
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Exportar dados")
-                //.setMessage("O backup sera realizado no formato .csv")
                 .setView(view)
                 .setPositiveButton("EXPORTAR", new DialogInterface.OnClickListener() {
                     @Override
@@ -274,11 +317,8 @@ public class MainActivity extends AppCompatActivity
                             if(checkedRadioButtonId == R.id.json_format){
                                 ext = Extensao.JSON;
                             }
-
-                            //TODO implementar nome arquivo e determinar formato de saida para metodos seguinte
-
                             util.exportarDados(arquivo, ext, MainActivity.this);
-                            Toast.makeText(MainActivity.this, "Backup realizado com Sucesso! \n" + arquivo, Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "Dados exportados realizado com Sucesso! \n" + arquivo, Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -292,7 +332,7 @@ public class MainActivity extends AppCompatActivity
         if(resultCode == RESULT_OK){
             if(requestCode == LOAD_FILE){
                 Uri dataUri = data.getData();
-                new FilesUtil().importarDados(MainActivity.this, dataUri);
+                new FilesUtil().restaurarDados(MainActivity.this, dataUri);
                 Log.i("RESULT", "onActivityResult: " + dataUri);
             }
         }

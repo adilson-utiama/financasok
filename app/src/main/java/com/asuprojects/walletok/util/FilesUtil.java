@@ -11,6 +11,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.asuprojects.walletok.MainActivity;
 import com.asuprojects.walletok.database.TabelaDespesa;
 import com.asuprojects.walletok.database.TabelaReceita;
 import com.asuprojects.walletok.model.Despesa;
@@ -18,14 +19,17 @@ import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.model.enums.Extensao;
 import com.asuprojects.walletok.service.DBService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
@@ -35,18 +39,49 @@ public class FilesUtil {
 
     private DBService service;
 
-    public static final String JSON = ".json";
-    public static final String CSV = ".csv";
-
     private String separador = ",";
+    private String filename = "backup.bkp";
+    private String dir = "/Backup_app/";
 
-    public void importarDados(Context context, Uri dataUri){
+    public String realizarBackup(Context context) throws IOException {
+        service = new DBService(context);
+        List<Despesa> despesas = service.getDespesaDAO().getAll();
+        List<Receita> receitas = service.getReceitaDAO().listAll();
+        Map<String, List<?>> mapa = new HashMap<>();
+        mapa.put("Despesas", despesas);
+        mapa.put("Receitas", receitas);
+
+        File file = null;
+
+        if(isExternalStorageWritable()){
+            File diretorio = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS) + dir);
+            if(!diretorio.exists()){
+                diretorio.mkdirs();
+            }
+
+            file = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS) + dir, filename);
+            Log.i("FILE_SAVED", "realizarBackup: " + file.getAbsolutePath());
+
+            ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(file));
+            saida.writeObject(mapa);
+            saida.close();
+
+        } else {
+            throw new RuntimeException("Não foi possivel realizar o Backup");
+        }
+
+        return file.exists() ? file.getAbsolutePath() : "Caminho do arquivo desconhecido.";
+    }
+
+    public void restaurarDados(Context context, Uri dataUri){
 
         String uriRealPath = getUriRealPath(context, dataUri);
-        Log.i("REAL_PATH", "importarDados: " + uriRealPath);
+        Log.i("REAL_PATH", "restaurarDados: " + uriRealPath);
 
         String type = context.getContentResolver().getType(dataUri);
-        Log.i("REAL_PATH", "importarDados: " + type);
+        Log.i("REAL_PATH", "restaurarDados: " + type);
 
         //TODO Fazer a leitura do arquivo e gravar dados no banco
         try {
@@ -59,7 +94,7 @@ public class FilesUtil {
                 if(linha != null) {
 //                    String[] valores = linha.split(",");
 //                    for(int i = 0; i < valores.length; i++){
-                        Log.i("READER", "importarDados: " + linha);
+                        Log.i("READER", "restaurarDados: " + linha);
                         //TODO preencher objeto com os dados
 //                    }
                 }
@@ -116,8 +151,10 @@ public class FilesUtil {
                 FileOutputStream outputStream = new FileOutputStream(file);
                 PrintStream ps = new PrintStream(outputStream);
 
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 String dados = gson.toJson(mapa);
+
+                //TODO verificar dados
 
                 ps.println(dados);
 
@@ -128,7 +165,7 @@ public class FilesUtil {
 
 
         } else {
-            throw new RuntimeException("Falha ao realizar backup");
+            throw new RuntimeException("Falha ao exportar os dados");
         }
 
     }
@@ -425,4 +462,6 @@ public class FilesUtil {
 
         return ret;
     }
+
+
 }

@@ -5,12 +5,12 @@
 
         <item
             android:title="Backup"
-            android:id="menu_backup"
+            android:id="@+id/menu_backup"
             android:icon="@drawable/ic_backup"/>
 
         <item
             android:title="Restaturar"
-            android:id="@+id/menu_importar"
+            android:id="@+id/menu_restaurar"
             android:icon="@drawable/ic_restaurar_dados" />
 
         <item
