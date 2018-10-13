@@ -39,217 +39,8 @@ import java.util.Map;
 
 public class FilesUtil {
 
-    private DBService service;
-
-    private String separador = ",";
-    private String filename = "backup.bkp";
-    private String dir = "/Backup_app/";
-
-    public String realizarBackup(Context context) throws IOException {
-        service = new DBService(context);
-        List<Despesa> despesas = service.getDespesaDAO().getAll();
-        List<Receita> receitas = service.getReceitaDAO().listAll();
-        Map<String, List<?>> mapa = new HashMap<>();
-        mapa.put("Despesas", despesas);
-        mapa.put("Receitas", receitas);
-
-        File file = null;
-
-        if(isExternalStorageWritable()){
-            File diretorio = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS) + dir);
-            if(!diretorio.exists()){
-                diretorio.mkdirs();
-            }
-
-            file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS) + dir, filename);
-
-            ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(file));
-            saida.writeObject(mapa);
-            saida.close();
-
-        } else {
-            throw new RuntimeException("Não foi possivel realizar o Backup");
-        }
-
-        service.close();
-
-        return file.exists() ? file.getAbsolutePath() : "Caminho do arquivo desconhecido.";
-    }
-
-    public boolean restaurarDados(Context context, Uri dataUri){
-        service = new DBService(context);
-
-        String uriRealPath = getUriRealPath(context, dataUri);
-        Log.i("REAL_PATH", "restaurarDados: " + uriRealPath);
-
-        String type = context.getContentResolver().getType(dataUri);
-        Log.i("REAL_PATH", "restaurarDados: " + type);
-
-        //TODO Fazer a leitura do arquivo e gravar dados no banco
-        try {
-
-            InputStream inputStream = context.getContentResolver().openInputStream(dataUri);
-
-            ObjectInputStream entrada = new ObjectInputStream(inputStream);
-            Map<String, List<?>> dados = (Map<String, List<?>>) entrada.readObject();
-
-            List<Despesa> despesas = (List<Despesa>) dados.get("Despesas");
-            for(Despesa d : despesas){
-                long id = d.get_id();
-                Despesa despesa = service.getDespesaDAO().findOne(id);
-                if(despesa != null){
-                    if(d.get_id() != despesa.get_id() && !d.getData().equals(despesa.getData())){
-                        d.set_id(0);
-                        service.getDespesaDAO().insertOrUpdate(d);
-                        Log.i("PERSIST", "restaurarDados: despesa restaurada: " + d.toString());
-                    }
-                } else {
-                    service.getDespesaDAO().insertOrUpdate(d);
-                }
-
-            }
-
-            List<Receita> receitas = (List<Receita>) dados.get("Receitas");
-            for(Receita r : receitas){
-                long id = r.get_id();
-                Receita receita = service.getReceitaDAO().findOne(id);
-                if(receita != null){
-                    if(r.get_id() != receita.get_id() && !r.getData().equals(receita.getData())){
-                        r.set_id(0);
-                        service.getReceitaDAO().insertOrUpdate(r);
-                        Log.i("PERSIST", "restaurarDados: receita restaurada: " + r.toString());
-                    }
-                } else {
-                    service.getReceitaDAO().insertOrUpdate(r);
-                }
-            }
-
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        service.close();
-
-        return true;
-    }
-
-    public void exportarDados(String fileName, Extensao extensao, Context context) throws IOException {
-
-        service = new DBService(context);
-        List<Despesa> despesas = service.getDespesaDAO().getAll();
-        List<Receita> receitas = service.getReceitaDAO().listAll();
-
-        if(isExternalStorageWritable()){
-
-            if(extensao.equals(Extensao.CSV)){
-
-                fileName += extensao.getExtensao();
-
-                File file = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS), fileName);
-
-                FileOutputStream outputStream = new FileOutputStream(file);
-                PrintStream ps = new PrintStream(outputStream);
-
-                ps.println(colunasDespesa());
-                for (Despesa d : despesas){
-                    ps.println(despesaLinha(d));
-                }
-                ps.println(colunasReceita());
-                for (Receita r : receitas) {
-                    ps.println(receitaLinha(r));
-                }
-
-                outputStream.close();
-                ps.close();
-            }
-
-            if(extensao.equals(Extensao.JSON)){
-                Map<String, List<?>> mapa = new HashMap<>();
-                mapa.put("Despesas", despesas);
-                mapa.put("Receitas", receitas);
-
-                fileName += extensao.getExtensao();
-                File file = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS), fileName);
-                FileOutputStream outputStream = new FileOutputStream(file);
-                PrintStream ps = new PrintStream(outputStream);
-
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                String dados = gson.toJson(mapa);
-
-                //TODO verificar dados
-
-                ps.println(dados);
-
-                outputStream.close();
-                ps.close();
-
-            }
-
-
-        } else {
-            throw new RuntimeException("Falha ao exportar os dados");
-        }
-
-        service.close();
-    }
-
-
-    private String receitaLinha(Receita r) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(r.getDataFormatada()).append(separador)
-                .append(r.getCategoriaReceita()).append(separador)
-                .append(r.getDescricao()).append(separador)
-                .append(r.getValor().doubleValue());
-        return builder.toString();
-    }
-
-    private String colunasDespesa() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("DESPESAS").append(separador)
-                .append(TabelaDespesa.COLUNA_DATA).append(separador)
-                .append(TabelaDespesa.COLUNA_CATEGORIA).append(separador)
-                .append(TabelaDespesa.COLUNA_DESCRICAO).append(separador)
-                .append(TabelaDespesa.COLUNA_PAGAMENTO).append(separador)
-                .append(TabelaDespesa.COLUNA_VALOR);
-        return builder.toString();
-    }
-
-    private String colunasReceita() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("RECEITAS").append(separador)
-                .append(TabelaReceita.COLUNA_DATA).append(separador)
-                .append(TabelaReceita.COLUNA_CATEGORIA).append(separador)
-                .append(TabelaReceita.COLUNA_DESCRICAO).append(separador)
-                .append(TabelaReceita.COLUNA_VALOR);
-        return builder.toString();
-    }
-
-    private String despesaLinha(Despesa d){
-        StringBuilder builder = new StringBuilder();
-        builder.append(d.getDataFormatada()).append(separador)
-                .append(d.getCategoriaDespesa()).append(separador)
-                .append(d.getDescricao()).append(separador)
-                .append(d.getPagamento()).append(separador)
-                .append(d.getValor().doubleValue());
-        return builder.toString();
-    }
-
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
     /* Get uri related content real local file path. */
-    private String getUriRealPath(Context ctx, Uri uri)
+    public static String getUriRealPath(Context ctx, Uri uri)
     {
         String ret = "";
 
@@ -266,7 +57,7 @@ public class FilesUtil {
         return ret;
     }
 
-    private String getUriRealPathAboveKitkat(Context ctx, Uri uri)
+    private static String getUriRealPathAboveKitkat(Context ctx, Uri uri)
     {
         String ret = "";
 
@@ -351,7 +142,7 @@ public class FilesUtil {
     }
 
     /* Check whether current android os version is bigger than kitkat or not. */
-    private boolean isAboveKitKat()
+    private static boolean isAboveKitKat()
     {
         boolean ret = false;
         ret = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
@@ -359,7 +150,7 @@ public class FilesUtil {
     }
 
     /* Check whether this uri represent a document or not. */
-    private boolean isDocumentUri(Context ctx, Uri uri)
+    private static boolean isDocumentUri(Context ctx, Uri uri)
     {
         boolean ret = false;
         if(ctx != null && uri != null) {
@@ -371,7 +162,7 @@ public class FilesUtil {
     /* Check whether this uri is a content uri or not.
      *  content uri like content://media/external/images/media/1302716
      *  */
-    private boolean isContentUri(Uri uri)
+    private static boolean isContentUri(Uri uri)
     {
         boolean ret = false;
         if(uri != null) {
@@ -387,7 +178,7 @@ public class FilesUtil {
     /* Check whether this uri is a file uri or not.
      *  file uri like file:///storage/41B7-12F1/DCIM/Camera/IMG_20180211_095139.jpg
      * */
-    private boolean isFileUri(Uri uri)
+    private static boolean isFileUri(Uri uri)
     {
         boolean ret = false;
         if(uri != null) {
@@ -402,7 +193,7 @@ public class FilesUtil {
 
 
     /* Check whether this document is provided by ExternalStorageProvider. */
-    private boolean isExternalStoreDoc(String uriAuthority)
+    private static boolean isExternalStoreDoc(String uriAuthority)
     {
         boolean ret = false;
 
@@ -415,7 +206,7 @@ public class FilesUtil {
     }
 
     /* Check whether this document is provided by DownloadsProvider. */
-    private boolean isDownloadDoc(String uriAuthority)
+    private static boolean isDownloadDoc(String uriAuthority)
     {
         boolean ret = false;
 
@@ -428,7 +219,7 @@ public class FilesUtil {
     }
 
     /* Check whether this document is provided by MediaProvider. */
-    private boolean isMediaDoc(String uriAuthority)
+    private static boolean isMediaDoc(String uriAuthority)
     {
         boolean ret = false;
 
@@ -441,7 +232,7 @@ public class FilesUtil {
     }
 
     /* Check whether this document is provided by google photos. */
-    private boolean isGooglePhotoDoc(String uriAuthority)
+    private static boolean isGooglePhotoDoc(String uriAuthority)
     {
         boolean ret = false;
 
@@ -454,7 +245,7 @@ public class FilesUtil {
     }
 
     /* Return uri represented document file real local path.*/
-    private String getImageRealPath(ContentResolver contentResolver, Uri uri, String whereClause)
+    private static String getImageRealPath(ContentResolver contentResolver, Uri uri, String whereClause)
     {
         String ret = "";
 

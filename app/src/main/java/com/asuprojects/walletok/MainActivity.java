@@ -35,6 +35,7 @@ import com.asuprojects.walletok.fragments.DespesasFragment;
 import com.asuprojects.walletok.fragments.ReceitasFragment;
 import com.asuprojects.walletok.fragments.ResumoFragment;
 import com.asuprojects.walletok.model.enums.Extensao;
+import com.asuprojects.walletok.service.FileService;
 import com.asuprojects.walletok.ui.ConfiguracoesActivity;
 import com.asuprojects.walletok.ui.DespesaActivity;
 import com.asuprojects.walletok.ui.ReceitaActivity;
@@ -240,7 +241,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            caminhoArquivo = new FilesUtil().realizarBackup(MainActivity.this);
+                            caminhoArquivo = new FileService().realizarBackup(MainActivity.this);
                         } catch (IOException e) {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, "Erro ao realizar o Backup", Toast.LENGTH_LONG).show();
@@ -306,7 +307,7 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton("EXPORTAR", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        FilesUtil util = new FilesUtil();
+                        FileService util = new FileService();
                         Extensao ext = null;
                         try {
 
@@ -333,7 +334,7 @@ public class MainActivity extends AppCompatActivity
         if(resultCode == RESULT_OK){
             if(requestCode == LOAD_FILE){
                 Uri dataUri = data.getData();
-                boolean result = new FilesUtil().restaurarDados(MainActivity.this, dataUri);
+                boolean result = new FileService().restaurarDados(MainActivity.this, dataUri);
                 if(result){
                     Toast.makeText(this, "Dados restaurados com Sucesso!", Toast.LENGTH_SHORT).show();
                 }

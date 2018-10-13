@@ -51,4 +51,6 @@
     <string name="desativa_tela_abertura">desativar_tela_abertura</string>
     <string name="desativa_tela_abertura_title">Desativar Tela de Abertura</string>
     <string name="protecao_por_senha">protecao_por_senha</string>
+    <string name="backup_path">backup_path</string>
+    <string name="export_file_path">export_file_path</string>
 </resources>
