@@ -27,7 +27,7 @@ public class DespesaDAO {
     private BancoSQLite3 banco;
 
     public DespesaDAO(Context context) {
-        this.banco = new BancoSQLite3(context);
+        this.banco = BancoSQLite3.getInstance(context);
     }
 
     public List<Despesa> getAllDespesasFrom(String mes){

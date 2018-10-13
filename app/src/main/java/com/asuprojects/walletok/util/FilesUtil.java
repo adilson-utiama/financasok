@@ -73,6 +73,8 @@ public class FilesUtil {
             throw new RuntimeException("Não foi possivel realizar o Backup");
         }
 
+        service.close();
+
         return file.exists() ? file.getAbsolutePath() : "Caminho do arquivo desconhecido.";
     }
 
@@ -129,6 +131,8 @@ public class FilesUtil {
             e.printStackTrace();
             return false;
         }
+
+        service.close();
 
         return true;
     }
@@ -192,6 +196,7 @@ public class FilesUtil {
             throw new RuntimeException("Falha ao exportar os dados");
         }
 
+        service.close();
     }
 
 

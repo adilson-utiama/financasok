@@ -25,7 +25,7 @@ public class ReceitaDAO {
     private BancoSQLite3 banco;
 
     public ReceitaDAO(Context context){
-        this.banco = new BancoSQLite3(context);
+        this.banco = BancoSQLite3.getInstance(context);
     }
 
     public List<Receita> getAllReceitasFrom(String mes){

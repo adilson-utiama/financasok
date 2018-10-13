@@ -26,4 +26,9 @@ public class DBService {
     public ReceitaDAO getReceitaDAO() {
         return receitaDAO;
     }
+
+    public void close(){
+        despesaDAO.close();
+        receitaDAO.close();
+    }
 }

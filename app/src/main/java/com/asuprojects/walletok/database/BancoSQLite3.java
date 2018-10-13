@@ -6,11 +6,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class BancoSQLite3 extends SQLiteOpenHelper {
 
+    private static BancoSQLite3 instancia;
+
     private static final int VERSAO = 1;
     private static final String NOME_BANCO = "financas";
 
-    public BancoSQLite3(Context context) {
+    private BancoSQLite3(Context context) {
         super(context, NOME_BANCO, null, VERSAO);
+    }
+
+    public static synchronized BancoSQLite3 getInstance(Context context){
+        if(instancia == null){
+            instancia = new BancoSQLite3(context);
+        }
+        return instancia;
     }
 
     @Override

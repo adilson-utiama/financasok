@@ -69,7 +69,6 @@ public class ReceitasFragment extends Fragment
         return view;
     }
 
-
     private void trocaFragment(List<Receita> lista){
         FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
         if(lista.isEmpty()){

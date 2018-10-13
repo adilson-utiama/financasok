@@ -15,7 +15,7 @@ public class UsuarioDAO {
     private BancoSQLite3 banco;
 
     public UsuarioDAO(Context context) {
-        this.banco = new BancoSQLite3(context);
+        this.banco = BancoSQLite3.getInstance(context);
     }
 
     public long insert(Usuario usuario){
