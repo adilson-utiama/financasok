@@ -29,8 +29,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +64,6 @@ public class FilesUtil {
 
             file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS) + dir, filename);
-            Log.i("FILE_SAVED", "realizarBackup: " + file.getAbsolutePath());
 
             ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(file));
             saida.writeObject(mapa);
@@ -75,7 +76,8 @@ public class FilesUtil {
         return file.exists() ? file.getAbsolutePath() : "Caminho do arquivo desconhecido.";
     }
 
-    public void restaurarDados(Context context, Uri dataUri){
+    public boolean restaurarDados(Context context, Uri dataUri){
+        service = new DBService(context);
 
         String uriRealPath = getUriRealPath(context, dataUri);
         Log.i("REAL_PATH", "restaurarDados: " + uriRealPath);
@@ -87,26 +89,48 @@ public class FilesUtil {
         try {
 
             InputStream inputStream = context.getContentResolver().openInputStream(dataUri);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String linha = reader.readLine();
-            while(linha != null) {
-                linha = reader.readLine();
-                if(linha != null) {
-//                    String[] valores = linha.split(",");
-//                    for(int i = 0; i < valores.length; i++){
-                        Log.i("READER", "restaurarDados: " + linha);
-                        //TODO preencher objeto com os dados
-//                    }
+
+            ObjectInputStream entrada = new ObjectInputStream(inputStream);
+            Map<String, List<?>> dados = (Map<String, List<?>>) entrada.readObject();
+
+            List<Despesa> despesas = (List<Despesa>) dados.get("Despesas");
+            for(Despesa d : despesas){
+                long id = d.get_id();
+                Despesa despesa = service.getDespesaDAO().findOne(id);
+                if(despesa != null){
+                    if(d.get_id() != despesa.get_id() && !d.getData().equals(despesa.getData())){
+                        d.set_id(0);
+                        service.getDespesaDAO().insertOrUpdate(d);
+                        Log.i("PERSIST", "restaurarDados: despesa restaurada: " + d.toString());
+                    }
+                } else {
+                    service.getDespesaDAO().insertOrUpdate(d);
                 }
 
             }
 
-            reader.close();
+            List<Receita> receitas = (List<Receita>) dados.get("Receitas");
+            for(Receita r : receitas){
+                long id = r.get_id();
+                Receita receita = service.getReceitaDAO().findOne(id);
+                if(receita != null){
+                    if(r.get_id() != receita.get_id() && !r.getData().equals(receita.getData())){
+                        r.set_id(0);
+                        service.getReceitaDAO().insertOrUpdate(r);
+                        Log.i("PERSIST", "restaurarDados: receita restaurada: " + r.toString());
+                    }
+                } else {
+                    service.getReceitaDAO().insertOrUpdate(r);
+                }
+            }
 
-        } catch (IOException e) {
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
 
+        return true;
     }
 
     public void exportarDados(String fileName, Extensao extensao, Context context) throws IOException {

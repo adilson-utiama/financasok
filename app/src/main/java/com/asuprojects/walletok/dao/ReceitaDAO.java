@@ -91,12 +91,20 @@ public class ReceitaDAO {
     public long insertOrUpdate(Receita receita) {
         SQLiteDatabase db = banco.getWritableDatabase();
         ContentValues values = despesaParaContentValues(receita);
-        if (receita.get_id() != 0) {
+        if (receita.get_id() != 0 && idExistsInDatabase(receita.get_id())) {
             return update(receita);
         } else {
             return db.insertOrThrow(TabelaReceita.NOME_TABELA, null, values);
         }
 
+    }
+
+    private boolean idExistsInDatabase(long id) {
+        Receita receita = findOne(id);
+        if(receita != null){
+            return true;
+        }
+        return false;
     }
 
     public long update(Receita receita) {
@@ -148,7 +156,7 @@ public class ReceitaDAO {
                 null);
 
         Receita receita = null;
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             receita = receitaFrom(cursor);
         } else {

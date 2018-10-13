@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity
 
     private static final int LOAD_FILE = 200;
     private static final int WRITE_FILE = 100;
-    private static final int SAVE_FILE = 300;
     private ViewPager viewPager;
-    private TabLayout tabLayout;
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+
+    private TabAdapter abasAdapter;
 
     private Toolbar toolbar;
 
@@ -85,15 +85,16 @@ public class MainActivity extends AppCompatActivity
         ReceitasFragment receitasFragment = new ReceitasFragment();
         ResumoFragment resumoFragment = new ResumoFragment();
 
-        TabAdapter abasAdapter = new TabAdapter(getSupportFragmentManager());
+        abasAdapter = new TabAdapter(getSupportFragmentManager());
         abasAdapter.adicionar(despesasFragment, "Despesas");
         abasAdapter.adicionar(receitasFragment, "Receitas");
         abasAdapter.adicionar(resumoFragment, "Resumo");
 
+
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(abasAdapter);
 
-        tabLayout = findViewById(R.id.tabLayout);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
         FloatingActionMenu fabMenu =  findViewById(R.id.fab_menu);
@@ -263,7 +264,7 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.setType("*/*");
+                        intent.setType("application/octet-stream");
 
                         if(intent.resolveActivity(getPackageManager()) != null){
                             startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo"), LOAD_FILE);
@@ -332,8 +333,10 @@ public class MainActivity extends AppCompatActivity
         if(resultCode == RESULT_OK){
             if(requestCode == LOAD_FILE){
                 Uri dataUri = data.getData();
-                new FilesUtil().restaurarDados(MainActivity.this, dataUri);
-                Log.i("RESULT", "onActivityResult: " + dataUri);
+                boolean result = new FilesUtil().restaurarDados(MainActivity.this, dataUri);
+                if(result){
+                    Toast.makeText(this, "Dados restaurados com Sucesso!", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

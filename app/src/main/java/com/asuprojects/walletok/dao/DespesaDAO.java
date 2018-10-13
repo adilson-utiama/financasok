@@ -80,8 +80,8 @@ public class DespesaDAO {
                 null,
                 null);
 
-        Despesa despesa = null;
-        if (cursor != null) {
+        Despesa despesa;
+        if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             despesa = despesaFrom(cursor);
         } else {
@@ -96,12 +96,21 @@ public class DespesaDAO {
     public long insertOrUpdate(Despesa despesa) {
         SQLiteDatabase db = banco.getWritableDatabase();
         ContentValues values = despesaParaContentValues(despesa);
-        if (despesa.get_id() != 0) {
+        if (despesa.get_id() != 0 && idExistsInDatabase(despesa.get_id())) {
+            Log.i("DB", "insertOrUpdate: verificando id: " + despesa.get_id() );
             return update(despesa);
         } else {
             return db.insertOrThrow(TabelaDespesa.NOME_TABELA, null, values);
         }
 
+    }
+
+    private boolean idExistsInDatabase(long id) {
+        Despesa despesa = findOne(id);
+        if(despesa != null){
+            return true;
+        }
+        return false;
     }
 
 
