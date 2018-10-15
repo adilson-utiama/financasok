@@ -47,10 +47,9 @@ import java.util.Map;
 public class ResumoFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
 
+    public static final String MES_SELECAO = "MES";
     private TextView valorTotal;
     private TextView valorDisponivel;
-
-    private AppCompatSpinner spinnerMes;
 
     private String mesSelecao;
 
@@ -71,8 +70,8 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         View view = inflater.inflate(R.layout.fragment_resumo, container, false);
 
         if(savedInstanceState != null) {
-            if(savedInstanceState.getSerializable("MES") != null){
-                mesSelecao = (String) savedInstanceState.getSerializable("MES");
+            if(savedInstanceState.getSerializable(MES_SELECAO) != null){
+                mesSelecao = (String) savedInstanceState.getSerializable(MES_SELECAO);
             }
         }
 
@@ -82,7 +81,7 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         valorTotal = view.findViewById(R.id.valor_total);
         valorDisponivel = view.findViewById(R.id.valor_disponivel);
 
-        spinnerMes = view.findViewById(R.id.spinner_resumoMes);
+        AppCompatSpinner spinnerMes = view.findViewById(R.id.spinner_resumoMes);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.meses, R.layout.spinner_item);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
@@ -98,7 +97,6 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
 
         calculaValorTotal();
 
-        Log.i("LISTA", "onCreateView: " + despesasDoMes);
         if(despesasDoMes != null){
             trocaFragment(despesasDoMes);
         }
@@ -108,7 +106,7 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable("MES", mesSelecao);
+        outState.putSerializable(MES_SELECAO, mesSelecao);
         super.onSaveInstanceState(outState);
     }
 
@@ -130,11 +128,12 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
 
     private void calculaValorTotal() {
         BigDecimal totalDespesas = totalFromDespesas(despesasDoMes);
-        Log.i("CALCULO", "calculaValorTotal: " + totalDespesas.doubleValue());
+        String totalFormatado = getString(R.string.despesa_total_label).concat(" ")
+                .concat(BigDecimalConverter.toStringFormatado(totalDespesas));;
         if(!totalDespesas.equals(BigDecimal.ZERO)){
-            valorTotal.setText("Despesa Total: " + BigDecimalConverter.toStringFormatado(totalDespesas));
+            valorTotal.setText(totalFormatado);
         } else {
-            valorTotal.setText("Despesa Total: " + "R$ 0,00");
+            valorTotal.setText(R.string.despesa_total_zero);
         }
         BigDecimal totalDisponivel = totalFromReceitas(receitasDoMes);
         totalDisponivel = totalDisponivel.subtract(totalDespesas);
@@ -143,7 +142,9 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         }else{
             valorDisponivel.setTextColor(Color.WHITE);
         }
-        valorDisponivel.setText("Disponivel: " + BigDecimalConverter.toStringFormatado(totalDisponivel));
+        String disponivel = getString(R.string.valor_disponivel_label).concat(" ")
+                .concat(BigDecimalConverter.toStringFormatado(totalDisponivel));
+        valorDisponivel.setText(disponivel);
 
     }
 

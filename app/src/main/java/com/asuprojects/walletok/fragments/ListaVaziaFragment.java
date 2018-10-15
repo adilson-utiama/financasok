@@ -14,40 +14,36 @@ import com.asuprojects.walletok.model.Tipo;
 
 public class ListaVaziaFragment extends Fragment {
 
-    private ImageView imageView;
-    private TextView texto;
-
     private Tipo tipo = Tipo.NENHUM;
 
     public ListaVaziaFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lista_vazia, container, false);
 
-        imageView = view.findViewById(R.id.iconListaVazia);
-        texto = view.findViewById(R.id.textview_listaVazia);
+        ImageView imageView = view.findViewById(R.id.iconListaVazia);
+        TextView texto = view.findViewById(R.id.textview_listaVazia);
 
         switch(tipo.getCodigo()){
             case 1:
                 imageView.setImageResource(R.drawable.ic_unhappy);
-                texto.setText("Nenhuma Receita");
+                texto.setText(R.string.lista_vazia_titulo_receita);
                 break;
             case 2:
                 imageView.setImageResource(R.drawable.ic_happy);
-                texto.setText("Nenhuma Despesa");
+                texto.setText(R.string.lista_vazia_titulo_despesa);
                 break;
             case 3:
                 imageView.setImageResource(R.drawable.ic_sem_registro);
-                texto.setText("Sem registro de dados");
+                texto.setText(R.string.lista_vazia_titulo_sem_registro);
                 break;
             default:
                 imageView.setImageResource(R.drawable.ic_sem_registro);
-                texto.setText("Vazio");
+                texto.setText(R.string.lista_vazia_titulo_vazio);
                 break;
         }
 

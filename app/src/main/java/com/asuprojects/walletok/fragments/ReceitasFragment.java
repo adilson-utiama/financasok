@@ -27,18 +27,12 @@ public class ReceitasFragment extends Fragment
         implements AdapterView.OnItemSelectedListener {
 
     private TextView valorTotalReceita;
-
-    private AppCompatSpinner spinnerMes;
-
     private List<Receita> receitas;
-
     private ReceitaDAO dao;
-
 
     public ReceitasFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +48,7 @@ public class ReceitasFragment extends Fragment
         valorTotalReceita = view.findViewById(R.id.textview_total_receita);
         valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
 
-        spinnerMes = view.findViewById(R.id.spinner_mes);
+        AppCompatSpinner spinnerMes = view.findViewById(R.id.spinner_mes);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.meses, R.layout.spinner_item);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);

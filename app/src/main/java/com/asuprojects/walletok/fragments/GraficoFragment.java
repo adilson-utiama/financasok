@@ -39,6 +39,7 @@ import java.util.Map;
 public class GraficoFragment extends Fragment
         implements OnChartValueSelectedListener {
 
+    public static final String MES_SELECAO = "MES";
     private TextView despesaCategoriaSelecao;
     private PieChart chart;
     private List<Despesa> despesasDoMes;
@@ -61,7 +62,7 @@ public class GraficoFragment extends Fragment
         dao = new DespesaDAO(getContext());
 
         if(savedInstanceState != null){
-            mesSelecao = (String) savedInstanceState.getSerializable("MES");
+            mesSelecao = (String) savedInstanceState.getSerializable(MES_SELECAO);
         }
 
         despesaCategoriaSelecao = view.findViewById(R.id.despesaCategoriaSelecao);
@@ -76,7 +77,7 @@ public class GraficoFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable("MES", mesSelecao);
+        outState.putSerializable(MES_SELECAO, mesSelecao);
         super.onSaveInstanceState(outState);
     }
 
@@ -93,7 +94,7 @@ public class GraficoFragment extends Fragment
     }
 
     private void configuraSetaValoresGrafico(List<PieEntry> entries) {
-        PieDataSet dataSet = new PieDataSet(entries, "Despesas");
+        PieDataSet dataSet = new PieDataSet(entries, getString(R.string.grafico_label_titulo));
         dataSet.setColors(gerarCores());
 
         PieData data = new PieData(dataSet);
@@ -112,7 +113,7 @@ public class GraficoFragment extends Fragment
         l.setEnabled(false);
 
         Description description = chart.getDescription();
-        description.setText("Despesas");
+        description.setText(getString(R.string.grafico_label_titulo));
         description.setEnabled(false);
     }
 

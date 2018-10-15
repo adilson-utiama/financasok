@@ -35,8 +35,6 @@ public class ReceitaDAO {
         String query = "SELECT * FROM " + TabelaReceita.NOME_TABELA
                 + " WHERE strftime('%m', data) = ?";
 
-        Log.i("QUERY", "getAllTarefasFrom: " + query);
-
         Cursor cursor = db.rawQuery(query, new String[]{ mes });
         cursor.moveToFirst();
         for (int i = 0; i < cursor.getCount(); i++) {
@@ -44,7 +42,6 @@ public class ReceitaDAO {
             receitas.add(receita);
             cursor.moveToNext();
         }
-
         return receitas;
     }
 

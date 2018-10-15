@@ -37,8 +37,6 @@ public class DespesaDAO {
         String query = "SELECT * FROM " + TabelaDespesa.NOME_TABELA
                 + " WHERE strftime('%m', data) = ?";
 
-        Log.i("QUERY", "getAllTarefasFrom: " + query);
-
         Cursor cursor = db.rawQuery(query, new String[]{ mes });
         cursor.moveToFirst();
         for (int i = 0; i < cursor.getCount(); i++) {
@@ -97,7 +95,6 @@ public class DespesaDAO {
         SQLiteDatabase db = banco.getWritableDatabase();
         ContentValues values = despesaParaContentValues(despesa);
         if (despesa.get_id() != 0 && idExistsInDatabase(despesa.get_id())) {
-            Log.i("DB", "insertOrUpdate: verificando id: " + despesa.get_id() );
             return update(despesa);
         } else {
             return db.insertOrThrow(TabelaDespesa.NOME_TABELA, null, values);

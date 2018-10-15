@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ListaReceitaFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    public static final String EDITAR_RECEITA = "EDITAR_RECEITA";
     private ReceitaAdapter adapter;
 
     private List<Receita> receitas;
@@ -44,7 +44,7 @@ public class ListaReceitaFragment extends Fragment {
 
         dao = new ReceitaDAO(getContext());
 
-        recyclerView = view.findViewById(R.id.recyclerView_receita);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_receita);
 
         adapter = new ReceitaAdapter(receitas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -59,7 +59,7 @@ public class ListaReceitaFragment extends Fragment {
                         Receita receita  = receitas.get(position);
                         Receita receitaEditar = dao.findOne(receita.get_id());
                         Intent intent = new Intent(view.getContext(), ReceitaActivity.class);
-                        intent.putExtra("EDITAR_RECEITA", receitaEditar);
+                        intent.putExtra(EDITAR_RECEITA, receitaEditar);
                         startActivity(intent);
                     }
 
@@ -91,18 +91,17 @@ public class ListaReceitaFragment extends Fragment {
 
     private void mostrarDialogDeRemocao(final Receita receita, final int posicao){
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext(), R.style.DialogCustom);
-        dialog.setTitle("Remoção de Receita");
-        dialog.setMessage("APAGAR " + receita.getDescricao() + " ?");
-        dialog.setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+        dialog.setTitle(R.string.dialog_titulo_apagar_receita);
+        dialog.setMessage(getString(R.string.dialog_msg_apagar) + " '" + receita.getDescricao() + "' ?");
+        dialog.setPositiveButton(getString(R.string.opcao_sim), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dao.delete(receita.get_id());
                 receitas.remove(posicao);
                 adapter.notifyItemRemoved(posicao);
-                //calculaValorTotal();
             }
         });
-        dialog.setNegativeButton("NÂO", null);
+        dialog.setNegativeButton(getString(R.string.opcao_nao), null);
         dialog.show();
     }
 }

@@ -62,7 +62,7 @@ public class DespesasFragment extends Fragment
         Calendar instance = Calendar.getInstance();
         spinnerMes.setSelection(instance.get(Calendar.MONTH));
 
-        trocaFragment(despesas);
+        trocaFragment();
 
         return view;
     }
@@ -72,7 +72,7 @@ public class DespesasFragment extends Fragment
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         despesas = daoDespesa.getAllDespesasFrom(StringUtils.mesParaString(position + 1));
         totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
-        trocaFragment(despesas);
+        trocaFragment();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class DespesasFragment extends Fragment
 
     }
 
-    private void trocaFragment(List<Despesa> listaDespesa){
+    private void trocaFragment(){
         FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
         if(despesas.isEmpty()){
             ListaVaziaFragment listaVaziaFragment = new ListaVaziaFragment();

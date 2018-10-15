@@ -24,6 +24,7 @@ import java.util.List;
 
 public class ListaDespesaFragment extends Fragment {
 
+    public static final String EDITAR_DESPESA = "EDITAR_DESPESA";
     private RecyclerView recyclerView;
     private DespesaAdapter adapter;
 
@@ -56,7 +57,7 @@ public class ListaDespesaFragment extends Fragment {
                         Despesa despesa = despesas.get(position);
                         Despesa despesaEditar = daoDespesa.findOne(despesa.get_id());
                         Intent intent = new Intent(view.getContext(), DespesaActivity.class);
-                        intent.putExtra("EDITAR_DESPESA", despesaEditar);
+                        intent.putExtra(EDITAR_DESPESA, despesaEditar);
                         startActivity(intent);
                     }
 
@@ -87,9 +88,9 @@ public class ListaDespesaFragment extends Fragment {
 
     private void mostrarDialogDeRemocao(final Despesa despesa, final int posicao){
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext(), R.style.DialogCustom);
-        dialog.setTitle("Remoção de Despesa");
-        dialog.setMessage("APAGAR " + despesa.getDescricao() + " ?");
-        dialog.setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+        dialog.setTitle(R.string.dialog_titulo_deletar_tarefa);
+        dialog.setMessage(getString(R.string.dialog_msg_apagar) + " '" + despesa.getDescricao() + "' ?");
+        dialog.setPositiveButton(R.string.opcao_sim, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 daoDespesa.delete(despesa.get_id());
@@ -97,7 +98,7 @@ public class ListaDespesaFragment extends Fragment {
                 adapter.notifyItemRemoved(posicao);
             }
         });
-        dialog.setNegativeButton("NÂO", null);
+        dialog.setNegativeButton(R.string.opcao_nao, null);
         dialog.show();
     }
 
