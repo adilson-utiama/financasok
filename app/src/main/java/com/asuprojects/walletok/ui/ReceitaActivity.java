@@ -98,10 +98,8 @@ public class ReceitaActivity extends AppCompatActivity {
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategorias);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerReceita.setAdapter(adapter);
-
-
 
         btnSalvar = findViewById(R.id.btn_salvar_receita);
         btnSalvar.setOnClickListener(new View.OnClickListener() {

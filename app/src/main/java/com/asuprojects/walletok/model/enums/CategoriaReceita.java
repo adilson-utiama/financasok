@@ -5,7 +5,8 @@ public enum CategoriaReceita {
     SALARIO("Salario"),
     PRESENTE("Presente"),
     PREMIO("Premio"),
-    OUTROS("Outros");
+    OUTROS("Outros"),
+    INDEFINIDO("Indefinido");
 
     private String descricao;
 
@@ -23,6 +24,6 @@ public enum CategoriaReceita {
                 return c;
             }
         }
-        throw new RuntimeException("Objeto nao encontrado");
+        return INDEFINIDO;
     }
 }
