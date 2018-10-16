@@ -420,7 +420,7 @@ public class MainActivity extends AppCompatActivity
                 Uri dataUri = data.getData();
                 boolean result = new FileService().restaurarDados(MainActivity.this, dataUri);
                 if(result){
-                    Toast.makeText(this, getString(R.string.msg_sucesso_exportar), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.msg_sucesso_restaurar), Toast.LENGTH_SHORT).show();
                 }
             }
         }

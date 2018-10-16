@@ -5,7 +5,7 @@ public enum CategoriaReceita {
     SALARIO("Salario"),
     PRESENTE("Presente"),
     PREMIO("Premio"),
-    OUTROS("Sem CategoriaDespesa");
+    OUTROS("Outros");
 
     private String descricao;
 

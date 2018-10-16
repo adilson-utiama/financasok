@@ -89,4 +89,5 @@
     <string name="dialog_titulo_exportar">Exportar dados</string>
     <string name="opcao_exportar">EXPORTAR</string>
     <string name="msg_sucesso_exportar">Dados exportados com Sucesso!</string>
+    <string name="msg_sucesso_restaurar">Dados restaurados com Sucesso!</string>
 </resources>

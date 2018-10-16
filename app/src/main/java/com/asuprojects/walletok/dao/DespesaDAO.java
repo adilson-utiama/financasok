@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.asuprojects.walletok.model.enums.CategoriaDespesa;
 import com.asuprojects.walletok.model.enums.Pagamento;
@@ -14,7 +13,6 @@ import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.asuprojects.walletok.util.CalendarConverter;
 import com.asuprojects.walletok.database.BancoSQLite3;
 import com.asuprojects.walletok.database.TabelaDespesa;
-import com.asuprojects.walletok.helper.CategoriaUtil;
 import com.asuprojects.walletok.model.Despesa;
 
 import java.math.BigDecimal;
@@ -165,7 +163,7 @@ public class DespesaDAO {
         despesa.setDescricao(descricao);
 
         String categoriaString = cursor.getString(cursor.getColumnIndexOrThrow(TabelaDespesa.COLUNA_CATEGORIA));
-        CategoriaDespesa categoria = CategoriaUtil.getCategoriaFrom(categoriaString);
+        CategoriaDespesa categoria = CategoriaDespesa.toEnum(categoriaString);
         despesa.setCategoriaDespesa(categoria);
 
         String dataString = cursor.getString(cursor.getColumnIndexOrThrow(TabelaDespesa.COLUNA_DATA));

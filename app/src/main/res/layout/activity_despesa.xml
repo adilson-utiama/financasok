@@ -60,13 +60,13 @@
                 android:layout_height="41dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="16dp"
-                android:focusable="true"
-                android:theme="@style/SpinnerCustom"
+                android:spinnerMode="dropdown"
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="@+id/textInputLayoutDescricaoReceita"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDescricaoReceita"
-                app:layout_constraintVertical_bias="0.23000002" />
+                app:layout_constraintVertical_bias="0.19" />
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/campo_data_receita"

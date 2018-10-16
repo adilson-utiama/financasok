@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
@@ -26,7 +25,6 @@ import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
 import com.asuprojects.walletok.MainActivity;
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.DespesaDAO;
-import com.asuprojects.walletok.helper.CategoriaUtil;
 import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.enums.CategoriaDespesa;
@@ -39,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class DespesaActivity extends AppCompatActivity {
+public class DespesaActivity extends AppCompatActivity{
 
     private TextInputEditText descricao;
     private EditText valor;
@@ -117,7 +115,7 @@ public class DespesaActivity extends AppCompatActivity {
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategorias);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
         btnSalvar.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +138,7 @@ public class DespesaActivity extends AppCompatActivity {
 
                     despesa.setData(dt);
                     int position = spinner.getSelectedItemPosition();
-                    despesa.setCategoriaDespesa(CategoriaUtil.getCategoriaFrom(listaCategorias.get(position)));
+                    despesa.setCategoriaDespesa(CategoriaDespesa.toEnum(listaCategorias.get(position)));
                     despesa.setValor(BigDecimal.valueOf(valorDecimal));
                     despesa.setPagamento(pagamento);
 

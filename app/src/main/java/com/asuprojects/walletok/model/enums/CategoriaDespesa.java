@@ -2,16 +2,15 @@ package com.asuprojects.walletok.model.enums;
 
 public enum CategoriaDespesa {
 
-    SUPERMERCADO("Supermercado"),
-    LANCHES("Lanches"),
+    ALIMENTACAO("Alimentação"),
+    COMPRAS("Compras"),
     CONTAS("Contas"),
-    REMEDIOS("Remedios"),
-    SEGURANCA("Segurança"),
-    TRANSPORTE("Transporte"),
-    CURSOS("Cursos"),
-    UTILITARIOS("Utilitarios"),
-    ELETRONICOS("Eletronicos"),
-    SEM_CATEGORIA("Outros");
+    EDUCACAO("Educação"),
+    LAZER("Lazer"),
+    SAUDE("Saúde"),
+    TRANSPORTE("Trasnporte"),
+    OUTROS("Outros"),
+    INDEFINIDO("Indefinido");
 
     private String descricao;
 
@@ -21,5 +20,14 @@ public enum CategoriaDespesa {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public static CategoriaDespesa toEnum(String value){
+        for(CategoriaDespesa c : CategoriaDespesa.values()){
+            if(c.getDescricao().equals(value)){
+                return c;
+            }
+        }
+        return INDEFINIDO;
     }
 }
