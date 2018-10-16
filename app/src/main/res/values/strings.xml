@@ -66,4 +66,27 @@
     <string name="despesa_total_zero">Despesa Total: R$ 0,00</string>
     <string name="despesa_total_label">Despesa Total:</string>
     <string name="valor_disponivel_label">Disponivel:</string>
+    <string name="hint_digite_a_resposta">Digite a Resposta</string>
+    <string name="dev_email">adilson@gmail.com</string>
+    <string name="company_name">ASU Projects</string>
+    <string name="selecao_formato_arquivo">Selecione formato do arquivo</string>
+    <string name="digite_nome_do_arquivo">Digite nome do arquivo</string>
+    <string name="csv_format">.CSV</string>
+    <string name="json_format">.JSON</string>
+    <string name="aba_titulo_despesas">Despesas</string>
+    <string name="aba_titulo_receitas">Receitas</string>
+    <string name="aba_titulo_resumo">Resumo</string>
+    <string name="msg_sair_do_app">Deseja sair/deslogar do App?</string>
+    <string name="dialog_titulo_backup">Backup</string>
+    <string name="dialog_msg_backup">Este procedimento ira realizar backup dos dados. Continuar?</string>
+    <string name="opcao_prosseguir">Prosseguir</string>
+    <string name="msg_erro_backup">Erro ao realizar o Backup</string>
+    <string name="msg_sucesso_backup">Backup Realizado com Sucesso! Salvo em:</string>
+    <string name="opcao_cancelar">Cancelar</string>
+    <string name="dialog_titulo_restaurar">Restaurar Dados</string>
+    <string name="dialog_msg_restaurar">Este procedimento ira restaurar dados a partir do backup  Continuar?</string>
+    <string name="intent_chooser_sel_file">Selecione o Arquivo</string>
+    <string name="dialog_titulo_exportar">Exportar dados</string>
+    <string name="opcao_exportar">EXPORTAR</string>
+    <string name="msg_sucesso_exportar">Dados exportados com Sucesso!</string>
 </resources>

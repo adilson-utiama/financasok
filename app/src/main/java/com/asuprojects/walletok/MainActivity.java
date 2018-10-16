@@ -57,32 +57,23 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-
     private static final int LOAD_FILE = 200;
     private static final int WRITE_FILE = 100;
-    private ViewPager viewPager;
 
     private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
+    private Toolbar toolbar;
 
     private LinearLayoutCompat container;
     private AdView mAdView;
-
-    private TabAdapter abasAdapter;
-
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar =  findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("WalletOk");
+        configuraToolbar();
 
         container = findViewById(R.id.linearLayoutCompat);
-
         configuraAdView();
 
         if(isConected()){
@@ -91,34 +82,13 @@ public class MainActivity extends AppCompatActivity
             container.removeView(mAdView);
         }
 
+        configuraNavigationDrawer();
+        montaEstruturaDeAbas();
+        configuraFabButton();
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-        ActionBarDrawerToggle toggle =
-                new ActionBarDrawerToggle(this,
-                        drawerLayout, toolbar,
-                        R.string.open_drawer, R.string.close_drawer);
+    }
 
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView = findViewById(R.id.navigationView);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        DespesasFragment despesasFragment = new DespesasFragment();
-        ReceitasFragment receitasFragment = new ReceitasFragment();
-        ResumoFragment resumoFragment = new ResumoFragment();
-
-        abasAdapter = new TabAdapter(getSupportFragmentManager());
-        abasAdapter.adicionar(despesasFragment, "Despesas");
-        abasAdapter.adicionar(receitasFragment, "Receitas");
-        abasAdapter.adicionar(resumoFragment, "Resumo");
-
-
-        viewPager = findViewById(R.id.viewPager);
-        viewPager.setAdapter(abasAdapter);
-
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
-
+    private void configuraFabButton() {
         FloatingActionMenu fabMenu =  findViewById(R.id.fab_menu);
         fabMenu.setClosedOnTouchOutside(true);
 
@@ -138,12 +108,42 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+    }
 
+    private void montaEstruturaDeAbas() {
+        TabAdapter abasAdapter = new TabAdapter(getSupportFragmentManager());
+        abasAdapter.adicionar(new DespesasFragment(), getString(R.string.aba_titulo_despesas));
+        abasAdapter.adicionar(new ReceitasFragment(), getString(R.string.aba_titulo_receitas));
+        abasAdapter.adicionar(new ResumoFragment(), getString(R.string.aba_titulo_resumo));
+
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(abasAdapter);
+
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void configuraNavigationDrawer() {
+        drawerLayout = findViewById(R.id.drawerLayout);
+        ActionBarDrawerToggle toggle =
+                new ActionBarDrawerToggle(this,
+                        drawerLayout, toolbar,
+                        R.string.open_drawer, R.string.close_drawer);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void configuraToolbar() {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.app_name);
     }
 
     @Override
     public void onPause() {
-        Log.i("CYCLE", "onPause: ");
         if (mAdView != null) {
             if(!isConected()){
                 container.removeView(mAdView);
@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void onResume() {
-        Log.i("CYCLE", "onResume: ");
         if (mAdView != null) {
             if(!isConected()){
                 container.removeView(mAdView);
@@ -224,8 +223,8 @@ public class MainActivity extends AppCompatActivity
 
     private void mostrarDialogSair() {
         AlertDialog.Builder dialogSair = new AlertDialog.Builder(this);
-        dialogSair.setMessage("Deseja sair/deslogar do App?")
-                .setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+        dialogSair.setMessage(R.string.msg_sair_do_app)
+                .setPositiveButton(getString(R.string.opcao_sim), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences pref = PreferenceManager
@@ -237,7 +236,7 @@ public class MainActivity extends AppCompatActivity
                         finishAffinity();
                     }
                 })
-                .setNegativeButton("NÂO", null)
+                .setNegativeButton(getString(R.string.opcao_nao), null)
                 .show();
     }
 
@@ -248,7 +247,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Log.i("CYCLE", "onDestroy: ");
         if (mAdView != null) {
             container.removeView(mAdView);
             mAdView.destroy();
@@ -318,9 +316,9 @@ public class MainActivity extends AppCompatActivity
 
     private void mostrarDialogBackup() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Backup")
-                .setMessage("Este procedimento ira realizar backup dos dados.\nContinuar?")
-                .setPositiveButton("Prosseguir", new DialogInterface.OnClickListener() {
+        dialog.setTitle(R.string.dialog_titulo_backup)
+                .setMessage(getString(R.string.dialog_msg_backup))
+                .setPositiveButton(getString(R.string.opcao_prosseguir), new DialogInterface.OnClickListener() {
 
                     String caminhoArquivo = null;
 
@@ -330,23 +328,23 @@ public class MainActivity extends AppCompatActivity
                             caminhoArquivo = new FileService().realizarBackup(MainActivity.this);
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Toast.makeText(MainActivity.this, "Erro ao realizar o Backup", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, R.string.msg_erro_backup, Toast.LENGTH_LONG).show();
                         }
 
                         Toast.makeText(MainActivity.this,
-                                "Backup Realizado com Sucesso!\nSalvo em: " + caminhoArquivo,
+                                getString(R.string.msg_sucesso_backup) + caminhoArquivo,
                                 Toast.LENGTH_LONG).show();
                     }
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(getString(R.string.opcao_cancelar), null)
                 .show();
     }
 
     private void mostrarDialogRestaurarDados() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Importar Dados")
-                .setMessage("Este procedimento ira apagar todos os dados atualmente gravados\n Continuar?")
-                .setPositiveButton("Prosseguir", new DialogInterface.OnClickListener() {
+        dialog.setTitle(R.string.dialog_titulo_restaurar)
+                .setMessage(getString(R.string.dialog_msg_restaurar))
+                .setPositiveButton(getString(R.string.opcao_prosseguir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -354,11 +352,11 @@ public class MainActivity extends AppCompatActivity
                         intent.setType("application/octet-stream");
 
                         if(intent.resolveActivity(getPackageManager()) != null){
-                            startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo"), LOAD_FILE);
+                            startActivityForResult(Intent.createChooser(intent, getString(R.string.intent_chooser_sel_file)), LOAD_FILE);
                         }
                     }
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(getString(R.string.opcao_cancelar), null)
                 .show();
     }
 
@@ -388,9 +386,9 @@ public class MainActivity extends AppCompatActivity
         final RadioGroup formatos = view.findViewById(R.id.radioGroup);
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Exportar dados")
+        dialog.setTitle(R.string.dialog_titulo_exportar)
                 .setView(view)
-                .setPositiveButton("EXPORTAR", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.opcao_exportar), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         FileService util = new FileService();
@@ -406,13 +404,13 @@ public class MainActivity extends AppCompatActivity
                                 ext = Extensao.JSON;
                             }
                             util.exportarDados(arquivo, ext, MainActivity.this);
-                            Toast.makeText(MainActivity.this, "Dados exportados realizado com Sucesso! \n" + arquivo, Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, getString(R.string.msg_sucesso_exportar) + arquivo, Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                       }
                 })
-                .setNegativeButton("CANCELAR", null).show();
+                .setNegativeButton(getString(R.string.opcao_cancelar), null).show();
     }
 
     @Override
@@ -422,7 +420,7 @@ public class MainActivity extends AppCompatActivity
                 Uri dataUri = data.getData();
                 boolean result = new FileService().restaurarDados(MainActivity.this, dataUri);
                 if(result){
-                    Toast.makeText(this, "Dados restaurados com Sucesso!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.msg_sucesso_exportar), Toast.LENGTH_SHORT).show();
                 }
             }
         }
