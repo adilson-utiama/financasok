@@ -77,13 +77,11 @@ public class CadastroSenhaActivity extends AppCompatActivity implements AdapterV
                     editor.putString(getString(R.string.usuario), inputEditTextUsuario.getText().toString().trim());
                     editor.apply();
 
-                    //TODO validacao de entrada de dados do usuario
-
                     Usuario usuario = new Usuario();
-                    usuario.setUsuario(inputEditTextUsuario.getText().toString());
-                    usuario.setSenha(inputEditTextSenha.getText().toString());
-                    usuario.setPergunta(spinnerPergunta.getSelectedItem().toString());
-                    usuario.setResposta(inputEditTextRespostaPergunta.getText().toString());
+                    usuario.setUsuario(inputEditTextUsuario.getText().toString().trim());
+                    usuario.setSenha(inputEditTextSenha.getText().toString().trim());
+                    usuario.setPergunta(spinnerPergunta.getSelectedItem().toString().trim());
+                    usuario.setResposta(inputEditTextRespostaPergunta.getText().toString().trim());
 
                     dao.insert(usuario);
 

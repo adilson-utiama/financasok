@@ -35,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
+    private TextView esqueciSenha;
+
     private UsuarioDAO dao;
 
     @Override
@@ -45,6 +47,10 @@ public class LoginActivity extends AppCompatActivity {
         dao = new UsuarioDAO(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String usuario = preferences.getString(getString(R.string.usuario), "");
+
+        esqueciSenha = findViewById(R.id.textView_esqueciSenha);
+        verificarUsuario(usuario);
 
         inputLayoutUser = findViewById(R.id.input_layout_user);
         inputUser = findViewById(R.id.input_text_user);
@@ -73,10 +79,24 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void verificarUsuario(String usuario) {
+        if(usuarioEstaVazio(usuario)){
+            esqueciSenha.setText("Não tem senha? Clique aqui.");
+        }
+    }
+
     public void esqueciSenha(View view){
         String usuarioNome = preferences.getString(getString(R.string.usuario), "");
-        Usuario user = dao.findBy(usuarioNome);
-        mostrarDialogPerguntaSecreta(user);
+        if(!usuarioEstaVazio(usuarioNome)){
+            Usuario user = dao.findBy(usuarioNome);
+            mostrarDialogPerguntaSecreta(user);
+        } else {
+            startActivity(new Intent(this, CadastroSenhaActivity.class));
+        }
+    }
+
+    private boolean usuarioEstaVazio(String usuario){
+        return usuario.isEmpty() || usuario.equals("");
     }
 
     private void mostrarDialogPerguntaSecreta(final Usuario user) {
@@ -104,8 +124,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean logarUsuario() {
-        String usuario = inputUser.getText().toString();
-        String senha = inputPassword.getText().toString();
+        String usuario = inputUser.getText().toString().trim();
+        String senha = inputPassword.getText().toString().trim();
 
         Usuario user = dao.findBy(usuario);
          if(user != null && user.getSenha().trim().equals(senha)){
