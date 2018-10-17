@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.UsuarioDAO;
@@ -70,32 +71,83 @@ public class CadastroSenhaActivity extends AppCompatActivity implements AdapterV
         btnCadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editor = preferences.edit();
-                editor.putString(getString(R.string.usuario), inputEditTextUsuario.getText().toString());
-                editor.apply();
 
-                //TODO validacao de entrada de dados do usuario
+                if(validaCampos()){
+                    editor = preferences.edit();
+                    editor.putString(getString(R.string.usuario), inputEditTextUsuario.getText().toString().trim());
+                    editor.apply();
 
-                Usuario usuario = new Usuario();
-                usuario.setUsuario(inputEditTextUsuario.getText().toString());
-                usuario.setSenha(inputEditTextSenha.getText().toString());
-                usuario.setPergunta(spinnerPergunta.getSelectedItem().toString());
-                usuario.setResposta(inputEditTextRespostaPergunta.getText().toString());
+                    //TODO validacao de entrada de dados do usuario
 
-                dao.insert(usuario);
+                    Usuario usuario = new Usuario();
+                    usuario.setUsuario(inputEditTextUsuario.getText().toString());
+                    usuario.setSenha(inputEditTextSenha.getText().toString());
+                    usuario.setPergunta(spinnerPergunta.getSelectedItem().toString());
+                    usuario.setResposta(inputEditTextRespostaPergunta.getText().toString());
 
-                Intent intent = new Intent(CadastroSenhaActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                    dao.insert(usuario);
+
+                    Intent intent = new Intent(CadastroSenhaActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
         });
+    }
+
+    private boolean validaCampos() {
+        String inputUsuario = inputEditTextUsuario.getText().toString().trim();
+        String inputSenha = inputEditTextSenha.getText().toString().trim();
+        String inputSenhaRepete = inputEditTextRepeteSenha.getText().toString().trim();
+        String inputRespostaPergunta = inputEditTextRespostaPergunta.getText().toString().trim();
+
+        if(inputUsuario.isEmpty() || inputUsuario.equals("")) {
+            inputLayoutUsuario.setError("Obrigatório preencher campo usuario");
+            inputLayoutUsuario.setErrorEnabled(true);
+            return false;
+        }
+        if(inputUsuario.length() < 6 || inputUsuario.length() > 15) {
+            inputLayoutUsuario.setError("Nome usuario deve conter de 6 a no maximo 15 caracteres");
+            inputLayoutUsuario.setErrorEnabled(true);
+            return false;
+        }
+        if(inputSenha.isEmpty() || inputSenha.equals("")) {
+            inputLayoutSenha.setError("Senha não pode estar em branco");
+            inputLayoutSenha.setErrorEnabled(true);
+            return false;
+        }
+        if(inputSenha.length() < 6) {
+            inputLayoutSenha.setError("Senha precisa conter no minimo 6 caracteres");
+            inputLayoutSenha.setErrorEnabled(true);
+            return false;
+        }
+        if(inputSenhaRepete.isEmpty() || inputSenhaRepete.equals("")) {
+            inputLayoutRepeteSenha.setError("Necessario redigitar a senha");
+            inputLayoutRepeteSenha.setErrorEnabled(true);
+            return false;
+        }
+        if(!inputSenha.contentEquals(inputSenhaRepete)) {
+            inputLayoutRepeteSenha.setError("Senha não corresponde. Digite Novamente");
+            inputLayoutRepeteSenha.setErrorEnabled(true);
+            return false;
+        }
+        if(inputRespostaPergunta.isEmpty() || inputRespostaPergunta.equals("")){
+            Toast.makeText(this, "Por favor, informe uma resposta a pergunta.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        inputLayoutUsuario.setErrorEnabled(false);
+        inputLayoutSenha.setErrorEnabled(false);
+        inputLayoutRepeteSenha.setErrorEnabled(false);
+
+        return true;
     }
 
     //Relacionado ao Spinner
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int posicao, long id) {
         String perguntaSelecionada = (String) adapterView.getItemAtPosition(posicao);
-        Log.i("SPINNER_SELECAO: ", perguntaSelecionada);
     }
 
     //Relacionado ao Spinner
