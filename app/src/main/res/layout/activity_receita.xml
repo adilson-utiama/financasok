@@ -71,7 +71,7 @@
                 android:id="@+id/campo_data_receita"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:background="@drawable/rounded_corner_background"
                 android:focusable="true"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/campo_spinner_receita"

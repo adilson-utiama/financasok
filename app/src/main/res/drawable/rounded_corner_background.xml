@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="?attr/colorAccent"/> <!-- cor do sólido -->
-            <corners android:radius="7dp"/> <!-- valor do arredondamento das bordas -->
+<shape android:shape="rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/colorAccent"/> <!-- cor do sólido -->
+    <corners android:radius="5dp"/> <!-- valor do arredondamento das bordas -->
 
-            <padding android:bottom="8dp" android:left="8dp" android:right="8dp" android:top="8dp"/>
-        </shape>
-    </item>
-</selector>
+    <padding android:bottom="8dp" android:left="8dp" android:right="8dp" android:top="8dp"/>
+</shape>
