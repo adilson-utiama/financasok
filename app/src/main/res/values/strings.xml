@@ -122,4 +122,18 @@
     <string name="radiobutton_opcao_dinheiro">Dinheiro</string>
     <string name="radiobutton_opcao_cartao">Cartao</string>
     <string name="radiobutton_opcao_outros">Outros</string>
+    <string name="edit_hint_digite_seu_nome">Digite seu Nome</string>
+    <string name="edit_hint_digite_a_senha">Digite a Senha</string>
+    <string name="btn_login_acessar">Acessar</string>
+    <string name="check_manter_conectado">Manter Conectado</string>
+    <string name="link_esqueci_a_senha">esqueci a senha</string>
+    <string name="app_versao">Versão 1.0</string>
+    <string name="tx_desenvolvido_por">Desenvolvido Por:</string>
+    <string name="dev_name">Adilson S. Utiama</string>
+    <string name="diretorio_do_backup">Diretorio do Backup</string>
+    <string name="nenhum_backup_realizado_ate_o_momento">Nenhum Backup realizado ate o momento</string>
+    <string name="diretorio_de_arquivos_exportados">Diretorio de arquivos exportados</string>
+    <string name="nenhum_dado_exportado_ate_o_momento">Nenhum dado exportado ate o momento</string>
+    <string name="tx_total_de_despesas">Total de Despesas:</string>
+    <string name="tx_valor_dispon_vel">Valor Disponível:</string>
 </resources>

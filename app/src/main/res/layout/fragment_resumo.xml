@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -28,14 +27,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="Total de Despesas: "
+                    android:text="@string/tx_total_de_despesas"
                     android:textColor="@android:color/white" />
 
                 <TextView
                     android:id="@+id/valor_disponivel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Valor Disponível: "
+                    android:text="@string/tx_valor_dispon_vel"
                     android:textColor="@android:color/white" />
             </android.support.v7.widget.LinearLayoutCompat>
 

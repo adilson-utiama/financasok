@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="R$"
+            android:text="@string/dinheiro_simbolo"
             android:textColor="@android:color/white"
             android:textSize="32sp" />
 
@@ -28,8 +28,8 @@
             android:id="@+id/campo_valor_receita"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:hint="Valor"
+            android:layout_marginStart="8dp"
+            android:hint="@string/edit_hint_valor"
             android:inputType="numberDecimal|text"
             android:textAlignment="textStart"
             android:textColor="@android:color/white"
@@ -96,7 +96,7 @@
                     android:id="@+id/campo_descricao_receita"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Descrição (max 30 caracteres)"
+                    android:hint="@string/edit_hint_descri_o_max_30_caracteres"
                     android:inputType="textCapSentences"
                     android:maxLength="30"/>
 
@@ -114,7 +114,7 @@
                 android:id="@+id/text_categoria_receita"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Categoria"
+                android:text="@string/tx_categoria"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/campo_spinner_receita"
                 app:layout_constraintStart_toStartOf="@+id/campo_spinner_receita" />
@@ -124,11 +124,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Data"
+                android:text="@string/tx_data"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/campo_data_receita"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="@+id/textView" />
+                app:layout_constraintStart_toStartOf="@+id/guideline" />
 
 
 
