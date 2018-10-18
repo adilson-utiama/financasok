@@ -100,4 +100,9 @@
     <string name="msg_erro_senha_nao_corresponde">Necessario redigitar a senha</string>
     <string name="msg_erro_digite_novamente">Senha não corresponde. Digite Novamente</string>
     <string name="msg_erro_resposta_pergunta_vazia">Por favor, informe uma resposta a pergunta.</string>
+    <string name="appbar_titulo_cofiguracoes">Configurações</string>
+    <string name="appbar_titulo_despesa">Adiciona Despesa</string>
+    <string name="appbar_titulo_edicao">Edição</string>
+    <string name="msg_erro_valor_em_branco">Valor está em Branco</string>
+    <string name="msg_erro_valor_baixo">Valor muito baixo</string>
 </resources>

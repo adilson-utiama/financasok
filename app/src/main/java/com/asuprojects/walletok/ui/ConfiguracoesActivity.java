@@ -15,7 +15,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracoes);
 
-        getSupportActionBar().setTitle("Configurações");
+        getSupportActionBar().setTitle(R.string.appbar_titulo_cofiguracoes);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getFragmentManager().beginTransaction()
@@ -23,7 +23,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                 .commit();
 
     }
-
 
     public static class ConfiguracoesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
 
@@ -34,8 +33,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
             getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
             onAttach(getActivity());
         }
-
-
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

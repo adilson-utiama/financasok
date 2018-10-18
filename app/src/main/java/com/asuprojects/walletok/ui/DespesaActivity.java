@@ -39,19 +39,16 @@ import java.util.List;
 
 public class DespesaActivity extends AppCompatActivity{
 
+    public static final String EDITAR_DESPESA = "EDITAR_DESPESA";
+    public static final double VALOR_MINIMO = 1.0;
     private TextInputEditText descricao;
     private EditText valor;
     private AppCompatSpinner spinner;
-    private FloatingActionButton btnSalvar;
-
-    private RadioGroup radioGroup;
-
-    private static AppCompatButton btnData;
+    private AppCompatButton btnData;
 
     private List<String> listaCategorias;
 
     private DespesaDAO dao;
-
     private Despesa despesa;
 
     private String current = "";
@@ -66,15 +63,94 @@ public class DespesaActivity extends AppCompatActivity{
 
         dao = new DespesaDAO(getApplicationContext());
 
-        radioGroup = findViewById(R.id.radioGroup);
+        cofiguraComponentes();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Adiciona Despesa");
+        Intent intent = getIntent();
+        if(intent.hasExtra(EDITAR_DESPESA)){
+            intentEdicaoDespesa(intent);
+        }
 
+    }
+
+    private void cofiguraComponentes() {
+        configuraToolbar();
         descricao = findViewById(R.id.campo_descricao_receita);
+        configuraCampoValor();
+        configuraSpinnerCategoria();
+        configuraFabSalvar();
+        configuraBtnData();
+    }
+
+    private void configuraBtnData() {
+        btnData = findViewById(R.id.campo_data_receita);
+        btnData.setText(CalendarConverter.toStringFormatadaBR(Calendar.getInstance()));
+        btnData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerBuilder builder = new DatePickerBuilder(DespesaActivity.this, listener)
+                        .headerColor(R.color.colorPrimary)
+                        .selectionColor(R.color.colorPrimary)
+                        .date(Calendar.getInstance())
+                        .pickerType(CalendarView.ONE_DAY_PICKER);
+                DatePicker datePicker = builder.build();
+                datePicker.show();
+
+            }
+        });
+    }
+
+    private void configuraFabSalvar() {
+        FloatingActionButton btnSalvar = findViewById(R.id.btn_salvar_receita);
+        btnSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(despesa == null){
+                    despesa = new Despesa();
+                }
+                if(valorEhValido()){
+                    salvaDespesa();
+                }
+
+            }
+        });
+    }
+
+    private void salvaDespesa() {
+        String dataBtn = btnData.getText().toString();
+        String[] split = dataBtn.split("/");
+        int dia = Integer.parseInt(split[0]);
+        int mes = Integer.parseInt(split[1]) - 1;
+        int ano = Integer.parseInt(split[2]);
+        Calendar dt = Calendar.getInstance();
+        dt.set(ano, mes, dia);
+
+        despesa.setDescricao(descricao.getText().toString());
+        despesa.setData(dt);
+        int position = spinner.getSelectedItemPosition();
+        despesa.setCategoriaDespesa(CategoriaDespesa.toEnum(listaCategorias.get(position)));
+        despesa.setValor(BigDecimal.valueOf(valorDecimal));
+        despesa.setPagamento(pagamento);
+
+        dao.insertOrUpdate(despesa);
+
+        Intent intent = new Intent(DespesaActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void configuraSpinnerCategoria() {
+        listaCategorias = new ArrayList<>();
+        for(CategoriaDespesa c : CategoriaDespesa.values()){
+            listaCategorias.add(c.getDescricao());
+        }
+        spinner = findViewById(R.id.campo_spinner_receita);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategorias);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    private void configuraCampoValor() {
         valor = findViewById(R.id.campo_valor_receita);
         valor.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -87,9 +163,7 @@ public class DespesaActivity extends AppCompatActivity{
                     String cleanString = s.toString().replaceAll("[R$,.]", "");
                     double parsed = Double.parseDouble(cleanString);
                     String formatted =  MoneyUtil.formatar((parsed/100));
-                    Log.i("TEXT_WATCH", "onTextChanged: " + formatted);
                     String emDouble = MoneyUtil.valorEmDouble(formatted);
-                    Log.i("TEXT_WATCH", "onTextChanged: " + emDouble);
                     valorDecimal = Double.parseDouble(emDouble);
                     current = formatted;
                     valor.setText(formatted);
@@ -102,100 +176,40 @@ public class DespesaActivity extends AppCompatActivity{
             @Override
             public void afterTextChanged(Editable s) { }
         });
+    }
 
-        spinner = findViewById(R.id.campo_spinner_receita);
-        btnData = findViewById(R.id.campo_data_receita);
-        btnData.setText(CalendarConverter.toStringFormatadaBR(Calendar.getInstance()));
+    private void configuraToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.appbar_titulo_despesa);
+    }
 
-        btnSalvar = findViewById(R.id.btn_salvar_receita);
+    private void intentEdicaoDespesa(Intent intent) {
+        RadioGroup radioGroup = findViewById(R.id.radioGroup);
+        despesa = (Despesa) intent.getSerializableExtra(EDITAR_DESPESA);
+        descricao.setText(despesa.getDescricao());
+        valor.setText(BigDecimalConverter.toStringFormatado(despesa.getValor()));
+        btnData.setText(despesa.getDataFormatada());
 
-        listaCategorias = new ArrayList<>();
-        for(CategoriaDespesa c : CategoriaDespesa.values()){
-            listaCategorias.add(c.getDescricao());
+        if(despesa.getPagamento().equals(Pagamento.DINHEIRO)){
+            radioGroup.check(R.id.pag_dinheiro);
+        }else if(despesa.getPagamento().equals(Pagamento.CARTAO)){
+            radioGroup.check(R.id.pag_cartao);
+        }else{
+            radioGroup.check(R.id.pag_outros);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategorias);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        btnSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(despesa == null){
-                    despesa = new Despesa();
-                }
-
-                despesa.setDescricao(descricao.getText().toString());
-
-                if(valorEhValido()){
-                    String dataBtn = btnData.getText().toString();
-                    String[] split = dataBtn.split("/");
-                    int dia = Integer.parseInt(split[0]);
-                    int mes = Integer.parseInt(split[1]) - 1;
-                    int ano = Integer.parseInt(split[2]);
-                    Calendar dt = Calendar.getInstance();
-                    dt.set(ano, mes, dia);
-
-                    despesa.setData(dt);
-                    int position = spinner.getSelectedItemPosition();
-                    despesa.setCategoriaDespesa(CategoriaDespesa.toEnum(listaCategorias.get(position)));
-                    despesa.setValor(BigDecimal.valueOf(valorDecimal));
-                    despesa.setPagamento(pagamento);
-
-                    dao.insertOrUpdate(despesa);
-
-                    Intent intent = new Intent(DespesaActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
-
-            }
-        });
-
-        Intent intent = getIntent();
-        if(intent.hasExtra("EDITAR_DESPESA")){
-            despesa = (Despesa) intent.getSerializableExtra("EDITAR_DESPESA");
-            descricao.setText(despesa.getDescricao());
-            //valor.setText(String.valueOf(despesa.getValor().doubleValue()));
-            valor.setText(BigDecimalConverter.toStringFormatado(despesa.getValor()));
-            btnData.setText(despesa.getDataFormatada());
-
-            if(despesa.getPagamento().equals(Pagamento.DINHEIRO)){
-                radioGroup.check(R.id.pag_dinheiro);
-            }else if(despesa.getPagamento().equals(Pagamento.CARTAO)){
-                radioGroup.check(R.id.pag_cartao);
-            }else{
-                radioGroup.check(R.id.pag_outros);
-            }
-
-            int index = listaCategorias.indexOf(despesa.getCategoriaDespesa().getDescricao());
-            spinner.setSelection(index, true);
-            getSupportActionBar().setTitle("Edição");
-        }
-
-        btnData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerBuilder builder = new DatePickerBuilder(DespesaActivity.this, listener)
-                        .headerColor(R.color.colorPrimary)
-                        .selectionColor(R.color.colorPrimary)
-                        .date(Calendar.getInstance())
-                        .pickerType(CalendarView.ONE_DAY_PICKER);
-
-                DatePicker datePicker = builder.build();
-                datePicker.show();
-
-            }
-        });
-
+        int index = listaCategorias.indexOf(despesa.getCategoriaDespesa().getDescricao());
+        spinner.setSelection(index, true);
+        getSupportActionBar().setTitle(R.string.appbar_titulo_edicao);
     }
 
     private boolean valorEhValido() {
         if(valor.getText().toString().isEmpty()){
-            Toast.makeText(DespesaActivity.this, "Valor está em Branco", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DespesaActivity.this, R.string.msg_erro_valor_em_branco, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(valorDecimal < 1.0){
-            Toast.makeText(DespesaActivity.this, "Valor muito baixo", Toast.LENGTH_SHORT).show();
+        if(valorDecimal < VALOR_MINIMO){
+            Toast.makeText(DespesaActivity.this, R.string.msg_erro_valor_baixo, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -203,7 +217,6 @@ public class DespesaActivity extends AppCompatActivity{
 
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
-
         switch(view.getId()) {
             case R.id.pag_dinheiro:
                 if (checked)
