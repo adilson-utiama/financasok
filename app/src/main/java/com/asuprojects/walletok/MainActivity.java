@@ -404,7 +404,7 @@ public class MainActivity extends AppCompatActivity
                                 ext = Extensao.JSON;
                             }
                             util.exportarDados(arquivo, ext, MainActivity.this);
-                            Toast.makeText(MainActivity.this, getString(R.string.msg_sucesso_exportar) + arquivo, Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, getString(R.string.msg_sucesso_exportar), Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

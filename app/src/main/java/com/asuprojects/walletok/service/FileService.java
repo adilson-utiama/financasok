@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.database.TabelaDespesa;
@@ -34,92 +35,50 @@ public class FileService {
     private String separador = ",";
     private String filename = "backup.bkp";
     private String dir = "/Backup_app/";
+    private final String despesa = "Despesas";
+    private final String receita = "Receitas";
 
     public String realizarBackup(Context context) throws IOException {
         service = new DBService(context);
         List<Despesa> despesas = service.getDespesaDAO().getAll();
         List<Receita> receitas = service.getReceitaDAO().listAll();
         Map<String, List<?>> mapa = new HashMap<>();
-        mapa.put("Despesas", despesas);
-        mapa.put("Receitas", receitas);
+        mapa.put(despesa, despesas);
+        mapa.put(receita, receitas);
 
         File file = null;
 
         if(isExternalStorageWritable()){
-            File diretorio = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS) + dir);
-            if(!diretorio.exists()){
-                diretorio.mkdirs();
-            }
-
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(context.getString(R.string.backup_path), diretorio.getAbsolutePath());
-            editor.apply();
+            File diretorio = criaDiretorioBackup();
+            salvaCaminhoBackupEmPreferences(context, diretorio);
 
             file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS) + dir, filename);
-
             ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(file));
             saida.writeObject(mapa);
             saida.close();
 
         } else {
-            throw new RuntimeException("Não foi possivel realizar o Backup");
+            Toast.makeText(context, context.getString(R.string.msg_falha_backup), Toast.LENGTH_SHORT).show();
         }
 
         service.close();
 
-        return file.exists() ? file.getAbsolutePath() : "Caminho do arquivo desconhecido.";
+        return file.exists() ? file.getAbsolutePath() : context.getString(R.string.msg_caminho_arquivo_desconhecido);
     }
 
     public boolean restaurarDados(Context context, Uri dataUri){
         service = new DBService(context);
-
         try {
-
             InputStream inputStream = context.getContentResolver().openInputStream(dataUri);
-
             ObjectInputStream entrada = new ObjectInputStream(inputStream);
             Map<String, List<?>> dados = (Map<String, List<?>>) entrada.readObject();
-
-            List<Despesa> despesas = (List<Despesa>) dados.get("Despesas");
-            for(Despesa d : despesas){
-                long id = d.get_id();
-                Despesa despesa = service.getDespesaDAO().findOne(id);
-                if(despesa != null){
-                    if(d.get_id() != despesa.get_id() && !d.getData().equals(despesa.getData())){
-                        d.set_id(0);
-                        service.getDespesaDAO().insertOrUpdate(d);
-                        Log.i("PERSIST", "restaurarDados: despesa restaurada: " + d.toString());
-                    }
-                } else {
-                    service.getDespesaDAO().insertOrUpdate(d);
-                }
-
-            }
-
-            List<Receita> receitas = (List<Receita>) dados.get("Receitas");
-            for(Receita r : receitas){
-                long id = r.get_id();
-                Receita receita = service.getReceitaDAO().findOne(id);
-                if(receita != null){
-                    if(r.get_id() != receita.get_id() && !r.getData().equals(receita.getData())){
-                        r.set_id(0);
-                        service.getReceitaDAO().insertOrUpdate(r);
-                        Log.i("PERSIST", "restaurarDados: receita restaurada: " + r.toString());
-                    }
-                } else {
-                    service.getReceitaDAO().insertOrUpdate(r);
-                }
-            }
-
-
+            salvaDespesasNoBanco(dados);
+            salvaReceitasNoBanco(dados);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
         }
-
         service.close();
 
         return true;
@@ -133,63 +92,114 @@ public class FileService {
 
         if(isExternalStorageWritable()){
 
+            fileName += extensao.getExtensao();
+            File file = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS), fileName);
+
+            salvaCaminhoExportadoEmPreferences(context, file);
+
             if(extensao.equals(Extensao.CSV)){
-
-                fileName += extensao.getExtensao();
-
-                File file = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS), fileName);
-
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(context.getString(R.string.export_file_path), file.getAbsolutePath());
-                editor.apply();
-
-                Log.i("TESTE", "exportarDados: " + file.getAbsolutePath());
-
-                FileOutputStream outputStream = new FileOutputStream(file);
-                PrintStream ps = new PrintStream(outputStream);
-
-                ps.println(colunasDespesa());
-                for (Despesa d : despesas){
-                    ps.println(despesaLinha(d));
-                }
-                ps.println(colunasReceita());
-                for (Receita r : receitas) {
-                    ps.println(receitaLinha(r));
-                }
-
-                outputStream.close();
-                ps.close();
+                salvaEmCSV(file, despesas, receitas);
             }
-
             if(extensao.equals(Extensao.JSON)){
-                Map<String, List<?>> mapa = new HashMap<>();
-                mapa.put("Despesas", despesas);
-                mapa.put("Receitas", receitas);
-
-                fileName += extensao.getExtensao();
-                File file = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS), fileName);
-                FileOutputStream outputStream = new FileOutputStream(file);
-                PrintStream ps = new PrintStream(outputStream);
-
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                String dados = gson.toJson(mapa);
-
-                ps.println(dados);
-
-                outputStream.close();
-                ps.close();
-
+                salvaEmJSON(file, despesas, receitas);
             }
-
 
         } else {
-            throw new RuntimeException("Falha ao exportar os dados");
+            throw new RuntimeException(context.getString(R.string.msg_falha_exportar_arquivo));
         }
 
         service.close();
+    }
+
+    @NonNull
+    private void salvaEmCSV(File file, List<Despesa> despesas, List<Receita> receitas) throws IOException {
+
+        FileOutputStream outputStream = new FileOutputStream(file);
+        PrintStream ps = new PrintStream(outputStream);
+        ps.println(colunasDespesa());
+        for (Despesa d : despesas){
+            ps.println(despesaLinha(d));
+        }
+        ps.println(colunasReceita());
+        for (Receita r : receitas) {
+            ps.println(receitaLinha(r));
+        }
+        outputStream.close();
+        ps.close();
+    }
+
+    private void salvaEmJSON(File file, List<Despesa> despesas, List<Receita> receitas) throws IOException {
+        Map<String, List<?>> mapa = new HashMap<>();
+        mapa.put(despesa, despesas);
+        mapa.put(receita, receitas);
+
+        PrintStream ps = new PrintStream(new FileOutputStream(file));
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String dados = gson.toJson(mapa);
+
+        ps.println(dados);
+        ps.close();
+    }
+
+
+    private void salvaReceitasNoBanco(Map<String, List<?>> dados) {
+        List<Receita> receitas = (List<Receita>) dados.get(receita);
+        for(Receita r : receitas){
+            long id = r.get_id();
+            Receita receita = service.getReceitaDAO().findOne(id);
+            if(receita != null){
+                if(r.get_id() != receita.get_id() && !r.getData().equals(receita.getData())){
+                    r.set_id(0);
+                    service.getReceitaDAO().insertOrUpdate(r);
+                }
+            } else {
+                service.getReceitaDAO().insertOrUpdate(r);
+            }
+        }
+    }
+
+    private void salvaDespesasNoBanco(Map<String, List<?>> dados) {
+        List<Despesa> despesas = (List<Despesa>) dados.get(despesa);
+        for(Despesa d : despesas){
+            long id = d.get_id();
+            Despesa despesa = service.getDespesaDAO().findOne(id);
+            if(despesa != null){
+                if(d.get_id() != despesa.get_id() && !d.getData().equals(despesa.getData())){
+                    d.set_id(0);
+                    service.getDespesaDAO().insertOrUpdate(d);
+                }
+            } else {
+                service.getDespesaDAO().insertOrUpdate(d);
+            }
+
+        }
+    }
+
+    private void salvaCaminhoBackupEmPreferences(Context context, File diretorio) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(context.getString(R.string.backup_path), diretorio.getAbsolutePath());
+        editor.apply();
+    }
+
+    private void salvaCaminhoExportadoEmPreferences(Context context, File file) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(context.getString(R.string.export_file_path), file.getAbsolutePath());
+        editor.apply();
+    }
+
+
+    @NonNull
+    private File criaDiretorioBackup() {
+        File diretorio = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS) + dir);
+        if(!diretorio.exists()){
+            diretorio.mkdirs();
+        }
+        return diretorio;
     }
 
 

@@ -22,6 +22,6 @@ public enum Pagamento {
                 return p;
             }
         }
-        throw new RuntimeException("Objeto não encontrado");
+        return OUTROS;
     }
 }

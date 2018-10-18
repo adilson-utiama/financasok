@@ -90,4 +90,7 @@
     <string name="opcao_exportar">EXPORTAR</string>
     <string name="msg_sucesso_exportar">Dados exportados com Sucesso!</string>
     <string name="msg_sucesso_restaurar">Dados restaurados com Sucesso!</string>
+    <string name="msg_falha_backup">Não foi possivel realizar o Backup</string>
+    <string name="msg_falha_exportar_arquivo">Falha ao exportar os dados</string>
+    <string name="msg_caminho_arquivo_desconhecido">Caminho do arquivo desconhecido.</string>
 </resources>
