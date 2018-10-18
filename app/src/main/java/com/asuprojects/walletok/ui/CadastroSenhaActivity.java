@@ -9,7 +9,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +20,8 @@ import com.asuprojects.walletok.model.Usuario;
 
 public class CadastroSenhaActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    public static final int MIN_CARACTERES = 6;
+    public static final int MAX_CARACTERES = 15;
     private TextInputLayout inputLayoutUsuario;
     private TextInputEditText inputEditTextUsuario;
     private TextInputLayout inputLayoutSenha;
@@ -29,10 +30,8 @@ public class CadastroSenhaActivity extends AppCompatActivity implements AdapterV
     private TextInputEditText inputEditTextRepeteSenha;
     private AppCompatSpinner spinnerPergunta;
     private TextInputEditText inputEditTextRespostaPergunta;
-    private AppCompatButton btnCadastro;
 
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
 
     private UsuarioDAO dao;
 
@@ -42,16 +41,28 @@ public class CadastroSenhaActivity extends AppCompatActivity implements AdapterV
         setContentView(R.layout.activity_cadastro_senha);
 
         dao = new UsuarioDAO(this);
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        configuraComponentes();
+        verificaUsuarioVazio();
+        configuraBotaoCadastro();
+    }
 
+    private void configuraBotaoCadastro() {
+        AppCompatButton btnCadastro = findViewById(R.id.btn_cadastro);
+        btnCadastro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(validaCampos()){
+                    salvaNomeUsuarioEmPreferences();
+                    salvaUsuarioNoBanco();
+                }
+            }
+        });
+    }
+
+    private void configuraComponentes() {
         inputLayoutUsuario = findViewById(R.id.first_input_layout_user);
         inputEditTextUsuario = findViewById(R.id.first_input_user);
-        String usuarioNome = preferences.getString(getString(R.string.usuario), "");
-        if(!usuarioNome.isEmpty() || !usuarioNome.equals("")){
-            inputEditTextUsuario.setText(usuarioNome);
-            inputEditTextUsuario.setEnabled(false);
-        }
 
         inputLayoutSenha = findViewById(R.id.first_input_layout_password);
         inputEditTextSenha = findViewById(R.id.first_input_password);
@@ -66,32 +77,34 @@ public class CadastroSenhaActivity extends AppCompatActivity implements AdapterV
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPergunta.setAdapter(adapter);
         spinnerPergunta.setOnItemSelectedListener(this);
+    }
 
-        btnCadastro = findViewById(R.id.btn_cadastro);
-        btnCadastro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    private void salvaUsuarioNoBanco() {
+        Usuario usuario = new Usuario();
+        usuario.setUsuario(inputEditTextUsuario.getText().toString().trim());
+        usuario.setSenha(inputEditTextSenha.getText().toString().trim());
+        usuario.setPergunta(spinnerPergunta.getSelectedItem().toString().trim());
+        usuario.setResposta(inputEditTextRespostaPergunta.getText().toString().trim());
 
-                if(validaCampos()){
-                    editor = preferences.edit();
-                    editor.putString(getString(R.string.usuario), inputEditTextUsuario.getText().toString().trim());
-                    editor.apply();
+        dao.insert(usuario);
 
-                    Usuario usuario = new Usuario();
-                    usuario.setUsuario(inputEditTextUsuario.getText().toString().trim());
-                    usuario.setSenha(inputEditTextSenha.getText().toString().trim());
-                    usuario.setPergunta(spinnerPergunta.getSelectedItem().toString().trim());
-                    usuario.setResposta(inputEditTextRespostaPergunta.getText().toString().trim());
+        Intent intent = new Intent(CadastroSenhaActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
-                    dao.insert(usuario);
+    private void salvaNomeUsuarioEmPreferences() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(getString(R.string.usuario), inputEditTextUsuario.getText().toString().trim());
+        editor.apply();
+    }
 
-                    Intent intent = new Intent(CadastroSenhaActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-            }
-        });
+    private void verificaUsuarioVazio() {
+        String usuarioNome = preferences.getString(getString(R.string.usuario), "");
+        if(!usuarioNome.isEmpty() || !usuarioNome.equals("")){
+            inputEditTextUsuario.setText(usuarioNome);
+            inputEditTextUsuario.setEnabled(false);
+        }
     }
 
     private boolean validaCampos() {
@@ -101,37 +114,37 @@ public class CadastroSenhaActivity extends AppCompatActivity implements AdapterV
         String inputRespostaPergunta = inputEditTextRespostaPergunta.getText().toString().trim();
 
         if(inputUsuario.isEmpty() || inputUsuario.equals("")) {
-            inputLayoutUsuario.setError("Obrigatório preencher campo usuario");
+            inputLayoutUsuario.setError(getString(R.string.msg_erro_validacao_campo_obrigatorio));
             inputLayoutUsuario.setErrorEnabled(true);
             return false;
         }
-        if(inputUsuario.length() < 6 || inputUsuario.length() > 15) {
-            inputLayoutUsuario.setError("Nome usuario deve conter de 6 a no maximo 15 caracteres");
+        if(inputUsuario.length() < MIN_CARACTERES || inputUsuario.length() > MAX_CARACTERES) {
+            inputLayoutUsuario.setError(getString(R.string.msg_erro_validacao_caracteres_size));
             inputLayoutUsuario.setErrorEnabled(true);
             return false;
         }
         if(inputSenha.isEmpty() || inputSenha.equals("")) {
-            inputLayoutSenha.setError("Senha não pode estar em branco");
+            inputLayoutSenha.setError(getString(R.string.msg_erro_senha_vazia));
             inputLayoutSenha.setErrorEnabled(true);
             return false;
         }
-        if(inputSenha.length() < 6) {
-            inputLayoutSenha.setError("Senha precisa conter no minimo 6 caracteres");
+        if(inputSenha.length() < MIN_CARACTERES) {
+            inputLayoutSenha.setError(getString(R.string.msg_erro_validacao_senha_caracteres));
             inputLayoutSenha.setErrorEnabled(true);
             return false;
         }
         if(inputSenhaRepete.isEmpty() || inputSenhaRepete.equals("")) {
-            inputLayoutRepeteSenha.setError("Necessario redigitar a senha");
+            inputLayoutRepeteSenha.setError(getString(R.string.msg_erro_senha_nao_corresponde));
             inputLayoutRepeteSenha.setErrorEnabled(true);
             return false;
         }
         if(!inputSenha.contentEquals(inputSenhaRepete)) {
-            inputLayoutRepeteSenha.setError("Senha não corresponde. Digite Novamente");
+            inputLayoutRepeteSenha.setError(getString(R.string.msg_erro_digite_novamente));
             inputLayoutRepeteSenha.setErrorEnabled(true);
             return false;
         }
         if(inputRespostaPergunta.isEmpty() || inputRespostaPergunta.equals("")){
-            Toast.makeText(this, "Por favor, informe uma resposta a pergunta.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_erro_resposta_pergunta_vazia, Toast.LENGTH_SHORT).show();
             return false;
         }
 

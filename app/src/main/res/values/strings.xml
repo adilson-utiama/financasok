@@ -93,4 +93,11 @@
     <string name="msg_falha_backup">Não foi possivel realizar o Backup</string>
     <string name="msg_falha_exportar_arquivo">Falha ao exportar os dados</string>
     <string name="msg_caminho_arquivo_desconhecido">Caminho do arquivo desconhecido.</string>
+    <string name="msg_erro_validacao_campo_obrigatorio">Obrigatório preencher campo usuario</string>
+    <string name="msg_erro_validacao_caracteres_size">Nome usuario deve conter de 6 a no maximo 15 caracteres</string>
+    <string name="msg_erro_senha_vazia">Senha não pode estar em branco</string>
+    <string name="msg_erro_validacao_senha_caracteres">Senha precisa conter no minimo 6 caracteres</string>
+    <string name="msg_erro_senha_nao_corresponde">Necessario redigitar a senha</string>
+    <string name="msg_erro_digite_novamente">Senha não corresponde. Digite Novamente</string>
+    <string name="msg_erro_resposta_pergunta_vazia">Por favor, informe uma resposta a pergunta.</string>
 </resources>
