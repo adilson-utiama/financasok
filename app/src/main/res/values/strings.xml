@@ -105,4 +105,12 @@
     <string name="appbar_titulo_edicao">Edição</string>
     <string name="msg_erro_valor_em_branco">Valor está em Branco</string>
     <string name="msg_erro_valor_baixo">Valor muito baixo</string>
+    <string name="tx_cadastro_de_senha">Cadastro de Senha</string>
+    <string name="edit_hint_nome">Nome</string>
+    <string name="edit_hint_senha">Senha</string>
+    <string name="edit_hint_digite_novamente_a_senha">Digite novamente a Senha</string>
+    <string name="tx_selecione_uma_pergunta">Selecione uma pergunta</string>
+    <string name="tx_resposta">Resposta</string>
+    <string name="edit_hint_digite_a_resposta">Digite a Resposta</string>
+    <string name="btn_cadastro_senha">Cadastro</string>
 </resources>

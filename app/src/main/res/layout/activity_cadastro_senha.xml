@@ -38,7 +38,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/roboto_thin"
-                android:text="Cadastro de Senha"
+                android:text="@string/tx_cadastro_de_senha"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20sp"
@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/background_edit_text"
-                    android:hint="Nome"
+                    android:hint="@string/edit_hint_nome"
                     android:inputType="text"
                     android:padding="8dp" />
 
@@ -88,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/background_edit_text"
-                    android:hint="Senha"
+                    android:hint="@string/edit_hint_senha"
                     android:inputType="textPassword"
                     android:padding="8dp" />
 
@@ -111,7 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/background_edit_text"
-                    android:hint="Digite novamente a Senha"
+                    android:hint="@string/edit_hint_digite_novamente_a_senha"
                     android:inputType="textPassword"
                     android:padding="8dp" />
 
@@ -122,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Selecione uma pergunta"
+                android:text="@string/tx_selecione_uma_pergunta"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintStart_toStartOf="@+id/first_input_layout_password_repeat"
                 app:layout_constraintTop_toBottomOf="@+id/first_input_layout_password_repeat" />
@@ -132,7 +132,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
-                android:paddingLeft="5dp"
                 android:paddingTop="10dp"
                 android:theme="@style/Widget.AppCompat.Spinner"
                 app:layout_constraintEnd_toEndOf="@+id/first_input_layout_password_repeat"
@@ -144,7 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Resposta"
+                android:text="@string/tx_resposta"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintStart_toStartOf="@+id/spinner_pergunta"
                 app:layout_constraintTop_toBottomOf="@+id/spinner_pergunta" />
@@ -154,7 +153,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@color/background_edit_text"
-                android:hint="Digite a Resposta"
+                android:hint="@string/edit_hint_digite_a_resposta"
                 android:inputType="text"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="@+id/spinner_pergunta"
@@ -170,7 +169,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@color/colorPrimary"
-                android:text="Cadastro"
+                android:text="@string/btn_cadastro_senha"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
