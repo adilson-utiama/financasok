@@ -113,4 +113,13 @@
     <string name="tx_resposta">Resposta</string>
     <string name="edit_hint_digite_a_resposta">Digite a Resposta</string>
     <string name="btn_cadastro_senha">Cadastro</string>
+    <string name="dinheiro_simbolo">R$</string>
+    <string name="edit_hint_valor">Valor</string>
+    <string name="edit_hint_descri_o_max_30_caracteres">Descrição (max 30 caracteres)</string>
+    <string name="tx_categoria">Categoria</string>
+    <string name="tx_data">Data</string>
+    <string name="tx_pagamento">Pagamento</string>
+    <string name="radiobutton_opcao_dinheiro">Dinheiro</string>
+    <string name="radiobutton_opcao_cartao">Cartao</string>
+    <string name="radiobutton_opcao_outros">Outros</string>
 </resources>
