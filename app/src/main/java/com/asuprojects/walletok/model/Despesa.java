@@ -4,6 +4,7 @@ import com.asuprojects.walletok.model.enums.CategoriaDespesa;
 import com.asuprojects.walletok.model.enums.Pagamento;
 import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.asuprojects.walletok.util.CalendarConverter;
+import com.asuprojects.walletok.util.CalendarUtil;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -59,7 +60,7 @@ public class Despesa implements Serializable {
     }
 
     public String getDataFormatada(){
-        return CalendarConverter.toStringFormatadaBR(getData());
+        return CalendarUtil.toStringFormatadaPelaRegiao(getData());
     }
 
     public void setData(Calendar data) {

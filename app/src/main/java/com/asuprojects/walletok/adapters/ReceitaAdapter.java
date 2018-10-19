@@ -11,6 +11,7 @@ import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.asuprojects.walletok.util.CalendarConverter;
+import com.asuprojects.walletok.util.CalendarUtil;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class ReceitaAdapter extends RecyclerView.Adapter {
         ReceitaViewHolder receitaHolder = (ReceitaViewHolder) holder;
         receitaHolder.setDescricao(receita.getDescricao());
         receitaHolder.setCategoria(receita.getCategoriaReceita().getDescricao());
-        receitaHolder.setData(CalendarConverter.toStringFormatadaBR(receita.getData()));
+        receitaHolder.setData(CalendarUtil.toStringFormatadaPelaRegiao(receita.getData()));
         receitaHolder.setValor(BigDecimalConverter.toStringFormatado(receita.getValor()));
     }
 

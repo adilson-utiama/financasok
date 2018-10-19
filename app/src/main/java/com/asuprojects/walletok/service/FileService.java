@@ -14,6 +14,7 @@ import com.asuprojects.walletok.database.TabelaReceita;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.model.enums.Extensao;
+import com.asuprojects.walletok.util.CalendarUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -24,16 +25,19 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FileService {
 
+    public static final String NOME_ARQUIVO = "backup-";
+    public static final String EXTENSAO_BKP = ".bkp";
     private DBService service;
 
     private String separador = ",";
-    private String filename = "backup.bkp";
     private String dir = "/Backup_app/";
     private final String despesa = "Despesas";
     private final String receita = "Receitas";
@@ -45,6 +49,8 @@ public class FileService {
         Map<String, List<?>> mapa = new HashMap<>();
         mapa.put(despesa, despesas);
         mapa.put(receita, receitas);
+
+        String filename = geraNomeArquivoComData();
 
         File file = null;
 
@@ -65,6 +71,14 @@ public class FileService {
         service.close();
 
         return file.exists() ? file.getAbsolutePath() : context.getString(R.string.msg_caminho_arquivo_desconhecido);
+    }
+
+    @NonNull
+    private String geraNomeArquivoComData() {
+        String dataAtualFormatada = CalendarUtil.getDataAtualFormatada("-");
+        StringBuilder builder = new StringBuilder();
+        builder.append(NOME_ARQUIVO).append(dataAtualFormatada).append(EXTENSAO_BKP);
+        return builder.toString();
     }
 
     public boolean restaurarDados(Context context, Uri dataUri){

@@ -10,7 +10,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -31,6 +30,7 @@ import com.asuprojects.walletok.model.enums.CategoriaDespesa;
 import com.asuprojects.walletok.model.enums.Pagamento;
 import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.asuprojects.walletok.util.CalendarConverter;
+import com.asuprojects.walletok.util.CalendarUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ public class DespesaActivity extends AppCompatActivity{
 
     private void configuraBtnData() {
         btnData = findViewById(R.id.campo_data_receita);
-        btnData.setText(CalendarConverter.toStringFormatadaBR(Calendar.getInstance()));
+        btnData.setText(CalendarUtil.toStringFormatadaPelaRegiao(Calendar.getInstance()));
         btnData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
