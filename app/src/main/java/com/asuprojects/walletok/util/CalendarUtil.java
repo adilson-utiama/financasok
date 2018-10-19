@@ -27,7 +27,7 @@ public class CalendarUtil {
         int ano = atual.get(Calendar.YEAR);
         StringBuilder builder = new StringBuilder();
         builder.append(dia).append(separador)
-                .append(mes).append(separador)
+                .append(mes + 1).append(separador)
                 .append(ano);
         return builder.toString();
     }
