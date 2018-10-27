@@ -153,7 +153,8 @@ public class GraficoFragment extends Fragment
         String label = ((PieEntry) e).getLabel();
         float value = ((PieEntry) e).getValue();
         String valorFormatadado = BigDecimalConverter.toStringFormatado(value);
-        despesaCategoriaSelecao.setText(label + " : " + valorFormatadado);
+        String valorTotalStr = label.concat(" : ").concat(valorFormatadado);
+        despesaCategoriaSelecao.setText(valorTotalStr);
     }
 
     @Override

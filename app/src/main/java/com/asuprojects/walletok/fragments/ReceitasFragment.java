@@ -44,23 +44,28 @@ public class ReceitasFragment extends Fragment
 
         String mes = StringUtils.mesParaString(Calendar.getInstance().get(Calendar.MONTH) + 1);
         receitas = dao.getAllReceitasFrom(mes);
+        preencheValorTotalReceitas(view);
+        configuraSpinnerSelecaoMes(view);
 
+        trocaFragment(receitas);
+
+        return view;
+    }
+
+    private void preencheValorTotalReceitas(View view) {
         valorTotalReceita = view.findViewById(R.id.textview_total_receita);
         valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
+    }
 
+    private void configuraSpinnerSelecaoMes(View view) {
         AppCompatSpinner spinnerMes = view.findViewById(R.id.spinner_mes);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.meses, R.layout.spinner_item);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerMes.setAdapter(arrayAdapter);
         spinnerMes.setOnItemSelectedListener(this);
-
         Calendar instance = Calendar.getInstance();
         spinnerMes.setSelection(instance.get(Calendar.MONTH));
-
-        trocaFragment(receitas);
-
-        return view;
     }
 
     private void trocaFragment(List<Receita> lista){

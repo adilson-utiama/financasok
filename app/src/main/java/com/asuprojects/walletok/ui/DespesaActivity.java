@@ -40,7 +40,7 @@ import java.util.List;
 public class DespesaActivity extends AppCompatActivity{
 
     public static final String EDITAR_DESPESA = "EDITAR_DESPESA";
-    public static final double VALOR_MINIMO = 1.0;
+    public static final double VALOR_MINIMO = 0.1;
     private TextInputEditText descricao;
     private EditText valor;
     private AppCompatSpinner spinner;

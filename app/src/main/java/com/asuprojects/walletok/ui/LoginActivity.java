@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Usuario ou senha invalido!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.tx_login_invalido, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void verificarUsuario(String usuario) {
         if(usuarioEstaVazio(usuario)){
-            esqueciSenha.setText("Não tem senha? Clique aqui.");
+            esqueciSenha.setText(R.string.tx_nao_tem_senha);
         }
     }
 
@@ -106,19 +106,19 @@ public class LoginActivity extends AppCompatActivity {
         final EditText resposta = view.findViewById(R.id.editText_resposta);
         pergunta.setText(user.getPergunta());
         dialog.setView(view);
-        dialog.setTitle("Pergunta Secreta");
-        dialog.setPositiveButton("Verficar", new DialogInterface.OnClickListener() {
+        dialog.setTitle(R.string.tx_pergunta_secreta);
+        dialog.setPositiveButton(R.string.tx_verificar, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                if(user.getResposta().equalsIgnoreCase(resposta.getText().toString())){
                    startActivity(new Intent(LoginActivity.this, CadastroSenhaActivity.class));
                    finish();
                } else {
-                   Toast.makeText(LoginActivity.this, "Resposta Inválida.", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(LoginActivity.this, R.string.tx_resposta_invalida, Toast.LENGTH_SHORT).show();
                }
             }
         });
-        dialog.setNegativeButton("Cancelar", null);
+        dialog.setNegativeButton(R.string.tx_cancelar, null);
         dialog.show();
 
     }

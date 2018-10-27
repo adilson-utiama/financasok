@@ -136,4 +136,16 @@
     <string name="nenhum_dado_exportado_ate_o_momento">Nenhum dado exportado ate o momento</string>
     <string name="tx_total_de_despesas">Total de Despesas:</string>
     <string name="tx_valor_dispon_vel">Valor Disponível:</string>
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banner_block_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="tx_login_invalido">Usuario ou senha invalido!</string>
+    <string name="tx_nao_tem_senha">Não tem senha? Clique aqui.</string>
+    <string name="tx_pergunta_secreta">Pergunta Secreta</string>
+    <string name="tx_verificar">Verficar</string>
+    <string name="tx_resposta_invalida">Resposta Inválida.</string>
+    <string name="tx_cancelar">Cancelar</string>
+    <string name="tx_adicionar_despesa">Adiciona Receita</string>
+    <string name="tx_titulo_toolbar_edicao">Edição</string>
+    <string name="tx_msg_erro_val_valorembranco">Valor está em Branco</string>
+    <string name="tx_msg_erro_val_valorbaixo">Valor muito baixo</string>
 </resources>

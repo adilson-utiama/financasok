@@ -30,11 +30,9 @@ public class ListaReceitaFragment extends Fragment {
     private List<Receita> receitas;
     private ReceitaDAO dao;
 
-
     public ListaReceitaFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,9 +41,13 @@ public class ListaReceitaFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_lista_receita, container, false);
 
         dao = new ReceitaDAO(getContext());
+        configuraRecyclerView(view);
 
+        return view;
+    }
+
+    private void configuraRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_receita);
-
         adapter = new ReceitaAdapter(receitas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -56,18 +58,13 @@ public class ListaReceitaFragment extends Fragment {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Receita receita  = receitas.get(position);
-                        Receita receitaEditar = dao.findOne(receita.get_id());
-                        Intent intent = new Intent(view.getContext(), ReceitaActivity.class);
-                        intent.putExtra(EDITAR_RECEITA, receitaEditar);
-                        startActivity(intent);
+                        edicaoTarefa(view, position);
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
                         Receita receita = receitas.get(position);
                         mostrarDialogDeRemocao(receita, position);
-
                     }
 
                     @Override
@@ -75,9 +72,14 @@ public class ListaReceitaFragment extends Fragment {
 
                     }
                 }));
+    }
 
-
-        return view;
+    private void edicaoTarefa(View view, int position) {
+        Receita receita  = receitas.get(position);
+        Receita receitaEditar = dao.findOne(receita.get_id());
+        Intent intent = new Intent(view.getContext(), ReceitaActivity.class);
+        intent.putExtra(EDITAR_RECEITA, receitaEditar);
+        startActivity(intent);
     }
 
     public void carregaReceitas(List<Receita> lista){

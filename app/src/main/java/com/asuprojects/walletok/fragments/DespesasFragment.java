@@ -45,26 +45,30 @@ public class DespesasFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_despesas, container, false);
 
         daoDespesa = new DespesaDAO(getContext());
-
         String mes = StringUtils.mesParaString(Calendar.getInstance().get(Calendar.MONTH) + 1);
         despesas = daoDespesa.getAllDespesasFrom(mes);
 
+        preencheCamppoTotalDespesas(view);
+        configuraSpinnerMes(view);
+        trocaFragment();
+
+        return view;
+    }
+
+    private void preencheCamppoTotalDespesas(View view) {
         totalDespesas = view.findViewById(R.id.textview_total_receita);
         totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
+    }
 
+    private void configuraSpinnerMes(View view) {
         spinnerMes = view.findViewById(R.id.spinner_mes);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.meses, R.layout.spinner_item);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerMes.setAdapter(arrayAdapter);
         spinnerMes.setOnItemSelectedListener(this);
-
         Calendar instance = Calendar.getInstance();
         spinnerMes.setSelection(instance.get(Calendar.MONTH));
-
-        trocaFragment();
-
-        return view;
     }
 
 

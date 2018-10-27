@@ -7,13 +7,11 @@ public class BigDecimalConverter {
 
     public static String toStringFormatado(BigDecimal valor){
         DecimalFormat format = new DecimalFormat("¤ ###,##0.00");
-
         return format.format(valor.doubleValue());
     }
 
     public static String toStringFormatado(double valor){
         DecimalFormat format = new DecimalFormat("¤ ###,##0.00");
-
         return format.format(valor);
     }
 
@@ -24,7 +22,6 @@ public class BigDecimalConverter {
         }catch(Exception e){
             e.printStackTrace();
         }
-
         return new BigDecimal(valor);
     }
 }

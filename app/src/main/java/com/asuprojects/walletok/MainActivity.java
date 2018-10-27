@@ -75,13 +75,11 @@ public class MainActivity extends AppCompatActivity
 
         container = findViewById(R.id.linearLayoutCompat);
         configuraAdView();
-
         if(isConected()){
             mostraAnuncioAdView();
         }else{
             container.removeView(mAdView);
         }
-
         configuraNavigationDrawer();
         montaEstruturaDeAbas();
         configuraFabButton();
@@ -91,7 +89,6 @@ public class MainActivity extends AppCompatActivity
     private void configuraFabButton() {
         FloatingActionMenu fabMenu =  findViewById(R.id.fab_menu);
         fabMenu.setClosedOnTouchOutside(true);
-
         FloatingActionButton fabReceita = findViewById(R.id.fab_adiciona_receita);
         fabReceita.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +96,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, ReceitaActivity.class));
             }
         });
-
         FloatingActionButton fabDespesa = findViewById(R.id.fab_adiciona_despesa);
         fabDespesa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,21 +176,19 @@ public class MainActivity extends AppCompatActivity
 
     private void configuraAdView() {
         MobileAds.initialize(this,
-                "ca-app-pub-3940256099942544~3347511713");
+                getString(R.string.admob_app_id));
         mAdView = new AdView(this);
         mAdView.setAdSize(AdSize.SMART_BANNER);
-        mAdView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        mAdView.setAdUnitId(getString(R.string.admob_banner_block_id));
     }
 
     private boolean isConected(){
         ConnectivityManager conmag = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         if ( conmag != null ) {
             conmag.getActiveNetworkInfo();
-            //Verifica internet pela WIFI
             if (conmag.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
                 return true;
             }
-            //Verifica se tem internet móvel
             if (conmag.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
                 return true;
             }
@@ -261,16 +255,12 @@ public class MainActivity extends AppCompatActivity
                 if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED){
-
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
                     } else {
                         ActivityCompat.requestPermissions(this,
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_FILE);
-
                     }
-
                 } else {
                     mostrarDialogBackup();
                 }
@@ -288,16 +278,12 @@ public class MainActivity extends AppCompatActivity
                 if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED){
-
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
                     } else {
                         ActivityCompat.requestPermissions(this,
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_FILE);
-
                     }
-
                 } else {
                     mostrarDialogExportar();
                 }
@@ -308,9 +294,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
         }
-
         drawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
@@ -319,9 +303,7 @@ public class MainActivity extends AppCompatActivity
         dialog.setTitle(R.string.dialog_titulo_backup)
                 .setMessage(getString(R.string.dialog_msg_backup))
                 .setPositiveButton(getString(R.string.opcao_prosseguir), new DialogInterface.OnClickListener() {
-
                     String caminhoArquivo = null;
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
@@ -330,7 +312,6 @@ public class MainActivity extends AppCompatActivity
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, R.string.msg_erro_backup, Toast.LENGTH_LONG).show();
                         }
-
                         Toast.makeText(MainActivity.this,
                                 getString(R.string.msg_sucesso_backup) + caminhoArquivo,
                                 Toast.LENGTH_LONG).show();
@@ -350,7 +331,6 @@ public class MainActivity extends AppCompatActivity
                         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
                         intent.setType("application/octet-stream");
-
                         if(intent.resolveActivity(getPackageManager()) != null){
                             startActivityForResult(Intent.createChooser(intent, getString(R.string.intent_chooser_sel_file)), LOAD_FILE);
                         }
@@ -368,13 +348,7 @@ public class MainActivity extends AppCompatActivity
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     mostrarDialogExportar();
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
-                return;
             }
 
         }

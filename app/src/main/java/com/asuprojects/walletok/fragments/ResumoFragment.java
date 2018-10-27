@@ -81,16 +81,7 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         valorTotal = view.findViewById(R.id.valor_total);
         valorDisponivel = view.findViewById(R.id.valor_disponivel);
 
-        AppCompatSpinner spinnerMes = view.findViewById(R.id.spinner_resumoMes);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.meses, R.layout.spinner_item);
-        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinnerMes.setAdapter(arrayAdapter);
-        spinnerMes.setOnItemSelectedListener(this);
-
-        int mes = Calendar.getInstance().get(Calendar.MONTH);
-        mesSelecao = StringUtils.mesParaString(mes + 1);
-        spinnerMes.setSelection(mes);
+        configuraSpinnerSelecaoMes(view);
 
         despesasDoMes = daoDespesa.getAllDespesasFrom(mesSelecao);
         receitasDoMes = daoReceita.getAllReceitasFrom(mesSelecao);
@@ -102,6 +93,18 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         }
 
         return view;
+    }
+
+    private void configuraSpinnerSelecaoMes(View view) {
+        AppCompatSpinner spinnerMes = view.findViewById(R.id.spinner_resumoMes);
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.meses, R.layout.spinner_item);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerMes.setAdapter(arrayAdapter);
+        spinnerMes.setOnItemSelectedListener(this);
+        int mes = Calendar.getInstance().get(Calendar.MONTH);
+        mesSelecao = StringUtils.mesParaString(mes + 1);
+        spinnerMes.setSelection(mes);
     }
 
     @Override
@@ -124,7 +127,6 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
             tx.commit();
         }
     }
-
 
     private void calculaValorTotal() {
         BigDecimal totalDespesas = totalFromDespesas(despesasDoMes);

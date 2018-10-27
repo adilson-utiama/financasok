@@ -8,7 +8,7 @@ public enum CategoriaDespesa {
     EDUCACAO("Educação"),
     LAZER("Lazer"),
     SAUDE("Saúde"),
-    TRANSPORTE("Trasnporte"),
+    TRANSPORTE("Transporte"),
     OUTROS("Outros"),
     INDEFINIDO("Indefinido");
 

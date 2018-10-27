@@ -36,6 +36,8 @@ import java.util.List;
 
 public class ReceitaActivity extends AppCompatActivity {
 
+    public static final String EDITAR_RECEITA = "EDITAR_RECEITA";
+    public static final double VALOR_MINIMO = 1.0;
     private EditText valor;
     private AppCompatSpinner spinnerReceita;
     private AppCompatButton btnData;
@@ -59,7 +61,7 @@ public class ReceitaActivity extends AppCompatActivity {
         dao = new ReceitaDAO(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Adiciona Receita");
+        getSupportActionBar().setTitle(R.string.tx_adicionar_despesa);
 
         campoDescricao = findViewById(R.id.campo_descricao_receita);
 
@@ -76,9 +78,7 @@ public class ReceitaActivity extends AppCompatActivity {
                     String cleanString = s.toString().replaceAll("[R$,.]", "");
                     double parsed = Double.parseDouble(cleanString);
                     String formatted = MoneyUtil.formatar((parsed/100));
-                    Log.i("TEXT_WATCH", "onTextChanged: " + formatted);
                     String emDouble = MoneyUtil.valorEmDouble(formatted);
-                    Log.i("TEXT_WATCH", "onTextChanged: " + emDouble);
                     valorDecimal = Double.parseDouble(emDouble);
                     current = formatted;
                     valor.setText(formatted);
@@ -151,8 +151,8 @@ public class ReceitaActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        if(intent.hasExtra("EDITAR_RECEITA")){
-            receita = (Receita) intent.getSerializableExtra("EDITAR_RECEITA");
+        if(intent.hasExtra(EDITAR_RECEITA)){
+            receita = (Receita) intent.getSerializableExtra(EDITAR_RECEITA);
             campoDescricao.setText(receita.getDescricao());
             valor.setText(BigDecimalConverter.toStringFormatado(receita.getValor()));
             btnData.setText(receita.getDataFormatada());
@@ -160,7 +160,7 @@ public class ReceitaActivity extends AppCompatActivity {
             int index = listaCategorias.indexOf(receita.getCategoriaReceita().getDescricao());
             spinnerReceita.setSelection(index, true);
 
-            getSupportActionBar().setTitle("Edição");
+            getSupportActionBar().setTitle(R.string.tx_titulo_toolbar_edicao);
         }
 
 
@@ -168,11 +168,11 @@ public class ReceitaActivity extends AppCompatActivity {
 
     private boolean valorEhValido() {
         if(valor.getText().toString().isEmpty()){
-            Toast.makeText(ReceitaActivity.this, "Valor está em Branco", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ReceitaActivity.this, R.string.tx_msg_erro_val_valorembranco, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(valorDecimal < 1.0){
-            Toast.makeText(ReceitaActivity.this, "Valor muito baixo", Toast.LENGTH_SHORT).show();
+        if(valorDecimal < VALOR_MINIMO){
+            Toast.makeText(ReceitaActivity.this, R.string.tx_msg_erro_val_valorbaixo, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

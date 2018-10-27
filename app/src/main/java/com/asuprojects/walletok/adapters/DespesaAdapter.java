@@ -1,6 +1,5 @@
 package com.asuprojects.walletok.adapters;
 
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -155,13 +155,11 @@ public class CadastroSenhaActivity extends AppCompatActivity implements AdapterV
         return true;
     }
 
-    //Relacionado ao Spinner
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int posicao, long id) {
         String perguntaSelecionada = (String) adapterView.getItemAtPosition(posicao);
     }
 
-    //Relacionado ao Spinner
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
