@@ -29,11 +29,9 @@ import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.enums.CategoriaDespesa;
 import com.asuprojects.walletok.model.enums.Pagamento;
 import com.asuprojects.walletok.util.BigDecimalConverter;
-import com.asuprojects.walletok.util.CalendarConverter;
 import com.asuprojects.walletok.util.CalendarUtil;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -45,8 +43,6 @@ public class DespesaActivity extends AppCompatActivity{
     private EditText valor;
     private AppCompatSpinner spinner;
     private AppCompatButton btnData;
-
-    private List<String> listaCategorias;
 
     private DespesaDAO dao;
     private Despesa despesa;
@@ -94,7 +90,6 @@ public class DespesaActivity extends AppCompatActivity{
                         .pickerType(CalendarView.ONE_DAY_PICKER);
                 DatePicker datePicker = builder.build();
                 datePicker.show();
-
             }
         });
     }
@@ -110,24 +105,18 @@ public class DespesaActivity extends AppCompatActivity{
                 if(valorEhValido()){
                     salvaDespesa();
                 }
-
             }
         });
     }
 
     private void salvaDespesa() {
         String dataBtn = btnData.getText().toString();
-//        String[] split = dataBtn.split("/");
-//        int dia = Integer.parseInt(split[0]);
-//        int mes = Integer.parseInt(split[1]) - 1;
-//        int ano = Integer.parseInt(split[2]);
         Calendar dt = CalendarUtil.stringToCalendar(dataBtn);
-//        dt.set(ano, mes, dia);
 
         despesa.setDescricao(descricao.getText().toString());
         despesa.setData(dt);
         int position = spinner.getSelectedItemPosition();
-        despesa.setCategoriaDespesa(CategoriaDespesa.toEnum(listaCategorias.get(position)));
+        despesa.setCategoriaDespesa(CategoriaDespesa.toEnum(position));
         despesa.setValor(BigDecimal.valueOf(valorDecimal));
         despesa.setPagamento(pagamento);
 
@@ -138,12 +127,10 @@ public class DespesaActivity extends AppCompatActivity{
     }
 
     private void configuraSpinnerCategoria() {
-        listaCategorias = new ArrayList<>();
-        for(CategoriaDespesa c : CategoriaDespesa.values()){
-            listaCategorias.add(c.getDescricao());
-        }
         spinner = findViewById(R.id.campo_spinner_receita);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategorias);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.categoria_despesas,
+                android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
@@ -198,9 +185,9 @@ public class DespesaActivity extends AppCompatActivity{
             radioGroup.check(R.id.pag_outros);
         }
 
-        int index = listaCategorias.indexOf(despesa.getCategoriaDespesa().getDescricao());
+        int index = despesa.getCategoriaDespesa().getCodigo();
         spinner.setSelection(index, true);
-        getSupportActionBar().setTitle(R.string.appbar_titulo_edicao);
+        getSupportActionBar().setTitle(R.string.appbar_titulo_edicao_despesa);
     }
 
     private boolean valorEhValido() {
@@ -237,11 +224,6 @@ public class DespesaActivity extends AppCompatActivity{
         @Override
         public void onSelect(List<Calendar> calendars) {
             Calendar calendar = calendars.get(0);
-//            int dia = calendar.get(Calendar.DAY_OF_MONTH);
-//            int mes = calendar.get(Calendar.MONTH);
-//            int ano = calendar.get(Calendar.YEAR);
-//            StringBuilder builder = new StringBuilder();
-//            builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
             String dataAtual = CalendarUtil.toStringFormatadaPelaRegiao(calendar);
             btnData.setText(dataAtual);
         }

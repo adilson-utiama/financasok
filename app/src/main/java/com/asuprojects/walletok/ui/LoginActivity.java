@@ -47,23 +47,29 @@ public class LoginActivity extends AppCompatActivity {
         dao = new UsuarioDAO(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String usuario = preferences.getString(getString(R.string.usuario), "");
 
+        String usuario = preferences.getString(getString(R.string.usuario), "");
         esqueciSenha = findViewById(R.id.textView_esqueciSenha);
         verificarUsuario(usuario);
 
+        configuraComponentes();
+        configuraBtnLogin();
+    }
+
+    private void configuraComponentes() {
         inputLayoutUser = findViewById(R.id.input_layout_user);
         inputUser = findViewById(R.id.input_text_user);
         inputLayoutPassword = findViewById(R.id.input_layout_password);
         inputPassword = findViewById(R.id.input_text_password);
         checkbox = findViewById(R.id.checkBox_manter_conectado);
+    }
 
+    private void configuraBtnLogin() {
         btnLogin = findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean logado = logarUsuario();
-
                 if(logado){
                     editor = preferences.edit();
                     editor.putBoolean(getString(R.string.manter_conectado), checkbox.isChecked());
@@ -120,13 +126,11 @@ public class LoginActivity extends AppCompatActivity {
         });
         dialog.setNegativeButton(R.string.tx_cancelar, null);
         dialog.show();
-
     }
 
     private boolean logarUsuario() {
         String usuario = inputUser.getText().toString().trim();
         String senha = inputPassword.getText().toString().trim();
-
         Usuario user = dao.findBy(usuario);
          if(user != null && user.getSenha().trim().equals(senha)){
             return true;

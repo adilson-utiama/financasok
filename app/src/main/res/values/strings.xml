@@ -13,9 +13,28 @@
         <item>Marca do seu primeiro carro?</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tipo_mov_despesa">Despesas</string>
+    <string name="tipo_mov_receita">Receitas</string>
 
+    <array name="categoria_despesas">
+        <item>Alimentação</item>
+        <item>Compras</item>
+        <item>Contas</item>
+        <item>Educação</item>
+        <item>Lazer</item>
+        <item>Saúde</item>
+        <item>Transporte</item>
+        <item>Outros</item>
+        <item>Indefinido</item>
+    </array>
+
+    <array name="categoria_receitas">
+        <item>Salário</item>
+        <item>Presente</item>
+        <item>Prêmio</item>
+        <item>Outros</item>
+        <item>Indefinido</item>
+    </array>
 
     <string name="material_calendar_monday">S</string>
     <string name="material_calendar_tuesday">T</string>
@@ -102,7 +121,8 @@
     <string name="msg_erro_resposta_pergunta_vazia">Por favor, informe uma resposta a pergunta.</string>
     <string name="appbar_titulo_cofiguracoes">Configurações</string>
     <string name="appbar_titulo_despesa">Adiciona Despesa</string>
-    <string name="appbar_titulo_edicao">Edição</string>
+    <string name="appbar_titulo_edicao_despesa">Editar Despesa</string>
+    <string name="appbar_titulo_edicao_receita">Editar Receita</string>
     <string name="msg_erro_valor_em_branco">Valor está em Branco</string>
     <string name="msg_erro_valor_baixo">Valor muito baixo</string>
     <string name="tx_cadastro_de_senha">Cadastro de Senha</string>
@@ -144,8 +164,7 @@
     <string name="tx_verificar">Verficar</string>
     <string name="tx_resposta_invalida">Resposta Inválida.</string>
     <string name="tx_cancelar">Cancelar</string>
-    <string name="tx_adicionar_despesa">Adiciona Receita</string>
-    <string name="tx_titulo_toolbar_edicao">Edição</string>
+    <string name="tx_adicionar_receita">Adiciona Receita</string>
     <string name="tx_msg_erro_val_valorembranco">Valor está em Branco</string>
     <string name="tx_msg_erro_val_valorbaixo">Valor muito baixo</string>
 </resources>

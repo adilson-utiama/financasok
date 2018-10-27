@@ -8,6 +8,17 @@ public class Usuario {
     private String pergunta;
     private String resposta;
 
+    public Usuario() {
+    }
+
+    public Usuario(long _id, String usuario, String senha, String pergunta, String resposta) {
+        this._id = _id;
+        this.usuario = usuario;
+        this.senha = senha;
+        this.pergunta = pergunta;
+        this.resposta = resposta;
+    }
+
     public long get_id() {
         return _id;
     }

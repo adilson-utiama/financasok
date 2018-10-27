@@ -58,11 +58,7 @@ public class UsuarioDAO {
                 String pergunta = cursor.getString(cursor.getColumnIndexOrThrow(TabelaUsuario.COLUNA_PERGUNTA));
                 String resposta = cursor.getString(cursor.getColumnIndexOrThrow(TabelaUsuario.COLUNA_RESPOSTA));
 
-                usuario.set_id(id);
-                usuario.setUsuario(login);
-                usuario.setSenha(senha);
-                usuario.setPergunta(pergunta);
-                usuario.setResposta(resposta);
+                usuario = new Usuario(id, login, senha, pergunta, resposta);
             }
         } else {
             cursor.close();

@@ -46,7 +46,7 @@ public class ListaDespesaFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerview_despesa);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new DespesaAdapter(despesas);
+        adapter = new DespesaAdapter(getActivity(), despesas);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(
                 getContext(),
@@ -82,7 +82,7 @@ public class ListaDespesaFragment extends Fragment {
         if(adapter != null){
             adapter.setDespesas(despesas);
         } else {
-            adapter = new DespesaAdapter(despesas);
+            adapter = new DespesaAdapter(getActivity(), despesas);
         }
     }
 

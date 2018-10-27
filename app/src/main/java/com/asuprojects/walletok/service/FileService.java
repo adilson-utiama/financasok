@@ -17,6 +17,7 @@ import com.asuprojects.walletok.model.enums.Extensao;
 import com.asuprojects.walletok.util.CalendarUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,6 +26,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -39,10 +42,18 @@ public class FileService {
 
     private String separador = ",";
     private String dir = "/Backup_app/";
-    private final String despesa = "Despesas";
-    private final String receita = "Receitas";
+    private String despesa;
+    private String receita;
 
-    public String realizarBackup(Context context) throws IOException {
+    private Context context;
+
+    public FileService(Context context){
+        this.context = context;
+        this.despesa = context.getString(R.string.tipo_mov_despesa);
+        this.receita = context.getString(R.string.tipo_mov_receita);
+    }
+
+    public String realizarBackup() throws IOException {
         service = new DBService(context);
         List<Despesa> despesas = service.getDespesaDAO().getAll();
         List<Receita> receitas = service.getReceitaDAO().listAll();
@@ -56,7 +67,7 @@ public class FileService {
 
         if(isExternalStorageWritable()){
             File diretorio = criaDiretorioBackup();
-            salvaCaminhoBackupEmPreferences(context, diretorio);
+            salvaCaminhoBackupEmPreferences(diretorio);
 
             file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS) + dir, filename);
@@ -81,7 +92,7 @@ public class FileService {
         return builder.toString();
     }
 
-    public boolean restaurarDados(Context context, Uri dataUri){
+    public boolean restaurarDados(Uri dataUri){
         service = new DBService(context);
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(dataUri);
@@ -98,8 +109,7 @@ public class FileService {
         return true;
     }
 
-    public void exportarDados(String fileName, Extensao extensao, Context context) throws IOException {
-
+    public void exportarDados(String fileName, Extensao extensao) throws IOException {
         service = new DBService(context);
         List<Despesa> despesas = service.getDespesaDAO().getAll();
         List<Receita> receitas = service.getReceitaDAO().listAll();
@@ -110,7 +120,7 @@ public class FileService {
             File file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS), fileName);
 
-            salvaCaminhoExportadoEmPreferences(context, file);
+            salvaCaminhoExportadoEmPreferences(file);
 
             if(extensao.equals(Extensao.CSV)){
                 salvaEmCSV(file, despesas, receitas);
@@ -151,6 +161,7 @@ public class FileService {
         PrintStream ps = new PrintStream(new FileOutputStream(file));
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //TODO gerar json traduzido para o Ingles
         String dados = gson.toJson(mapa);
 
         ps.println(dados);
@@ -191,14 +202,14 @@ public class FileService {
         }
     }
 
-    private void salvaCaminhoBackupEmPreferences(Context context, File diretorio) {
+    private void salvaCaminhoBackupEmPreferences(File diretorio) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(context.getString(R.string.backup_path), diretorio.getAbsolutePath());
         editor.apply();
     }
 
-    private void salvaCaminhoExportadoEmPreferences(Context context, File file) {
+    private void salvaCaminhoExportadoEmPreferences(File file) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(context.getString(R.string.export_file_path), file.getAbsolutePath());
@@ -218,9 +229,10 @@ public class FileService {
 
 
     private String receitaLinha(Receita r) {
+        String[] stringArray = context.getResources().getStringArray(R.array.categoria_receitas);
         StringBuilder builder = new StringBuilder();
         builder.append(r.getDataFormatada()).append(separador)
-                .append(r.getCategoriaReceita()).append(separador)
+                .append(stringArray[r.getCategoriaReceita().getCodigo()]).append(separador)
                 .append(r.getDescricao()).append(separador)
                 .append(r.getValor().doubleValue());
         return builder.toString();
@@ -228,7 +240,8 @@ public class FileService {
 
     private String colunasDespesa() {
         StringBuilder builder = new StringBuilder();
-        builder.append("DESPESAS").append(separador)
+        //TODO gerar colunas traduzidas para o Ingles
+        builder.append(despesa).append(separador)
                 .append(TabelaDespesa.COLUNA_DATA).append(separador)
                 .append(TabelaDespesa.COLUNA_CATEGORIA).append(separador)
                 .append(TabelaDespesa.COLUNA_DESCRICAO).append(separador)
@@ -239,7 +252,8 @@ public class FileService {
 
     private String colunasReceita() {
         StringBuilder builder = new StringBuilder();
-        builder.append("RECEITAS").append(separador)
+        //TODO gerar colunas traduzidas para o Ingles
+        builder.append(receita).append(separador)
                 .append(TabelaReceita.COLUNA_DATA).append(separador)
                 .append(TabelaReceita.COLUNA_CATEGORIA).append(separador)
                 .append(TabelaReceita.COLUNA_DESCRICAO).append(separador)
@@ -248,9 +262,10 @@ public class FileService {
     }
 
     private String despesaLinha(Despesa d){
+        String[] stringArray = context.getResources().getStringArray(R.array.categoria_despesas);
         StringBuilder builder = new StringBuilder();
         builder.append(d.getDataFormatada()).append(separador)
-                .append(d.getCategoriaDespesa()).append(separador)
+                .append(stringArray[d.getCategoriaDespesa().getCodigo()]).append(separador)
                 .append(d.getDescricao()).append(separador)
                 .append(d.getPagamento()).append(separador)
                 .append(d.getValor().doubleValue());

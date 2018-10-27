@@ -19,6 +19,17 @@ public class Despesa implements Serializable {
     private Calendar data;
     private Pagamento pagamento;
 
+    public Despesa() {
+    }
+
+    public Despesa(String descricao, CategoriaDespesa categoriaDespesa, BigDecimal valor, Calendar data, Pagamento pagamento) {
+        this.descricao = descricao;
+        this.categoriaDespesa = categoriaDespesa;
+        this.valor = valor;
+        this.data = data;
+        this.pagamento = pagamento;
+    }
+
     public long get_id() {
         return _id;
     }

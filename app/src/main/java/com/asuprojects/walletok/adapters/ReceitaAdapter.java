@@ -1,5 +1,6 @@
 package com.asuprojects.walletok.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,8 +19,10 @@ import java.util.List;
 public class ReceitaAdapter extends RecyclerView.Adapter {
 
     private List<Receita> receitas;
+    private Context ctx;
 
-    public ReceitaAdapter(List<Receita> receitas){
+    public ReceitaAdapter(Context ctx, List<Receita> receitas){
+        this.ctx = ctx;
         this.receitas = receitas;
     }
 
@@ -36,7 +39,8 @@ public class ReceitaAdapter extends RecyclerView.Adapter {
         Receita receita = receitas.get(position);
         ReceitaViewHolder receitaHolder = (ReceitaViewHolder) holder;
         receitaHolder.setDescricao(receita.getDescricao());
-        receitaHolder.setCategoria(receita.getCategoriaReceita().getDescricao());
+        String[] stringArray = ctx.getResources().getStringArray(R.array.categoria_receitas);
+        receitaHolder.setCategoria(stringArray[receita.getCategoriaReceita().getCodigo()]);
         receitaHolder.setData(CalendarUtil.toStringFormatadaPelaRegiao(receita.getData()));
         receitaHolder.setValor(BigDecimalConverter.toStringFormatado(receita.getValor()));
     }

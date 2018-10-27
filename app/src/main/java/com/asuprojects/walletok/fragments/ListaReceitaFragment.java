@@ -48,7 +48,7 @@ public class ListaReceitaFragment extends Fragment {
 
     private void configuraRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_receita);
-        adapter = new ReceitaAdapter(receitas);
+        adapter = new ReceitaAdapter(getActivity(), receitas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -87,7 +87,7 @@ public class ListaReceitaFragment extends Fragment {
         if(adapter != null){
             adapter.setReceitas(receitas);
         } else {
-            adapter = new ReceitaAdapter(receitas);
+            adapter = new ReceitaAdapter(getActivity(), receitas);
         }
     }
 

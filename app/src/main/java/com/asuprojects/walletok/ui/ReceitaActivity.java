@@ -9,7 +9,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -26,12 +25,9 @@ import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.model.enums.CategoriaReceita;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.util.BigDecimalConverter;
-import com.asuprojects.walletok.util.CalendarConverter;
 import com.asuprojects.walletok.util.CalendarUtil;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -43,14 +39,11 @@ public class ReceitaActivity extends AppCompatActivity {
     private AppCompatSpinner spinnerReceita;
     private AppCompatButton btnData;
     private TextInputEditText campoDescricao;
-    private FloatingActionButton btnSalvar;
 
     private ReceitaDAO dao;
 
     private String current = "";
     private double valorDecimal;
-
-    private List<String> listaCategorias;
 
     private Receita receita;
 
@@ -61,11 +54,22 @@ public class ReceitaActivity extends AppCompatActivity {
 
         dao = new ReceitaDAO(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.tx_adicionar_despesa);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.tx_adicionar_receita);
+        }
 
         campoDescricao = findViewById(R.id.campo_descricao_receita);
+        configuraEditTextValor();
+        configuraSpinnerCategoria();
+        configuraBtnSalvar();
+        configuraBtnSelData();
 
+        Intent intent = getIntent();
+        eHEdicaoReceita(intent);
+    }
+
+    private void configuraEditTextValor() {
         valor = findViewById(R.id.campo_valor_receita);
         valor.addTextChangedListener(new TextWatcher() {
 
@@ -91,48 +95,18 @@ public class ReceitaActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) { }
         });
+    }
 
+    private void configuraSpinnerCategoria() {
         spinnerReceita = findViewById(R.id.campo_spinner_receita);
-        listaCategorias = new ArrayList<>();
-        for(CategoriaReceita c : CategoriaReceita.values()){
-            listaCategorias.add(c.getDescricao());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategorias);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.categoria_receitas,
+                android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerReceita.setAdapter(adapter);
+    }
 
-        btnSalvar = findViewById(R.id.btn_salvar_receita);
-        btnSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(receita == null){
-                    receita = new Receita();
-                }
-
-                if(valorEhValido()){
-                    String dataBtn = btnData.getText().toString();
-//                    String[] split = dataBtn.split("/");
-//                    int dia = Integer.parseInt(split[0]);
-//                    int mes = Integer.parseInt(split[1]) - 1;
-//                    int ano = Integer.parseInt(split[2]);
-                    Calendar dt = CalendarUtil.stringToCalendar(dataBtn);
-                    receita.setData(dt);
-                    receita.setDescricao(campoDescricao.getText().toString());
-                    receita.setValor(BigDecimal.valueOf(valorDecimal));
-                    int position = spinnerReceita.getSelectedItemPosition();
-                    receita.setCategoriaReceita(CategoriaReceita.toEnum(listaCategorias.get(position)));
-
-                    dao.insertOrUpdate(receita);
-
-                    startActivity(new Intent(ReceitaActivity.this, MainActivity.class));
-                }
-
-            }
-        });
-
-
-
+    private void configuraBtnSelData() {
         btnData = findViewById(R.id.campo_data_receita);
         setDataAtual();
         btnData.setOnClickListener(new View.OnClickListener() {
@@ -143,27 +117,51 @@ public class ReceitaActivity extends AppCompatActivity {
                         .selectionColor(R.color.colorPrimary)
                         .date(Calendar.getInstance())
                         .pickerType(CalendarView.ONE_DAY_PICKER);
-
                 DatePicker datePicker = builder.build();
                 datePicker.show();
 
             }
         });
+    }
 
-        Intent intent = getIntent();
+    private void configuraBtnSalvar() {
+        FloatingActionButton btnSalvar = findViewById(R.id.btn_salvar_receita);
+        btnSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(receita == null){
+                    receita = new Receita();
+                }
+                if(valorEhValido()){
+                    String dataBtn = btnData.getText().toString();
+                    Calendar dt = CalendarUtil.stringToCalendar(dataBtn);
+                    receita.setData(dt);
+                    receita.setDescricao(campoDescricao.getText().toString());
+                    receita.setValor(BigDecimal.valueOf(valorDecimal));
+                    int position = spinnerReceita.getSelectedItemPosition();
+                    receita.setCategoriaReceita(CategoriaReceita.toEnum(position));
+
+                    dao.insertOrUpdate(receita);
+
+                    startActivity(new Intent(ReceitaActivity.this, MainActivity.class));
+                }
+
+            }
+        });
+    }
+
+    private void eHEdicaoReceita(Intent intent) {
         if(intent.hasExtra(EDITAR_RECEITA)){
             receita = (Receita) intent.getSerializableExtra(EDITAR_RECEITA);
             campoDescricao.setText(receita.getDescricao());
             valor.setText(BigDecimalConverter.toStringFormatado(receita.getValor()));
             btnData.setText(receita.getDataFormatada());
 
-            int index = listaCategorias.indexOf(receita.getCategoriaReceita().getDescricao());
+            int index = receita.getCategoriaReceita().getCodigo();
             spinnerReceita.setSelection(index, true);
 
-            getSupportActionBar().setTitle(R.string.tx_titulo_toolbar_edicao);
+            getSupportActionBar().setTitle(R.string.appbar_titulo_edicao_receita);
         }
-
-
     }
 
     private boolean valorEhValido() {
@@ -179,12 +177,6 @@ public class ReceitaActivity extends AppCompatActivity {
     }
 
     private void setDataAtual() {
-//        Calendar calendar = Calendar.getInstance();
-//        int dia = calendar.get(Calendar.DAY_OF_MONTH);
-//        int mes = calendar.get(Calendar.MONTH);
-//        int ano = calendar.get(Calendar.YEAR);
-//        StringBuilder builder = new StringBuilder();
-//        builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
         String dataAtual = CalendarUtil.toStringFormatadaPelaRegiao(Calendar.getInstance());
         btnData.setText(dataAtual);
     }
@@ -193,11 +185,6 @@ public class ReceitaActivity extends AppCompatActivity {
         @Override
         public void onSelect(List<Calendar> calendars) {
             Calendar calendar = calendars.get(0);
-//            int dia = calendar.get(Calendar.DAY_OF_MONTH);
-//            int mes = calendar.get(Calendar.MONTH);
-//            int ano = calendar.get(Calendar.YEAR);
-//            StringBuilder builder = new StringBuilder();
-//            builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
             String dataSelecionada = CalendarUtil.toStringFormatadaPelaRegiao(calendar);
             btnData.setText(dataSelecionada);
         }

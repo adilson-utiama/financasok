@@ -1,9 +1,11 @@
 package com.asuprojects.walletok.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,8 +19,10 @@ public class DespesaAdapter extends RecyclerView.Adapter {
 
 
     private List<Despesa> despesas;
+    private Context ctx;
 
-    public DespesaAdapter(List<Despesa> despesas) {
+    public DespesaAdapter(Context ctx,  List<Despesa> despesas) {
+        this.ctx = ctx;
         this.despesas = despesas;
     }
 
@@ -35,7 +39,8 @@ public class DespesaAdapter extends RecyclerView.Adapter {
         Despesa despesa = despesas.get(position);
         DespesaViewHolder despesaHolder = (DespesaViewHolder) holder;
         despesaHolder.setDescricao(despesa.getDescricao());
-        despesaHolder.setCategoria(despesa.getCategoriaDespesa().getDescricao());
+        String[] stringArray = ctx.getResources().getStringArray(R.array.categoria_despesas);
+        despesaHolder.setCategoria(stringArray[despesa.getCategoriaDespesa().getCodigo()]);
         despesaHolder.setValor(despesa.getValorFormatado());
         despesaHolder.setData(despesa.getDataFormatada());
         if(despesa.getPagamento().equals(Pagamento.DINHEIRO)){

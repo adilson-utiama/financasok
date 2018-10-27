@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            caminhoArquivo = new FileService().realizarBackup(MainActivity.this);
+                            caminhoArquivo = new FileService(MainActivity.this).realizarBackup();
                         } catch (IOException e) {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, R.string.msg_erro_backup, Toast.LENGTH_LONG).show();
@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton(getString(R.string.opcao_exportar), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        FileService util = new FileService();
+                        FileService util = new FileService(MainActivity.this);
                         Extensao ext = null;
                         try {
 
@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity
                             if(checkedRadioButtonId == R.id.json_format){
                                 ext = Extensao.JSON;
                             }
-                            util.exportarDados(arquivo, ext, MainActivity.this);
+                            util.exportarDados(arquivo, ext);
                             Toast.makeText(MainActivity.this, getString(R.string.msg_sucesso_exportar), Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -392,7 +392,7 @@ public class MainActivity extends AppCompatActivity
         if(resultCode == RESULT_OK){
             if(requestCode == LOAD_FILE){
                 Uri dataUri = data.getData();
-                boolean result = new FileService().restaurarDados(MainActivity.this, dataUri);
+                boolean result = new FileService(MainActivity.this).restaurarDados(dataUri);
                 if(result){
                     Toast.makeText(this, getString(R.string.msg_sucesso_restaurar), Toast.LENGTH_SHORT).show();
                 }

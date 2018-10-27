@@ -138,7 +138,7 @@ public class DespesaDAO {
     private ContentValues despesaParaContentValues(Despesa despesa) {
         ContentValues values = new ContentValues();
         values.put(TabelaDespesa.COLUNA_DESCRICAO, despesa.getDescricao());
-        values.put(TabelaDespesa.COLUNA_CATEGORIA, despesa.getCategoriaDespesa().getDescricao());
+        values.put(TabelaDespesa.COLUNA_CATEGORIA, despesa.getCategoriaDespesa().getCodigo());
         values.put(TabelaDespesa.COLUNA_DATA, CalendarConverter.toStringFormatada(despesa.getData()));
         values.put(TabelaDespesa.COLUNA_VALOR, despesa.getValor().doubleValue());
         values.put(TabelaDespesa.COLUNA_PAGAMENTO, despesa.getPagamento().getDesc());
@@ -162,8 +162,8 @@ public class DespesaDAO {
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow(TabelaDespesa.COLUNA_DESCRICAO));
         despesa.setDescricao(descricao);
 
-        String categoriaString = cursor.getString(cursor.getColumnIndexOrThrow(TabelaDespesa.COLUNA_CATEGORIA));
-        CategoriaDespesa categoria = CategoriaDespesa.toEnum(categoriaString);
+        Integer categoriaInteger = cursor.getInt(cursor.getColumnIndexOrThrow(TabelaDespesa.COLUNA_CATEGORIA));
+        CategoriaDespesa categoria = CategoriaDespesa.toEnum(categoriaInteger);
         despesa.setCategoriaDespesa(categoria);
 
         String dataString = cursor.getString(cursor.getColumnIndexOrThrow(TabelaDespesa.COLUNA_DATA));

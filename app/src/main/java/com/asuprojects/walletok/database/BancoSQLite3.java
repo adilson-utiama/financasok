@@ -43,7 +43,7 @@ public class BancoSQLite3 extends SQLiteOpenHelper {
             "CREATE TABLE " + TabelaReceita.NOME_TABELA + " (" +
                     TabelaReceita.COLUNA_ID + " INTEGER PRIMARY KEY," +
                     TabelaReceita.COLUNA_DESCRICAO + " TEXT, " +
-                    TabelaReceita.COLUNA_CATEGORIA + " TEXT, " +
+                    TabelaReceita.COLUNA_CATEGORIA + " INTEGER, " +
                     TabelaReceita.COLUNA_DATA + " TEXT, " +
                     TabelaReceita.COLUNA_VALOR + " REAL )";
 
@@ -54,7 +54,7 @@ public class BancoSQLite3 extends SQLiteOpenHelper {
             "CREATE TABLE " + TabelaDespesa.NOME_TABELA + " (" +
                     TabelaDespesa.COLUNA_ID + " INTEGER PRIMARY KEY," +
                     TabelaDespesa.COLUNA_DESCRICAO + " TEXT, " +
-                    TabelaDespesa.COLUNA_CATEGORIA + " TEXT, " +
+                    TabelaDespesa.COLUNA_CATEGORIA + " INTEGER, " +
                     TabelaDespesa.COLUNA_DATA + " TEXT, " +
                     TabelaDespesa.COLUNA_PAGAMENTO + " TEXT, " +
                     TabelaDespesa.COLUNA_VALOR + " REAL )";
