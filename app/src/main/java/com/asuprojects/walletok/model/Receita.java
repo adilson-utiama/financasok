@@ -2,6 +2,7 @@ package com.asuprojects.walletok.model;
 
 import com.asuprojects.walletok.model.enums.CategoriaReceita;
 import com.asuprojects.walletok.util.CalendarConverter;
+import com.asuprojects.walletok.util.CalendarUtil;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -56,6 +57,6 @@ public class Receita implements Serializable {
     }
 
     public String getDataFormatada() {
-        return CalendarConverter.toStringFormatada(getData());
+        return CalendarUtil.toStringFormatadaPelaRegiao(getData());
     }
 }

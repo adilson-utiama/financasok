@@ -1,13 +1,15 @@
 package com.asuprojects.walletok.util;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class CalendarUtil {
 
-    public static final String BR_FORMAT_REGEX = "[0-9]{1,2}\\\\/[0-9]{1,2}\\\\/[0-9]{4}";
-    public static final String US_FORMAT_REGEX = "[0-9]{4}\\\\/[0-9]{1,2}\\\\/[0-9]{1,2}";
+    public static final String BR_FORMAT_REGEX = "[0-9]{1,2}\\D[0-9]{1,2}\\D[0-9]{4}";
+    public static final String US_FORMAT_REGEX = "[0-9]{4}\\D[0-9]{1,2}\\D[0-9]{1,2}";
     public static final String BR_FORMATO = "dd/MM/yyyy";
     public static final String ISO8601 = "yyyy-MM-dd";
 
@@ -31,22 +33,22 @@ public class CalendarUtil {
         return builder.toString();
     }
 
-    public Calendar stringToCalendar(String data){
+    public static Calendar stringToCalendar(String data){
         Calendar calendar = Calendar.getInstance();
         if(data.matches(BR_FORMAT_REGEX)) {
-            String[] numeros = data.split("\\\\/D");
+            String[] numeros = data.split("\\D");
             int dia = Integer.parseInt(numeros[0]);
             int mes = Integer.parseInt(numeros[1]);
             int ano = Integer.parseInt(numeros[2]);
-            calendar.set(ano, mes, dia);
+            calendar.set(ano, mes - 1, dia);
             return calendar;
         }
         if(data.matches(US_FORMAT_REGEX)){
-            String[] numeros = data.split("\\\\/D");
+            String[] numeros = data.split("\\D");
             int ano = Integer.parseInt(numeros[0]);
             int mes = Integer.parseInt(numeros[1]);
             int dia = Integer.parseInt(numeros[2]);
-            calendar.set(ano, mes, dia);
+            calendar.set(ano, mes - 1, dia);
             return calendar;
         }
         throw new RuntimeException("Formato de data não identificado.");

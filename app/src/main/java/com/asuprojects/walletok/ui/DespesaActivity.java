@@ -117,12 +117,12 @@ public class DespesaActivity extends AppCompatActivity{
 
     private void salvaDespesa() {
         String dataBtn = btnData.getText().toString();
-        String[] split = dataBtn.split("/");
-        int dia = Integer.parseInt(split[0]);
-        int mes = Integer.parseInt(split[1]) - 1;
-        int ano = Integer.parseInt(split[2]);
-        Calendar dt = Calendar.getInstance();
-        dt.set(ano, mes, dia);
+//        String[] split = dataBtn.split("/");
+//        int dia = Integer.parseInt(split[0]);
+//        int mes = Integer.parseInt(split[1]) - 1;
+//        int ano = Integer.parseInt(split[2]);
+        Calendar dt = CalendarUtil.stringToCalendar(dataBtn);
+//        dt.set(ano, mes, dia);
 
         despesa.setDescricao(descricao.getText().toString());
         despesa.setData(dt);
@@ -237,12 +237,13 @@ public class DespesaActivity extends AppCompatActivity{
         @Override
         public void onSelect(List<Calendar> calendars) {
             Calendar calendar = calendars.get(0);
-            int dia = calendar.get(Calendar.DAY_OF_MONTH);
-            int mes = calendar.get(Calendar.MONTH);
-            int ano = calendar.get(Calendar.YEAR);
-            StringBuilder builder = new StringBuilder();
-            builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
-            btnData.setText(builder.toString());
+//            int dia = calendar.get(Calendar.DAY_OF_MONTH);
+//            int mes = calendar.get(Calendar.MONTH);
+//            int ano = calendar.get(Calendar.YEAR);
+//            StringBuilder builder = new StringBuilder();
+//            builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
+            String dataAtual = CalendarUtil.toStringFormatadaPelaRegiao(calendar);
+            btnData.setText(dataAtual);
         }
     };
 

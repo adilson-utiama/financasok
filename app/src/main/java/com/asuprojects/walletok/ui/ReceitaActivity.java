@@ -27,6 +27,7 @@ import com.asuprojects.walletok.model.enums.CategoriaReceita;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.asuprojects.walletok.util.CalendarConverter;
+import com.asuprojects.walletok.util.CalendarUtil;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -111,12 +112,11 @@ public class ReceitaActivity extends AppCompatActivity {
 
                 if(valorEhValido()){
                     String dataBtn = btnData.getText().toString();
-                    String[] split = dataBtn.split("/");
-                    int dia = Integer.parseInt(split[0]);
-                    int mes = Integer.parseInt(split[1]) - 1;
-                    int ano = Integer.parseInt(split[2]);
-                    Calendar dt = Calendar.getInstance();
-                    dt.set(ano, mes, dia);
+//                    String[] split = dataBtn.split("/");
+//                    int dia = Integer.parseInt(split[0]);
+//                    int mes = Integer.parseInt(split[1]) - 1;
+//                    int ano = Integer.parseInt(split[2]);
+                    Calendar dt = CalendarUtil.stringToCalendar(dataBtn);
                     receita.setData(dt);
                     receita.setDescricao(campoDescricao.getText().toString());
                     receita.setValor(BigDecimal.valueOf(valorDecimal));
@@ -179,25 +179,27 @@ public class ReceitaActivity extends AppCompatActivity {
     }
 
     private void setDataAtual() {
-        Calendar calendar = Calendar.getInstance();
-        int dia = calendar.get(Calendar.DAY_OF_MONTH);
-        int mes = calendar.get(Calendar.MONTH);
-        int ano = calendar.get(Calendar.YEAR);
-        StringBuilder builder = new StringBuilder();
-        builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
-        btnData.setText(builder.toString());
+//        Calendar calendar = Calendar.getInstance();
+//        int dia = calendar.get(Calendar.DAY_OF_MONTH);
+//        int mes = calendar.get(Calendar.MONTH);
+//        int ano = calendar.get(Calendar.YEAR);
+//        StringBuilder builder = new StringBuilder();
+//        builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
+        String dataAtual = CalendarUtil.toStringFormatadaPelaRegiao(Calendar.getInstance());
+        btnData.setText(dataAtual);
     }
 
     private OnSelectDateListener listener = new OnSelectDateListener() {
         @Override
         public void onSelect(List<Calendar> calendars) {
             Calendar calendar = calendars.get(0);
-            int dia = calendar.get(Calendar.DAY_OF_MONTH);
-            int mes = calendar.get(Calendar.MONTH);
-            int ano = calendar.get(Calendar.YEAR);
-            StringBuilder builder = new StringBuilder();
-            builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
-            btnData.setText(builder.toString());
+//            int dia = calendar.get(Calendar.DAY_OF_MONTH);
+//            int mes = calendar.get(Calendar.MONTH);
+//            int ano = calendar.get(Calendar.YEAR);
+//            StringBuilder builder = new StringBuilder();
+//            builder.append(dia).append("/").append(mes + 1).append("/").append(ano);
+            String dataSelecionada = CalendarUtil.toStringFormatadaPelaRegiao(calendar);
+            btnData.setText(dataSelecionada);
         }
     };
 
