@@ -15,6 +15,7 @@ import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.model.enums.Extensao;
 import com.asuprojects.walletok.util.CalendarUtil;
+import com.asuprojects.walletok.util.GsonUTCCalendarAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
@@ -28,6 +29,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -160,7 +162,11 @@ public class FileService {
 
         PrintStream ps = new PrintStream(new FileOutputStream(file));
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting()
+                .registerTypeHierarchyAdapter(Calendar.class, new GsonUTCCalendarAdapter())
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+
         //TODO gerar json traduzido para o Ingles
         String dados = gson.toJson(mapa);
 
@@ -241,7 +247,7 @@ public class FileService {
     private String colunasDespesa() {
         StringBuilder builder = new StringBuilder();
         //TODO gerar colunas traduzidas para o Ingles
-        builder.append(despesa).append(separador)
+        builder.append(despesa).append("\n")
                 .append(TabelaDespesa.COLUNA_DATA).append(separador)
                 .append(TabelaDespesa.COLUNA_CATEGORIA).append(separador)
                 .append(TabelaDespesa.COLUNA_DESCRICAO).append(separador)
@@ -253,7 +259,7 @@ public class FileService {
     private String colunasReceita() {
         StringBuilder builder = new StringBuilder();
         //TODO gerar colunas traduzidas para o Ingles
-        builder.append(receita).append(separador)
+        builder.append(receita).append("\n")
                 .append(TabelaReceita.COLUNA_DATA).append(separador)
                 .append(TabelaReceita.COLUNA_CATEGORIA).append(separador)
                 .append(TabelaReceita.COLUNA_DESCRICAO).append(separador)

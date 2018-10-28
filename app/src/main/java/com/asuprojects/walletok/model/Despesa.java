@@ -5,6 +5,8 @@ import com.asuprojects.walletok.model.enums.Pagamento;
 import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.asuprojects.walletok.util.CalendarConverter;
 import com.asuprojects.walletok.util.CalendarUtil;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,11 +14,22 @@ import java.util.Calendar;
 
 public class Despesa implements Serializable {
 
+    @Expose(serialize = false)
     private long _id;
+
+    @SerializedName("description") @Expose
     private String descricao;
+
+    @SerializedName("category") @Expose
     private CategoriaDespesa categoriaDespesa;
+
+    @SerializedName("value") @Expose
     private BigDecimal valor;
+
+    @SerializedName("date") @Expose
     private Calendar data;
+
+    @SerializedName("payment") @Expose
     private Pagamento pagamento;
 
     public Despesa() {
