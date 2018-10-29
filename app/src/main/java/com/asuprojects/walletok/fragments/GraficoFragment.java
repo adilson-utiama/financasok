@@ -35,7 +35,6 @@ public class GraficoFragment extends Fragment
         implements OnChartValueSelectedListener {
 
     public static final String MES_SELECAO = "MES";
-    private TextView despesaCategoriaSelecao;
     private PieChart chart;
     private List<Despesa> despesasDoMes;
 
@@ -60,7 +59,6 @@ public class GraficoFragment extends Fragment
             mesSelecao = (String) savedInstanceState.getSerializable(MES_SELECAO);
         }
 
-        despesaCategoriaSelecao = view.findViewById(R.id.despesaCategoriaSelecao);
         chart = view.findViewById(R.id.pieChart);
 
         this.despesasDoMes = dao.getAllDespesasFrom(mesSelecao);
@@ -98,11 +96,13 @@ public class GraficoFragment extends Fragment
 
         chart.setData(data);
         chart.setOnChartValueSelectedListener(this);
-        chart.setDrawHoleEnabled(false);
         chart.setUsePercentValues(true);
         chart.setCenterTextColor(Color.WHITE);
         chart.setRotationEnabled(false);
         chart.setEntryLabelColor(Color.rgb(89,89,89));
+        chart.setDrawHoleEnabled(true);
+        chart.setCenterTextSize(18);
+        chart.setCenterTextColor(Color.rgb(89,89,89));
 
         Legend l = chart.getLegend();
         l.setEnabled(false);
@@ -148,14 +148,12 @@ public class GraficoFragment extends Fragment
         String label = ((PieEntry) e).getLabel();
         float value = ((PieEntry) e).getValue();
         String valorFormatadado = BigDecimalConverter.toStringFormatado(value);
-        String valorTotalStr = label.concat(" : ").concat(valorFormatadado);
-        despesaCategoriaSelecao.setText(valorTotalStr);
+        String valorTotalStr = label.concat("\n").concat(valorFormatadado);
+        chart.setCenterText(valorTotalStr);
     }
 
     @Override
-    public void onNothingSelected() {
-        despesaCategoriaSelecao.setText("");
-    }
+    public void onNothingSelected() { }
 
 
 }

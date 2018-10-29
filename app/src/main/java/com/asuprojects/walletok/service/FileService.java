@@ -166,10 +166,7 @@ public class FileService {
                 .registerTypeHierarchyAdapter(Calendar.class, new GsonUTCCalendarAdapter())
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
-
-        //TODO gerar json traduzido para o Ingles
         String dados = gson.toJson(mapa);
-
         ps.println(dados);
         ps.close();
     }
