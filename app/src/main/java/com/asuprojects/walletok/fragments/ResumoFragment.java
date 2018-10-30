@@ -66,9 +66,10 @@ public class ResumoFragment extends Fragment {
 
         final String[] meses = view.getResources().getStringArray(R.array.meses);
 
-        centerText = view.findViewById(R.id.receitas_tx_center_mes_sel);
+        centerText = view.findViewById(R.id.resumo_tx_center_mes_sel);
         centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
-        arrowLeft = view.findViewById(R.id.receitas_arrow_left);
+
+        arrowLeft = view.findViewById(R.id.resumo_arrow_left);
         arrowLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,13 +80,11 @@ public class ResumoFragment extends Fragment {
                     mesSelecao -= 1;
                 }
                 centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
-
                 dataAtual.set(anoAtual, mesSelecao + 1, 0);
-                Log.i("MESES", "onCreateView: Data: " + dataAtual.getTime());
                 selecaoMes(dataAtual);
             }
         });
-        arrowRight = view.findViewById(R.id.receitas_arrow_right);
+        arrowRight = view.findViewById(R.id.resumo_arrow_right);
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,9 +95,7 @@ public class ResumoFragment extends Fragment {
                     mesSelecao += 1;
                 }
                 centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
-
                 dataAtual.set(anoAtual, mesSelecao + 1, 0);
-                Log.i("MESES", "onCreateView: Data: " + dataAtual.getTime());
                 selecaoMes(dataAtual);
             }
         });
@@ -109,7 +106,6 @@ public class ResumoFragment extends Fragment {
         valorTotal = view.findViewById(R.id.valor_total);
         valorDisponivel = view.findViewById(R.id.valor_disponivel);
 
-        Log.i("MESES", "onCreateView: " + mesSelecao);
         despesasDoMes = daoDespesa.getAllDespesasFrom(String.valueOf(mesSelecao + 1));
         receitasDoMes = daoReceita.getAllReceitasFrom(String.valueOf(mesSelecao + 1));
 

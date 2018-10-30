@@ -1,17 +1,12 @@
 package com.asuprojects.walletok.fragments;
 
 
-import android.media.tv.TvView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.AppCompatSpinner;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +15,6 @@ import com.asuprojects.walletok.dao.ReceitaDAO;
 import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.model.Tipo;
-import com.asuprojects.walletok.util.StringUtils;
 
 import java.util.Calendar;
 import java.util.List;

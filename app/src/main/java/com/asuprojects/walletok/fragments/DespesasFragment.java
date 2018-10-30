@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.asuprojects.walletok.R;
@@ -22,16 +23,21 @@ import com.asuprojects.walletok.util.StringUtils;
 import java.util.Calendar;
 import java.util.List;
 
-public class DespesasFragment extends Fragment
-                implements AdapterView.OnItemSelectedListener {
+public class DespesasFragment extends Fragment {
 
     private TextView totalDespesas;
 
-    private AppCompatSpinner spinnerMes;
-
     private List<Despesa> despesas;
-
     private DespesaDAO daoDespesa;
+
+    private ImageView arrowLeft;
+    private ImageView arrowRight;
+    private TextView centerText;
+
+    private int mesSelecao = 0;
+    private int anoAtual = 0;
+    private Calendar dataAtual;
+    private String[] meses;
 
     public DespesasFragment() {
         // Required empty public constructor
@@ -44,12 +50,47 @@ public class DespesasFragment extends Fragment
 
         View view = inflater.inflate(R.layout.fragment_despesas, container, false);
 
+        dataAtual = Calendar.getInstance();
+        mesSelecao = dataAtual.get(Calendar.MONTH);
+        anoAtual = dataAtual.get(Calendar.YEAR);
+        meses = view.getResources().getStringArray(R.array.meses);
+
         daoDespesa = new DespesaDAO(getContext());
-        String mes = StringUtils.mesParaString(Calendar.getInstance().get(Calendar.MONTH) + 1);
-        despesas = daoDespesa.getAllDespesasFrom(mes);
+        despesas = daoDespesa.getAllDespesasFrom(dataAtual);
+
+        arrowLeft = view.findViewById(R.id.despesas_arrow_left);
+        arrowLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mesSelecao <= 0){
+                    mesSelecao = 11;
+                    anoAtual -= 1;
+                } else {
+                    mesSelecao -= 1;
+                }
+                dataAtual.set(anoAtual, mesSelecao + 1, 0);
+                selecaoMes(dataAtual);
+            }
+        });
+        arrowRight = view.findViewById(R.id.despesas_arrow_right);
+        arrowRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mesSelecao >= 11){
+                    mesSelecao = 0;
+                    anoAtual += 1;
+                } else {
+                    mesSelecao += 1;
+                }
+                dataAtual.set(anoAtual, mesSelecao + 1, 0);
+                selecaoMes(dataAtual);
+            }
+        });
+
+        centerText = view.findViewById(R.id.despesas_tx_center_mes_sel);
+        centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
 
         preencheCamppoTotalDespesas(view);
-        configuraSpinnerMes(view);
         trocaFragment();
 
         return view;
@@ -60,28 +101,12 @@ public class DespesasFragment extends Fragment
         totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
     }
 
-    private void configuraSpinnerMes(View view) {
-        spinnerMes = view.findViewById(R.id.spinner_mes);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.meses, R.layout.spinner_item);
-        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinnerMes.setAdapter(arrayAdapter);
-        spinnerMes.setOnItemSelectedListener(this);
-        Calendar instance = Calendar.getInstance();
-        spinnerMes.setSelection(instance.get(Calendar.MONTH));
-    }
-
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        despesas = daoDespesa.getAllDespesasFrom(StringUtils.mesParaString(position + 1));
-        totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
+    private void selecaoMes(Calendar data){
+        despesas = daoDespesa.getAllDespesasFrom(data);
+        String valorTotal = MoneyUtil.valorTotalFrom(despesas);
+        totalDespesas.setText(valorTotal);
+        centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
         trocaFragment();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     private void trocaFragment(){
