@@ -18,6 +18,7 @@ import com.asuprojects.walletok.util.CalendarConverter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ReceitaDAO {
@@ -26,6 +27,26 @@ public class ReceitaDAO {
 
     public ReceitaDAO(Context context){
         this.banco = BancoSQLite3.getInstance(context);
+    }
+
+    public List<Receita> getAllReceitasFrom(Calendar data){
+        String mes = String.valueOf(data.get(Calendar.MONTH) + 1);
+        String ano = String.valueOf(data.get(Calendar.YEAR));
+
+        SQLiteDatabase db = banco.getReadableDatabase();
+        List<Receita> receitas = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TabelaReceita.NOME_TABELA
+                + " WHERE strftime('%m', data) = ? AND strftime('%Y', data) = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{ mes, ano });
+        cursor.moveToFirst();
+        for (int i = 0; i < cursor.getCount(); i++) {
+            Receita receita = receitaFrom(cursor);
+            receitas.add(receita);
+            cursor.moveToNext();
+        }
+        return receitas;
     }
 
     public List<Receita> getAllReceitasFrom(String mes){

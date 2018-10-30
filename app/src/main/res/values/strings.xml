@@ -82,7 +82,7 @@
     <string name="lista_vazia_titulo_despesa">Nenhuma Despesa</string>
     <string name="lista_vazia_titulo_sem_registro">Sem registro de dados</string>
     <string name="lista_vazia_titulo_vazio">Vazio</string>
-    <string name="despesa_total_zero">Despesa Total: R$ 0,00</string>
+    <string name="despesa_total_zero">R$ 0,00</string>
     <string name="despesa_total_label">Despesa Total:</string>
     <string name="valor_disponivel_label">Disponivel:</string>
     <string name="hint_digite_a_resposta">Digite a Resposta</string>

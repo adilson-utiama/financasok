@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,14 +45,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ResumoFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-
+public class ResumoFragment extends Fragment {
 
     public static final String MES_SELECAO = "MES";
     private TextView valorTotal;
     private TextView valorDisponivel;
-
-    private String mesSelecao;
 
     private DespesaDAO daoDespesa;
     private ReceitaDAO daoReceita;
@@ -59,10 +57,17 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
     private List<Despesa> despesasDoMes;
     private List<Receita> receitasDoMes;
 
+    private ImageView arrowLeft;
+    private ImageView arrowRight;
+    private TextView centerText;
+
+    private int mesSelecao = 0;
+    private int anoAtual = 0;
+    private Calendar dataAtual;
+
     public ResumoFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,9 +76,53 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
 
         if(savedInstanceState != null) {
             if(savedInstanceState.getSerializable(MES_SELECAO) != null){
-                mesSelecao = (String) savedInstanceState.getSerializable(MES_SELECAO);
+                mesSelecao = (int) savedInstanceState.getSerializable(MES_SELECAO);
             }
         }
+
+        dataAtual = Calendar.getInstance();
+        mesSelecao = dataAtual.get(Calendar.MONTH);
+        anoAtual = dataAtual.get(Calendar.YEAR);
+
+        final String[] meses = view.getResources().getStringArray(R.array.meses);
+
+        centerText = view.findViewById(R.id.tx_center_mes_sel);
+        centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
+
+        arrowLeft = view.findViewById(R.id.arrow_left);
+        arrowLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mesSelecao <= 0){
+                    mesSelecao = 11;
+                    anoAtual -= 1;
+                } else {
+                    mesSelecao -= 1;
+                }
+                centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
+
+                dataAtual.set(anoAtual, mesSelecao + 1, 0);
+                Log.i("MESES", "onCreateView: Data: " + dataAtual.getTime());
+                selecaoMes(dataAtual);
+            }
+        });
+        arrowRight = view.findViewById(R.id.arrow_right);
+        arrowRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mesSelecao >= 11){
+                    mesSelecao = 0;
+                    anoAtual += 1;
+                } else {
+                    mesSelecao += 1;
+                }
+                centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
+
+                dataAtual.set(anoAtual, mesSelecao + 1, 0);
+                Log.i("MESES", "onCreateView: Data: " + dataAtual.getTime());
+                selecaoMes(dataAtual);
+            }
+        });
 
         daoDespesa = new DespesaDAO(getContext());
         daoReceita = new ReceitaDAO(getContext());
@@ -81,10 +130,9 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         valorTotal = view.findViewById(R.id.valor_total);
         valorDisponivel = view.findViewById(R.id.valor_disponivel);
 
-        configuraSpinnerSelecaoMes(view);
-
-        despesasDoMes = daoDespesa.getAllDespesasFrom(mesSelecao);
-        receitasDoMes = daoReceita.getAllReceitasFrom(mesSelecao);
+        Log.i("MESES", "onCreateView: " + mesSelecao);
+        despesasDoMes = daoDespesa.getAllDespesasFrom(String.valueOf(mesSelecao + 1));
+        receitasDoMes = daoReceita.getAllReceitasFrom(String.valueOf(mesSelecao + 1));
 
         calculaValorTotal();
 
@@ -95,21 +143,9 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         return view;
     }
 
-    private void configuraSpinnerSelecaoMes(View view) {
-        AppCompatSpinner spinnerMes = view.findViewById(R.id.spinner_resumoMes);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.meses, R.layout.spinner_item);
-        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinnerMes.setAdapter(arrayAdapter);
-        spinnerMes.setOnItemSelectedListener(this);
-        int mes = Calendar.getInstance().get(Calendar.MONTH);
-        mesSelecao = StringUtils.mesParaString(mes + 1);
-        spinnerMes.setSelection(mes);
-    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(MES_SELECAO, mesSelecao);
+        outState.putSerializable(MES_SELECAO, mesSelecao + 1);
         super.onSaveInstanceState(outState);
     }
 
@@ -122,7 +158,7 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
             tx.commit();
         } else {
             GraficoFragment graficoFragment = new GraficoFragment();
-            graficoFragment.carregaLista(mesSelecao);
+            graficoFragment.carregaLista(String.valueOf(mesSelecao + 1));
             tx.replace(R.id.frameLayoutGrafico, graficoFragment);
             tx.commit();
         }
@@ -130,8 +166,7 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
 
     private void calculaValorTotal() {
         BigDecimal totalDespesas = totalFromDespesas(despesasDoMes);
-        String totalFormatado = getString(R.string.despesa_total_label).concat(" ")
-                .concat(BigDecimalConverter.toStringFormatado(totalDespesas));;
+        String totalFormatado = BigDecimalConverter.toStringFormatado(totalDespesas);
         if(!totalDespesas.equals(BigDecimal.ZERO)){
             valorTotal.setText(totalFormatado);
         } else {
@@ -141,11 +176,8 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         totalDisponivel = totalDisponivel.subtract(totalDespesas);
         if(totalDisponivel.doubleValue() < BigDecimal.ZERO.doubleValue()){
             valorDisponivel.setTextColor(Color.RED);
-        }else{
-            valorDisponivel.setTextColor(Color.WHITE);
         }
-        String disponivel = getString(R.string.valor_disponivel_label).concat(" ")
-                .concat(BigDecimalConverter.toStringFormatado(totalDisponivel));
+        String disponivel = BigDecimalConverter.toStringFormatado(totalDisponivel);
         valorDisponivel.setText(disponivel);
 
     }
@@ -166,17 +198,11 @@ public class ResumoFragment extends Fragment implements AdapterView.OnItemSelect
         return total;
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mesSelecao = StringUtils.mesParaString(position + 1);
-        despesasDoMes = daoDespesa.getAllDespesasFrom(mesSelecao);
-        receitasDoMes = daoReceita.getAllReceitasFrom(mesSelecao);
+    private void selecaoMes(Calendar data){
+        despesasDoMes = daoDespesa.getAllDespesasFrom(data);
+        receitasDoMes = daoReceita.getAllReceitasFrom(data);
         calculaValorTotal();
         trocaFragment(despesasDoMes);
     }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) { }
-
 
 }

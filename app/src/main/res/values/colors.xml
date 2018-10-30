@@ -6,6 +6,6 @@
     <color name="background_light">#bdffb5</color>
     <color name="background_edit_text">#dfffdb</color>
 
-    <color name="receita">#607890</color>
-    <color name="despesa">#B22318</color>
+    <color name="receita">#2962FF</color>
+    <color name="despesa">#f57c00</color>
 </resources>

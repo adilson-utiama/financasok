@@ -28,6 +28,29 @@ public class DespesaDAO {
         this.banco = BancoSQLite3.getInstance(context);
     }
 
+    //TODO mudar para pegar pelo mes e ano
+    public List<Despesa> getAllDespesasFrom(Calendar data){
+        String mes = String.valueOf(data.get(Calendar.MONTH) + 1);
+        String ano = String.valueOf(data.get(Calendar.YEAR));
+
+        SQLiteDatabase db = banco.getReadableDatabase();
+        List<Despesa> despesas = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TabelaDespesa.NOME_TABELA
+                + " WHERE strftime('%m', data) = ? AND strftime('%Y', data) = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{ mes, ano });
+        cursor.moveToFirst();
+        for (int i = 0; i < cursor.getCount(); i++) {
+            Despesa despesa = despesaFrom(cursor);
+            despesas.add(despesa);
+            cursor.moveToNext();
+        }
+
+        return despesas;
+    }
+
+
     public List<Despesa> getAllDespesasFrom(String mes){
         SQLiteDatabase db = banco.getReadableDatabase();
         List<Despesa> despesas = new ArrayList<>();
