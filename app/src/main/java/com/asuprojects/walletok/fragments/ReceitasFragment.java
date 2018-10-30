@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatSpinner;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.asuprojects.walletok.R;
@@ -23,12 +25,20 @@ import com.asuprojects.walletok.util.StringUtils;
 import java.util.Calendar;
 import java.util.List;
 
-public class ReceitasFragment extends Fragment
-        implements AdapterView.OnItemSelectedListener {
+public class ReceitasFragment extends Fragment {
 
     private TextView valorTotalReceita;
     private List<Receita> receitas;
     private ReceitaDAO dao;
+
+    private ImageView arrowLeft;
+    private ImageView arrowRight;
+    private TextView centerText;
+
+    private int mesSelecao = 0;
+    private int anoAtual = 0;
+    private Calendar dataAtual;
+    private String[] meses;
 
     public ReceitasFragment() {
         // Required empty public constructor
@@ -37,16 +47,50 @@ public class ReceitasFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_receitas, container, false);
 
         dao = new ReceitaDAO(getContext());
 
-        View view = inflater.inflate(R.layout.fragment_receitas, container, false);
+        dataAtual = Calendar.getInstance();
+        mesSelecao = dataAtual.get(Calendar.MONTH);
+        anoAtual = dataAtual.get(Calendar.YEAR);
+        meses = view.getResources().getStringArray(R.array.meses);
 
-        String mes = StringUtils.mesParaString(Calendar.getInstance().get(Calendar.MONTH) + 1);
-        receitas = dao.getAllReceitasFrom(mes);
+        arrowLeft = view.findViewById(R.id.receitas_arrow_left);
+        arrowLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mesSelecao <= 0){
+                    mesSelecao = 11;
+                    anoAtual -= 1;
+                } else {
+                    mesSelecao -= 1;
+                }
+                dataAtual.set(anoAtual, mesSelecao + 1, 0);
+                selecaoMes(dataAtual);
+            }
+        });
+        arrowRight = view.findViewById(R.id.receitas_arrow_right);
+        arrowRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mesSelecao >= 11){
+                    mesSelecao = 0;
+                    anoAtual += 1;
+                } else {
+                    mesSelecao += 1;
+                }
+                dataAtual.set(anoAtual, mesSelecao + 1, 0);
+                selecaoMes(dataAtual);
+            }
+        });
+
+        receitas = dao.getAllReceitasFrom(dataAtual);
+
+        centerText = view.findViewById(R.id.receitas_tx_center_mes_sel);
+        centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
+
         preencheValorTotalReceitas(view);
-        configuraSpinnerSelecaoMes(view);
-
         trocaFragment(receitas);
 
         return view;
@@ -55,17 +99,6 @@ public class ReceitasFragment extends Fragment
     private void preencheValorTotalReceitas(View view) {
         valorTotalReceita = view.findViewById(R.id.textview_total_receita);
         valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
-    }
-
-    private void configuraSpinnerSelecaoMes(View view) {
-        AppCompatSpinner spinnerMes = view.findViewById(R.id.spinner_mes);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.meses, R.layout.spinner_item);
-        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinnerMes.setAdapter(arrayAdapter);
-        spinnerMes.setOnItemSelectedListener(this);
-        Calendar instance = Calendar.getInstance();
-        spinnerMes.setSelection(instance.get(Calendar.MONTH));
     }
 
     private void trocaFragment(List<Receita> lista){
@@ -83,15 +116,12 @@ public class ReceitasFragment extends Fragment
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        receitas = dao.getAllReceitasFrom(StringUtils.mesParaString(position + 1));
-        valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
+    private void selecaoMes(Calendar data){
+        receitas = dao.getAllReceitasFrom(data);
+        String valorTotal = MoneyUtil.valorTotalFrom(receitas);
+        valorTotalReceita.setText(valorTotal);
+        centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
         trocaFragment(receitas);
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 }

@@ -2,21 +2,16 @@ package com.asuprojects.walletok.fragments;
 
 
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.DespesaDAO;
@@ -25,25 +20,10 @@ import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.model.Tipo;
 import com.asuprojects.walletok.util.BigDecimalConverter;
-import com.asuprojects.walletok.util.StringUtils;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ResumoFragment extends Fragment {
 
@@ -86,10 +66,9 @@ public class ResumoFragment extends Fragment {
 
         final String[] meses = view.getResources().getStringArray(R.array.meses);
 
-        centerText = view.findViewById(R.id.tx_center_mes_sel);
+        centerText = view.findViewById(R.id.receitas_tx_center_mes_sel);
         centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
-
-        arrowLeft = view.findViewById(R.id.arrow_left);
+        arrowLeft = view.findViewById(R.id.receitas_arrow_left);
         arrowLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +85,7 @@ public class ResumoFragment extends Fragment {
                 selecaoMes(dataAtual);
             }
         });
-        arrowRight = view.findViewById(R.id.arrow_right);
+        arrowRight = view.findViewById(R.id.receitas_arrow_right);
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

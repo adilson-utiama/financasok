@@ -14,17 +14,17 @@
         android:background="@color/colorPrimaryDark">
 
         <ImageView
-            android:id="@+id/arrow_left"
+            android:id="@+id/receitas_arrow_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:src="@drawable/ic_arrow_left"
-            app:layout_constraintBottom_toBottomOf="@+id/tx_center_mes_sel"
+            app:layout_constraintBottom_toBottomOf="@+id/receitas_tx_center_mes_sel"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tx_center_mes_sel" />
+            app:layout_constraintTop_toTopOf="@+id/receitas_tx_center_mes_sel" />
 
         <TextView
-            android:id="@+id/tx_center_mes_sel"
+            android:id="@+id/receitas_tx_center_mes_sel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -36,19 +36,19 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/arrow_right"
-            app:layout_constraintStart_toEndOf="@+id/arrow_left"
+            app:layout_constraintEnd_toStartOf="@+id/receitas_arrow_right"
+            app:layout_constraintStart_toEndOf="@+id/receitas_arrow_left"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/arrow_right"
+            android:id="@+id/receitas_arrow_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_arrow_right"
-            app:layout_constraintBottom_toBottomOf="@+id/tx_center_mes_sel"
+            app:layout_constraintBottom_toBottomOf="@+id/receitas_tx_center_mes_sel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tx_center_mes_sel" />
+            app:layout_constraintTop_toTopOf="@+id/receitas_tx_center_mes_sel" />
 
     </android.support.constraint.ConstraintLayout>
 
