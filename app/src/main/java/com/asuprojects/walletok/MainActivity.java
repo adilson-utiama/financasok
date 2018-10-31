@@ -51,6 +51,9 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import net.rdrei.android.dirchooser.DirectoryChooserActivity;
+import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     private static final int ADD_RECEITA = 1000;
     private static final int ADD_DESPESA = 2000;
     public static final String TAB_NUMBER = "TAB_NUMBER";
+    private static final int REQUEST_DIRECTORY = 300;
 
     private int tabAtual = 0;
 
@@ -72,6 +76,8 @@ public class MainActivity extends AppCompatActivity
     private AdView mAdView;
     private TabAdapter abasAdapter;
     private ViewPager viewPager;
+
+    private String caminhoArquivo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -321,18 +327,17 @@ public class MainActivity extends AppCompatActivity
         dialog.setTitle(R.string.dialog_titulo_backup)
                 .setMessage(getString(R.string.dialog_msg_backup))
                 .setPositiveButton(getString(R.string.opcao_prosseguir), new DialogInterface.OnClickListener() {
-                    String caminhoArquivo = null;
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            caminhoArquivo = new FileService(MainActivity.this).realizarBackup();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(MainActivity.this, R.string.msg_erro_backup, Toast.LENGTH_LONG).show();
-                        }
-                        Toast.makeText(MainActivity.this,
-                                getString(R.string.msg_sucesso_backup) + caminhoArquivo,
-                                Toast.LENGTH_LONG).show();
+                            final Intent chooserIntent = new Intent(MainActivity.this, DirectoryChooserActivity.class);
+                            final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
+                                    .newDirectoryName("Backup_App")
+                                    .allowReadOnlyDirectory(true)
+                                    .allowNewDirectoryNameModification(true)
+                                    .build();
+
+                            chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
+                            startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
                     }
                 })
                 .setNegativeButton(getString(R.string.opcao_cancelar), null)
@@ -407,6 +412,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("URI", "onActivityResult: Recebendo resultado..." );
         if(resultCode == RESULT_OK){
             if(requestCode == LOAD_FILE){
                 Uri dataUri = data.getData();
@@ -414,6 +420,24 @@ public class MainActivity extends AppCompatActivity
                 if(result){
                     Toast.makeText(this, getString(R.string.msg_sucesso_restaurar), Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+
+        if(requestCode == REQUEST_DIRECTORY){
+            if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
+                String caminho = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
+                try {
+                    caminhoArquivo = new FileService(MainActivity.this).realizarBackup(caminho);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, R.string.msg_erro_backup, Toast.LENGTH_LONG).show();
+                }
+                Toast.makeText(MainActivity.this,
+                        getString(R.string.msg_sucesso_backup) + caminhoArquivo,
+                        Toast.LENGTH_LONG).show();
+
+            } else {
+
             }
 
         }

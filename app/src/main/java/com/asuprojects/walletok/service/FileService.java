@@ -1,11 +1,13 @@
 package com.asuprojects.walletok.service;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.asuprojects.walletok.R;
@@ -19,6 +21,9 @@ import com.asuprojects.walletok.util.GsonUTCCalendarAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
+
+import net.rdrei.android.dirchooser.DirectoryChooserActivity;
+import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,7 +48,6 @@ public class FileService {
     private DBService service;
 
     private String separador = ",";
-    private String dir = "/Backup_app/";
     private String despesa;
     private String receita;
 
@@ -55,7 +59,7 @@ public class FileService {
         this.receita = context.getString(R.string.tipo_mov_receita);
     }
 
-    public String realizarBackup() throws IOException {
+    public String realizarBackup(String caminho) throws IOException {
         service = new DBService(context);
         List<Despesa> despesas = service.getDespesaDAO().getAll();
         List<Receita> receitas = service.getReceitaDAO().listAll();
@@ -68,21 +72,15 @@ public class FileService {
         File file = null;
 
         if(isExternalStorageWritable()){
-            File diretorio = criaDiretorioBackup();
-            salvaCaminhoBackupEmPreferences(diretorio);
-
-            file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS) + dir, filename);
+            salvaCaminhoBackupEmPreferences(caminho);
+            file = new File(caminho, filename);
             ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(file));
             saida.writeObject(mapa);
             saida.close();
-
         } else {
             Toast.makeText(context, context.getString(R.string.msg_falha_backup), Toast.LENGTH_SHORT).show();
         }
-
         service.close();
-
         return file.exists() ? file.getAbsolutePath() : context.getString(R.string.msg_caminho_arquivo_desconhecido);
     }
 
@@ -117,7 +115,6 @@ public class FileService {
         List<Receita> receitas = service.getReceitaDAO().listAll();
 
         if(isExternalStorageWritable()){
-
             fileName += extensao.getExtensao();
             File file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS), fileName);
@@ -205,10 +202,10 @@ public class FileService {
         }
     }
 
-    private void salvaCaminhoBackupEmPreferences(File diretorio) {
+    private void salvaCaminhoBackupEmPreferences(String diretorio) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(context.getString(R.string.backup_path), diretorio.getAbsolutePath());
+        editor.putString(context.getString(R.string.backup_path), diretorio);
         editor.apply();
     }
 
@@ -218,18 +215,6 @@ public class FileService {
         editor.putString(context.getString(R.string.export_file_path), file.getAbsolutePath());
         editor.apply();
     }
-
-
-    @NonNull
-    private File criaDiretorioBackup() {
-        File diretorio = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS) + dir);
-        if(!diretorio.exists()){
-            diretorio.mkdirs();
-        }
-        return diretorio;
-    }
-
 
     private String receitaLinha(Receita r) {
         String[] stringArray = context.getResources().getStringArray(R.array.categoria_receitas);
