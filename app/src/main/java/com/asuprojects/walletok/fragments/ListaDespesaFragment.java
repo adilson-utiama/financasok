@@ -48,7 +48,7 @@ public class ListaDespesaFragment extends Fragment {
 
         containerDespesas = view.findViewById(R.id.lista_despesas_container);
         containerDespesas.setAlpha(0);
-        containerDespesas.animate().setDuration(600).alpha(1F).setListener(null);
+        containerDespesas.animate().setDuration(500).alpha(1F).setListener(null);
 
         daoDespesa = new DespesaDAO(getContext());
 

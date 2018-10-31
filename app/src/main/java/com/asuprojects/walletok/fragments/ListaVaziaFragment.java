@@ -29,7 +29,7 @@ public class ListaVaziaFragment extends Fragment {
 
         listaVaziaContainer = view.findViewById(R.id.lista_vazia_container);
         listaVaziaContainer.setAlpha(0);
-        listaVaziaContainer.animate().setDuration(600).alpha(1F).setListener(null);
+        listaVaziaContainer.animate().setDuration(500).alpha(1F).setListener(null);
 
         ImageView imageView = view.findViewById(R.id.iconListaVazia);
         TextView texto = view.findViewById(R.id.textview_listaVazia);

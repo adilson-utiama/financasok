@@ -28,7 +28,6 @@ public class DespesaDAO {
         this.banco = BancoSQLite3.getInstance(context);
     }
 
-    //TODO mudar para pegar pelo mes e ano
     public List<Despesa> getAllDespesasFrom(Calendar data){
         String mes = String.valueOf(data.get(Calendar.MONTH) + 1);
         String ano = String.valueOf(data.get(Calendar.YEAR));

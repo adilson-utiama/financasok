@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,7 @@ public class GraficoFragment extends Fragment
     private TextView valorTotal;
     private TextView valorDisponivel;
 
+    private LinearLayoutCompat graficoContainer;
 
     public GraficoFragment() {
         // Required empty public constructor
@@ -63,6 +65,10 @@ public class GraficoFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grafico, container, false);
+
+        graficoContainer = view.findViewById(R.id.grafico_container);
+        graficoContainer.setAlpha(0);
+        graficoContainer.animate().setDuration(500).alpha(1F).setListener(null);
 
         daoDespesa = new DespesaDAO(getContext());
         daoReceita = new ReceitaDAO(getContext());

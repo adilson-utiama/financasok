@@ -48,7 +48,7 @@ public class ListaReceitaFragment extends Fragment {
 
         listaReceitaContainer = view.findViewById(R.id.lista_receitas_container);
         listaReceitaContainer.setAlpha(0);
-        listaReceitaContainer.animate().setDuration(600).alpha(1F).setListener(null);
+        listaReceitaContainer.animate().setDuration(500).alpha(1F).setListener(null);
 
         dao = new ReceitaDAO(getContext());
 
