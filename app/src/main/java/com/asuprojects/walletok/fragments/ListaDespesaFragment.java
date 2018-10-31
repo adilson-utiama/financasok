@@ -12,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.adapters.DespesaAdapter;
 import com.asuprojects.walletok.dao.DespesaDAO;
+import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.helper.RecyclerItemClickListener;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.ui.DespesaActivity;
@@ -25,16 +27,16 @@ import java.util.List;
 public class ListaDespesaFragment extends Fragment {
 
     public static final String EDITAR_DESPESA = "EDITAR_DESPESA";
-    private RecyclerView recyclerView;
     private DespesaAdapter adapter;
 
     private DespesaDAO daoDespesa;
     private List<Despesa> despesas;
 
+    private TextView totalDespesas;
+
     public ListaDespesaFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +45,16 @@ public class ListaDespesaFragment extends Fragment {
 
         daoDespesa = new DespesaDAO(getContext());
 
-        recyclerView = view.findViewById(R.id.recyclerview_despesa);
+        configuraRecyclerView(view);
+
+        totalDespesas = view.findViewById(R.id.textview_total_despesa);
+        totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
+
+        return view;
+    }
+
+    private void configuraRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview_despesa);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new DespesaAdapter(getActivity(), despesas);
@@ -73,8 +84,6 @@ public class ListaDespesaFragment extends Fragment {
 
                     }
                 }));
-
-        return view;
     }
 
     public void carregaDespesas(List<Despesa> lista){
@@ -96,6 +105,7 @@ public class ListaDespesaFragment extends Fragment {
                 daoDespesa.delete(despesa.get_id());
                 despesas.remove(posicao);
                 adapter.notifyItemRemoved(posicao);
+                totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
             }
         });
         dialog.setNegativeButton(R.string.opcao_nao, null);

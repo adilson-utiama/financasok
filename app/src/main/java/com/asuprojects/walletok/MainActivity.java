@@ -59,12 +59,19 @@ public class MainActivity extends AppCompatActivity
 
     private static final int LOAD_FILE = 200;
     private static final int WRITE_FILE = 100;
+    private static final int ADD_RECEITA = 1000;
+    private static final int ADD_DESPESA = 2000;
+    public static final String TAB_NUMBER = "TAB_NUMBER";
+
+    private int tabAtual = 0;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
     private LinearLayoutCompat container;
     private AdView mAdView;
+    private TabAdapter abasAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,16 +91,24 @@ public class MainActivity extends AppCompatActivity
         montaEstruturaDeAbas();
         configuraFabButton();
 
+        Intent intent = getIntent();
+        if(intent.hasExtra(TAB_NUMBER)){
+            int tab_number = intent.getIntExtra(TAB_NUMBER, 0);
+            viewPager.setCurrentItem(tab_number);
+        }
     }
 
     private void configuraFabButton() {
-        FloatingActionMenu fabMenu =  findViewById(R.id.fab_menu);
+        final FloatingActionMenu fabMenu =  findViewById(R.id.fab_menu);
         fabMenu.setClosedOnTouchOutside(true);
         FloatingActionButton fabReceita = findViewById(R.id.fab_adiciona_receita);
         fabReceita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, ReceitaActivity.class));
+                Intent intent = new Intent(MainActivity.this, ReceitaActivity.class);
+                //startActivity(intent);
+                startActivityForResult(intent, ADD_RECEITA);
+                fabMenu.close(true);
             }
         });
         FloatingActionButton fabDespesa = findViewById(R.id.fab_adiciona_despesa);
@@ -101,22 +116,44 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DespesaActivity.class);
-                startActivity(intent);
+                //startActivity(intent);
+                startActivityForResult(intent, ADD_DESPESA);
+                fabMenu.close(true);
             }
         });
     }
 
     private void montaEstruturaDeAbas() {
-        TabAdapter abasAdapter = new TabAdapter(getSupportFragmentManager());
+        abasAdapter = new TabAdapter(getSupportFragmentManager());
         abasAdapter.adicionar(new DespesasFragment(), getString(R.string.aba_titulo_despesas));
         abasAdapter.adicionar(new ReceitasFragment(), getString(R.string.aba_titulo_receitas));
         abasAdapter.adicionar(new ResumoFragment(), getString(R.string.aba_titulo_resumo));
 
-        ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(abasAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.setCurrentItem(tabAtual);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                Log.i("TAB_POSITION", "onTabSelected: " + position);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void configuraNavigationDrawer() {
@@ -397,6 +434,7 @@ public class MainActivity extends AppCompatActivity
                     Toast.makeText(this, getString(R.string.msg_sucesso_restaurar), Toast.LENGTH_SHORT).show();
                 }
             }
+
         }
     }
 }

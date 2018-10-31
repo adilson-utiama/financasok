@@ -39,6 +39,7 @@ public class DespesaActivity extends AppCompatActivity{
 
     public static final String EDITAR_DESPESA = "EDITAR_DESPESA";
     public static final double VALOR_MINIMO = 0.1;
+    public static final String TAB_NUMBER = "TAB_NUMBER";
     private TextInputEditText descricao;
     private EditText valor;
     private AppCompatSpinner spinner;
@@ -123,6 +124,7 @@ public class DespesaActivity extends AppCompatActivity{
         dao.insertOrUpdate(despesa);
 
         Intent intent = new Intent(DespesaActivity.this, MainActivity.class);
+        intent.putExtra(TAB_NUMBER, 0);
         startActivity(intent);
     }
 

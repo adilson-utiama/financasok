@@ -25,8 +25,6 @@ import java.util.List;
 
 public class DespesasFragment extends Fragment {
 
-    private TextView totalDespesas;
-
     private List<Despesa> despesas;
     private DespesaDAO daoDespesa;
 
@@ -89,22 +87,13 @@ public class DespesasFragment extends Fragment {
 
         centerText = view.findViewById(R.id.despesas_tx_center_mes_sel);
         centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
-
-        preencheCamppoTotalDespesas(view);
         trocaFragment();
 
         return view;
     }
 
-    private void preencheCamppoTotalDespesas(View view) {
-        totalDespesas = view.findViewById(R.id.textview_total_receita);
-        totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
-    }
-
     private void selecaoMes(Calendar data){
         despesas = daoDespesa.getAllDespesasFrom(data);
-        String valorTotal = MoneyUtil.valorTotalFrom(despesas);
-        totalDespesas.setText(valorTotal);
         centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
         trocaFragment();
     }

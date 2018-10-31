@@ -21,6 +21,7 @@ import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
 import com.asuprojects.walletok.MainActivity;
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.ReceitaDAO;
+import com.asuprojects.walletok.fragments.ReceitasFragment;
 import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.model.enums.CategoriaReceita;
 import com.asuprojects.walletok.model.Receita;
@@ -35,6 +36,8 @@ public class ReceitaActivity extends AppCompatActivity {
 
     public static final String EDITAR_RECEITA = "EDITAR_RECEITA";
     public static final double VALOR_MINIMO = 1.0;
+    public static final String TAB_NUMBER = "TAB_NUMBER";
+
     private EditText valor;
     private AppCompatSpinner spinnerReceita;
     private AppCompatButton btnData;
@@ -143,7 +146,9 @@ public class ReceitaActivity extends AppCompatActivity {
 
                     dao.insertOrUpdate(receita);
 
-                    startActivity(new Intent(ReceitaActivity.this, MainActivity.class));
+                    Intent intent = new Intent(ReceitaActivity.this, MainActivity.class);
+                    intent.putExtra(TAB_NUMBER, 1);
+                    startActivity(intent);
                 }
 
             }

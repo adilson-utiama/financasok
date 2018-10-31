@@ -21,7 +21,6 @@ import java.util.List;
 
 public class ReceitasFragment extends Fragment {
 
-    private TextView valorTotalReceita;
     private List<Receita> receitas;
     private ReceitaDAO dao;
 
@@ -83,16 +82,9 @@ public class ReceitasFragment extends Fragment {
 
         centerText = view.findViewById(R.id.receitas_tx_center_mes_sel);
         centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
-
-        preencheValorTotalReceitas(view);
         trocaFragment(receitas);
 
         return view;
-    }
-
-    private void preencheValorTotalReceitas(View view) {
-        valorTotalReceita = view.findViewById(R.id.textview_total_receita);
-        valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
     }
 
     private void trocaFragment(List<Receita> lista){
@@ -113,7 +105,6 @@ public class ReceitasFragment extends Fragment {
     private void selecaoMes(Calendar data){
         receitas = dao.getAllReceitasFrom(data);
         String valorTotal = MoneyUtil.valorTotalFrom(receitas);
-        valorTotalReceita.setText(valorTotal);
         centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
         trocaFragment(receitas);
     }

@@ -12,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.adapters.ReceitaAdapter;
 import com.asuprojects.walletok.dao.ReceitaDAO;
+import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.helper.RecyclerItemClickListener;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.ui.ReceitaActivity;
@@ -30,6 +32,8 @@ public class ListaReceitaFragment extends Fragment {
     private List<Receita> receitas;
     private ReceitaDAO dao;
 
+    private TextView valorTotalReceita;
+
     public ListaReceitaFragment() {
         // Required empty public constructor
     }
@@ -39,9 +43,12 @@ public class ListaReceitaFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_lista_receita, container, false);
-
         dao = new ReceitaDAO(getContext());
+
         configuraRecyclerView(view);
+
+        valorTotalReceita = view.findViewById(R.id.textview_total_receita);
+        valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
 
         return view;
     }
@@ -101,6 +108,7 @@ public class ListaReceitaFragment extends Fragment {
                 dao.delete(receita.get_id());
                 receitas.remove(posicao);
                 adapter.notifyItemRemoved(posicao);
+                valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
             }
         });
         dialog.setNegativeButton(getString(R.string.opcao_nao), null);
