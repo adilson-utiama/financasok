@@ -1,7 +1,6 @@
 package com.asuprojects.walletok.fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,27 +14,17 @@ import android.widget.TextView;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.DespesaDAO;
-import com.asuprojects.walletok.dao.ReceitaDAO;
 import com.asuprojects.walletok.model.Despesa;
-import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.model.Tipo;
-import com.asuprojects.walletok.util.BigDecimalConverter;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 
 public class ResumoFragment extends Fragment {
 
     public static final String MES_SELECAO = "MES";
-    private TextView valorTotal;
-    private TextView valorDisponivel;
-
-    private DespesaDAO daoDespesa;
-    private ReceitaDAO daoReceita;
-
     private List<Despesa> despesasDoMes;
-    private List<Receita> receitasDoMes;
+    private DespesaDAO daoDespesa;
 
     private ImageView arrowLeft;
     private ImageView arrowRight;
@@ -101,15 +90,8 @@ public class ResumoFragment extends Fragment {
         });
 
         daoDespesa = new DespesaDAO(getContext());
-        daoReceita = new ReceitaDAO(getContext());
-
-        valorTotal = view.findViewById(R.id.valor_total);
-        valorDisponivel = view.findViewById(R.id.valor_disponivel);
 
         despesasDoMes = daoDespesa.getAllDespesasFrom(String.valueOf(mesSelecao + 1));
-        receitasDoMes = daoReceita.getAllReceitasFrom(String.valueOf(mesSelecao + 1));
-
-        calculaValorTotal();
 
         if(despesasDoMes != null){
             trocaFragment(despesasDoMes);
@@ -133,50 +115,14 @@ public class ResumoFragment extends Fragment {
             tx.commit();
         } else {
             GraficoFragment graficoFragment = new GraficoFragment();
-            graficoFragment.carregaLista(String.valueOf(mesSelecao + 1));
+            graficoFragment.dataSelecionada(dataAtual);
             tx.replace(R.id.frameLayoutGrafico, graficoFragment);
             tx.commit();
         }
     }
 
-    private void calculaValorTotal() {
-        BigDecimal totalDespesas = totalFromDespesas(despesasDoMes);
-        String totalFormatado = BigDecimalConverter.toStringFormatado(totalDespesas);
-        if(!totalDespesas.equals(BigDecimal.ZERO)){
-            valorTotal.setText(totalFormatado);
-        } else {
-            valorTotal.setText(R.string.despesa_total_zero);
-        }
-        BigDecimal totalDisponivel = totalFromReceitas(receitasDoMes);
-        totalDisponivel = totalDisponivel.subtract(totalDespesas);
-        if(totalDisponivel.doubleValue() < BigDecimal.ZERO.doubleValue()){
-            valorDisponivel.setTextColor(Color.RED);
-        }
-        String disponivel = BigDecimalConverter.toStringFormatado(totalDisponivel);
-        valorDisponivel.setText(disponivel);
-
-    }
-
-    private BigDecimal totalFromDespesas(List<Despesa> despesasDoMes) {
-        BigDecimal total = BigDecimal.ZERO;
-        for(Despesa d : despesasDoMes){
-            total = total.add(d.getValor());
-        }
-        return total;
-    }
-
-    private BigDecimal totalFromReceitas(List<Receita> receitas) {
-        BigDecimal total = BigDecimal.ZERO;
-        for(Receita c : receitas){
-            total = total.add(c.getValor());
-        }
-        return total;
-    }
-
     private void selecaoMes(Calendar data){
         despesasDoMes = daoDespesa.getAllDespesasFrom(data);
-        receitasDoMes = daoReceita.getAllReceitasFrom(data);
-        calculaValorTotal();
         trocaFragment(despesasDoMes);
     }
 
