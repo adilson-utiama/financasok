@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,6 +35,8 @@ public class ListaDespesaFragment extends Fragment {
 
     private TextView totalDespesas;
 
+    private LinearLayoutCompat containerDespesas;
+
     public ListaDespesaFragment() {
         // Required empty public constructor
     }
@@ -42,6 +45,10 @@ public class ListaDespesaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lista_despesa, container, false);
+
+        containerDespesas = view.findViewById(R.id.lista_despesas_container);
+        containerDespesas.setAlpha(0);
+        containerDespesas.animate().setDuration(600).alpha(1F).setListener(null);
 
         daoDespesa = new DespesaDAO(getContext());
 

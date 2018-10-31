@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ReceitaActivity.class);
-                //startActivity(intent);
                 startActivityForResult(intent, ADD_RECEITA);
                 fabMenu.close(true);
             }
@@ -116,7 +115,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DespesaActivity.class);
-                //startActivity(intent);
                 startActivityForResult(intent, ADD_DESPESA);
                 fabMenu.close(true);
             }
@@ -133,27 +131,10 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(abasAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager, true);
 
         viewPager.setCurrentItem(tabAtual);
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                Log.i("TAB_POSITION", "onTabSelected: " + position);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
 
     private void configuraNavigationDrawer() {

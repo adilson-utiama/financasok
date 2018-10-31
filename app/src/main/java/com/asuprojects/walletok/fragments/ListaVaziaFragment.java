@@ -3,6 +3,7 @@ package com.asuprojects.walletok.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.asuprojects.walletok.model.Tipo;
 public class ListaVaziaFragment extends Fragment {
 
     private Tipo tipo = Tipo.NENHUM;
+    private LinearLayoutCompat listaVaziaContainer;
 
     public ListaVaziaFragment() {
         // Required empty public constructor
@@ -24,6 +26,10 @@ public class ListaVaziaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lista_vazia, container, false);
+
+        listaVaziaContainer = view.findViewById(R.id.lista_vazia_container);
+        listaVaziaContainer.setAlpha(0);
+        listaVaziaContainer.animate().setDuration(600).alpha(1F).setListener(null);
 
         ImageView imageView = view.findViewById(R.id.iconListaVazia);
         TextView texto = view.findViewById(R.id.textview_listaVazia);

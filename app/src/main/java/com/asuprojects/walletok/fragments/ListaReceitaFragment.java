@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ public class ListaReceitaFragment extends Fragment {
     private ReceitaDAO dao;
 
     private TextView valorTotalReceita;
+    private LinearLayoutCompat listaReceitaContainer;
 
     public ListaReceitaFragment() {
         // Required empty public constructor
@@ -43,6 +45,11 @@ public class ListaReceitaFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_lista_receita, container, false);
+
+        listaReceitaContainer = view.findViewById(R.id.lista_receitas_container);
+        listaReceitaContainer.setAlpha(0);
+        listaReceitaContainer.animate().setDuration(600).alpha(1F).setListener(null);
+
         dao = new ReceitaDAO(getContext());
 
         configuraRecyclerView(view);
