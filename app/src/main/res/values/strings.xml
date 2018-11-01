@@ -167,4 +167,7 @@
     <string name="tx_adicionar_receita">Adiciona Receita</string>
     <string name="tx_msg_erro_val_valorembranco">Valor está em Branco</string>
     <string name="tx_msg_erro_val_valorbaixo">Valor muito baixo</string>
+    <string name="choose_folder_title">Selecione uma Pasta</string>
+    <string name="chooser_folder_ok">Confirmar</string>
+    <string name="chooser_folder_cancel">Cancelar</string>
 </resources>

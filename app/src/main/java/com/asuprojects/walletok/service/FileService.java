@@ -92,10 +92,10 @@ public class FileService {
         return builder.toString();
     }
 
-    public boolean restaurarDados(Uri dataUri){
+    public boolean restaurarDados(String dataUri){
         service = new DBService(context);
         try {
-            InputStream inputStream = context.getContentResolver().openInputStream(dataUri);
+            InputStream inputStream = context.getContentResolver().openInputStream(Uri.fromFile(new File(dataUri.toString())));
             ObjectInputStream entrada = new ObjectInputStream(inputStream);
             Map<String, List<?>> dados = (Map<String, List<?>>) entrada.readObject();
             salvaDespesasNoBanco(dados);

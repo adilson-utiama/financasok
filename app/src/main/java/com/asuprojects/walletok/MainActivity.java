@@ -43,6 +43,7 @@ import com.asuprojects.walletok.ui.ConfiguracoesActivity;
 import com.asuprojects.walletok.ui.DespesaActivity;
 import com.asuprojects.walletok.ui.ReceitaActivity;
 import com.asuprojects.walletok.ui.SobreActivity;
+import com.asuprojects.walletok.util.FileChooserActivity;
 import com.asuprojects.walletok.util.FilesUtil;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -50,6 +51,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
@@ -329,15 +331,34 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton(getString(R.string.opcao_prosseguir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                            final Intent chooserIntent = new Intent(MainActivity.this, DirectoryChooserActivity.class);
-                            final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
-                                    .newDirectoryName("Backup_App")
-                                    .allowReadOnlyDirectory(true)
-                                    .allowNewDirectoryNameModification(true)
-                                    .build();
-
-                            chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-                            startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
+//                            final Intent chooserIntent = new Intent(MainActivity.this, DirectoryChooserActivity.class);
+//                            final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
+//                                    .newDirectoryName("Backup_App")
+//                                    .allowReadOnlyDirectory(true)
+//                                    .allowNewDirectoryNameModification(true)
+//                                    .build();
+//                            chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
+//                            startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
+                        new ChooserDialog(MainActivity.this)
+                                .withFilter(true, false)
+                                .withResources(R.string.choose_folder_title, R.string.chooser_folder_ok, R.string.chooser_folder_cancel)
+                                .withFileIconsRes(false, R.drawable.ic_file, R.mipmap.ic_pasta)
+                                .withChosenListener(new ChooserDialog.Result() {
+                                    @Override
+                                    public void onChoosePath(String path, File pathFile) {
+                                        try {
+                                            caminhoArquivo = new FileService(MainActivity.this).realizarBackup(path);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(MainActivity.this, R.string.msg_erro_backup, Toast.LENGTH_LONG).show();
+                                        }
+                                        Toast.makeText(MainActivity.this,
+                                                getString(R.string.msg_sucesso_backup) + caminhoArquivo,
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .build()
+                                .show();
                     }
                 })
                 .setNegativeButton(getString(R.string.opcao_cancelar), null)
@@ -351,12 +372,27 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton(getString(R.string.opcao_prosseguir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.setType("application/octet-stream");
-                        if(intent.resolveActivity(getPackageManager()) != null){
-                            startActivityForResult(Intent.createChooser(intent, getString(R.string.intent_chooser_sel_file)), LOAD_FILE);
-                        }
+                        new ChooserDialog(MainActivity.this)
+                                .withFilter(false, false, "bkp")
+                                .withFileIconsRes(false, R.drawable.ic_file, R.mipmap.ic_pasta)
+                                .withChosenListener(new ChooserDialog.Result() {
+                                    @Override
+                                    public void onChoosePath(String path, File pathFile) {
+                                        boolean result = new FileService(MainActivity.this).restaurarDados(path);
+                                        if(result){
+                                            Toast.makeText(MainActivity.this, getString(R.string.msg_sucesso_restaurar), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                })
+                                .build()
+                                .show();
+
+//                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                        intent.setType("application/octet-stream");
+//                        if(intent.resolveActivity(getPackageManager()) != null){
+//                            startActivityForResult(Intent.createChooser(intent, getString(R.string.intent_chooser_sel_file)), LOAD_FILE);
+//                        }
                     }
                 })
                 .setNegativeButton(getString(R.string.opcao_cancelar), null)
@@ -391,7 +427,6 @@ public class MainActivity extends AppCompatActivity
                         FileService util = new FileService(MainActivity.this);
                         Extensao ext = null;
                         try {
-
                             String arquivo = nomeArquivo.getText().toString();
                             int checkedRadioButtonId = formatos.getCheckedRadioButtonId();
                             if(checkedRadioButtonId == R.id.csv_format){
@@ -412,34 +447,32 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("URI", "onActivityResult: Recebendo resultado..." );
-        if(resultCode == RESULT_OK){
-            if(requestCode == LOAD_FILE){
-                Uri dataUri = data.getData();
-                boolean result = new FileService(MainActivity.this).restaurarDados(dataUri);
-                if(result){
-                    Toast.makeText(this, getString(R.string.msg_sucesso_restaurar), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
 
-        if(requestCode == REQUEST_DIRECTORY){
-            if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
-                String caminho = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-                try {
-                    caminhoArquivo = new FileService(MainActivity.this).realizarBackup(caminho);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(MainActivity.this, R.string.msg_erro_backup, Toast.LENGTH_LONG).show();
-                }
-                Toast.makeText(MainActivity.this,
-                        getString(R.string.msg_sucesso_backup) + caminhoArquivo,
-                        Toast.LENGTH_LONG).show();
-
-            } else {
-
-            }
-
-        }
+//        if(requestCode == LOAD_FILE){
+//            if (resultCode == FileChooserActivity.RESULT_CODE_FILE_SELECTED) {
+//                String caminho = data.getStringExtra(FileChooserActivity.RESULT_SELECTED_FILE);
+//                boolean result = new FileService(MainActivity.this).restaurarDados(caminho);
+//                if(result){
+//                    Toast.makeText(this, getString(R.string.msg_sucesso_restaurar), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
+//        if(requestCode == REQUEST_DIRECTORY){
+//            if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
+//                String caminho = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
+//                try {
+//                    caminhoArquivo = new FileService(MainActivity.this).realizarBackup(caminho);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(MainActivity.this, R.string.msg_erro_backup, Toast.LENGTH_LONG).show();
+//                }
+//                Toast.makeText(MainActivity.this,
+//                        getString(R.string.msg_sucesso_backup) + caminhoArquivo,
+//                        Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(this, "Falha ao selecionar pasta do backup.", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
     }
 }
