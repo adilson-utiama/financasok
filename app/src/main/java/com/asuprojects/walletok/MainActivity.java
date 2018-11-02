@@ -39,6 +39,7 @@ import com.asuprojects.walletok.model.enums.Extensao;
 import com.asuprojects.walletok.service.FileService;
 import com.asuprojects.walletok.ui.ConfiguracoesActivity;
 import com.asuprojects.walletok.ui.DespesaActivity;
+import com.asuprojects.walletok.ui.ExportarArquivoActivity;
 import com.asuprojects.walletok.ui.ReceitaActivity;
 import com.asuprojects.walletok.ui.SobreActivity;
 import com.github.clans.fab.FloatingActionButton;
@@ -299,7 +300,7 @@ public class MainActivity extends AppCompatActivity
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_FILE);
                     }
                 } else {
-                    mostrarDialogExportar();
+                    startActivity(new Intent(MainActivity.this, ExportarArquivoActivity.class));
                 }
                 break;
             }
@@ -379,56 +380,11 @@ public class MainActivity extends AppCompatActivity
             case WRITE_FILE: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mostrarDialogExportar();
+                    startActivity(new Intent(MainActivity.this, ExportarArquivoActivity.class));
                 }
             }
 
         }
-    }
-
-    private void mostrarDialogExportar() {
-        View view = getLayoutInflater().inflate(R.layout.view_exportar_dados_dialog, null);
-        final TextView nomeArquivo = view.findViewById(R.id.nome_arquivo);
-        final RadioGroup formatos = view.findViewById(R.id.radioGroup);
-        final AppCompatButton btnSelPasta = view.findViewById(R.id.btn_selecao_pasta);
-        final TextView caminhoArquivo = view.findViewById(R.id.tx_caminho_arquivo);
-        btnSelPasta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ChooserDialog(MainActivity.this)
-                    .withFilter(true, false)
-                    .withFileIconsRes(false, R.drawable.ic_file, R.mipmap.ic_pasta)
-                    .withChosenListener(new ChooserDialog.Result() {
-                        @Override
-                        public void onChoosePath(String caminho, File file) {
-                            caminhoArquivo.setText(caminho);
-                        }
-                    }).build().show();
-            }
-        });
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(R.string.dialog_titulo_exportar)
-            .setView(view)
-            .setPositiveButton(getString(R.string.opcao_exportar), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Extensao ext = null;
-                    try {
-                        String arquivo = nomeArquivo.getText().toString().trim();
-                        String caminho = caminhoArquivo.getText().toString().trim();
-                        int checkedRadioButtonId = formatos.getCheckedRadioButtonId();
-                        if(checkedRadioButtonId == R.id.csv_format){ ext = Extensao.CSV; }
-                        if(checkedRadioButtonId == R.id.json_format){ ext = Extensao.JSON; }
-                        new FileService(MainActivity.this).exportarDados(caminho, arquivo, ext);
-                        Toast.makeText(MainActivity.this, getString(R.string.msg_sucesso_exportar), Toast.LENGTH_LONG).show();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                  }
-            })
-            .setNegativeButton(getString(R.string.opcao_cancelar), null).show();
     }
 
 }

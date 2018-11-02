@@ -105,8 +105,6 @@
     <string name="dialog_titulo_restaurar">Restaurar Dados</string>
     <string name="dialog_msg_restaurar">Este procedimento ira restaurar dados a partir do backup  Continuar?</string>
     <string name="intent_chooser_sel_file">Selecione o Arquivo</string>
-    <string name="dialog_titulo_exportar">Exportar dados</string>
-    <string name="opcao_exportar">EXPORTAR</string>
     <string name="msg_sucesso_exportar">Dados exportados com Sucesso!</string>
     <string name="msg_sucesso_restaurar">Dados restaurados com Sucesso!</string>
     <string name="msg_falha_backup">Não foi possivel realizar o Backup</string>

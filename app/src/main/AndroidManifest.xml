@@ -22,7 +22,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.DespesaActivity"
             android:parentActivityName=".MainActivity" />
@@ -55,7 +55,9 @@
         <activity
             android:name=".ui.SobreActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
+        <activity
+            android:name=".ui.ExportarArquivoActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>
