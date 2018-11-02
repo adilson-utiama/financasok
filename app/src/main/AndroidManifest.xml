@@ -56,7 +56,6 @@
             android:name=".ui.SobreActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
-        <activity android:name=".util.FileChooserActivity"></activity>
     </application>
 
 </manifest>

@@ -1,13 +1,11 @@
 package com.asuprojects.walletok.service;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.asuprojects.walletok.R;
@@ -20,10 +18,6 @@ import com.asuprojects.walletok.util.CalendarUtil;
 import com.asuprojects.walletok.util.GsonUTCCalendarAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonWriter;
-
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,10 +26,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -109,15 +99,14 @@ public class FileService {
         return true;
     }
 
-    public void exportarDados(String fileName, Extensao extensao) throws IOException {
+    public void exportarDados(String caminho, String fileName, Extensao extensao) throws IOException {
         service = new DBService(context);
         List<Despesa> despesas = service.getDespesaDAO().getAll();
         List<Receita> receitas = service.getReceitaDAO().listAll();
 
         if(isExternalStorageWritable()){
             fileName += extensao.getExtensao();
-            File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS), fileName);
+            File file = new File(caminho, fileName);
 
             salvaCaminhoExportadoEmPreferences(file);
 
