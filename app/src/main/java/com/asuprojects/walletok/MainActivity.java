@@ -362,6 +362,8 @@ public class MainActivity extends AppCompatActivity
                                 boolean result = new FileService(MainActivity.this).restaurarDados(path);
                                 if(result){
                                     Toast.makeText(MainActivity.this, getString(R.string.msg_sucesso_restaurar), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Erro ao importar dados", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })

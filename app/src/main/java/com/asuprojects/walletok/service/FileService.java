@@ -14,6 +14,7 @@ import com.asuprojects.walletok.database.TabelaReceita;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.model.enums.Extensao;
+import com.asuprojects.walletok.util.BytesUtil;
 import com.asuprojects.walletok.util.CalendarUtil;
 import com.asuprojects.walletok.util.GsonUTCCalendarAdapter;
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -61,11 +63,13 @@ public class FileService {
 
         File file = null;
 
+        byte[] mapaByteArray = BytesUtil.toByteArray(mapa);
+
         if(isExternalStorageWritable()){
             salvaCaminhoBackupEmPreferences(caminho);
             file = new File(caminho, filename);
-            ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(file));
-            saida.writeObject(mapa);
+            FileOutputStream saida = new FileOutputStream(file);
+            saida.write(mapaByteArray);
             saida.close();
         } else {
             Toast.makeText(context, context.getString(R.string.msg_falha_backup), Toast.LENGTH_SHORT).show();
@@ -85,8 +89,9 @@ public class FileService {
     public boolean restaurarDados(String dataUri){
         service = new DBService(context);
         try {
-            InputStream inputStream = context.getContentResolver().openInputStream(Uri.fromFile(new File(dataUri.toString())));
+            InputStream inputStream = context.getContentResolver().openInputStream(Uri.fromFile(new File(dataUri)));
             ObjectInputStream entrada = new ObjectInputStream(inputStream);
+
             Map<String, List<?>> dados = (Map<String, List<?>>) entrada.readObject();
             salvaDespesasNoBanco(dados);
             salvaReceitasNoBanco(dados);
