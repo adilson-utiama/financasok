@@ -107,7 +107,7 @@ public class DespesasFragment extends Fragment {
             tx.commit();
         } else {
             ListaDespesaFragment listaDespesaFragment = new ListaDespesaFragment();
-            listaDespesaFragment.carregaDespesas(despesas);
+            listaDespesaFragment.carregaDespesas(despesas, dataAtual);
             tx.replace(R.id.frameLayoutDespesa, listaDespesaFragment);
             tx.commit();
         }

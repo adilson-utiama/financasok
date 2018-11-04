@@ -3,26 +3,34 @@ package com.asuprojects.walletok.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.adapters.DespesaAdapter;
 import com.asuprojects.walletok.dao.DespesaDAO;
+import com.asuprojects.walletok.dao.ReceitaDAO;
 import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.helper.RecyclerItemClickListener;
 import com.asuprojects.walletok.model.Despesa;
+import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.ui.DespesaActivity;
+import com.asuprojects.walletok.util.BigDecimalConverter;
 
+import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 
 public class ListaDespesaFragment extends Fragment {
@@ -32,10 +40,15 @@ public class ListaDespesaFragment extends Fragment {
 
     private DespesaDAO daoDespesa;
     private List<Despesa> despesas;
+    private List<Receita> receitas;
 
     private TextView totalDespesas;
+    private TextView totalReceitas;
 
     private LinearLayoutCompat containerDespesas;
+
+    private Calendar dataAtual;
+    private ProgressBar barraDespesas;
 
     public ListaDespesaFragment() {
         // Required empty public constructor
@@ -54,10 +67,30 @@ public class ListaDespesaFragment extends Fragment {
 
         configuraRecyclerView(view);
 
+        barraDespesas = view.findViewById(R.id.barra_desepsas);
+        totalReceitas = view.findViewById(R.id.textview_total_receita);
         totalDespesas = view.findViewById(R.id.textview_total_despesa);
-        totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
+
+        receitas = new ReceitaDAO(getActivity()).getAllReceitasFrom(dataAtual);
+
+        calculaValorDisponivel();
 
         return view;
+    }
+
+    private void calculaValorDisponivel() {
+        BigDecimal despesasTotal = MoneyUtil.valorTotalBigDecimalFrom(despesas);
+        BigDecimal receitaTotal = MoneyUtil.valorTotalBigDecimalFrom(receitas);
+        receitaTotal = receitaTotal.subtract(despesasTotal);
+        totalReceitas.setText(BigDecimalConverter.toStringFormatado(receitaTotal));
+        totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
+        barraDespesas.setMax(MoneyUtil.valorTotalBigDecimalFrom(receitas).intValue());
+        barraDespesas.setProgress(MoneyUtil.valorTotalBigDecimalFrom(despesas).intValue());
+        if (receitaTotal.doubleValue() < 0.0){
+            barraDespesas.setProgressDrawable(getResources().getDrawable(R.drawable.barra_vermelha));
+        } else {
+            barraDespesas.setProgressDrawable(getResources().getDrawable(R.drawable.barra_despesas));
+        }
     }
 
     private void configuraRecyclerView(View view) {
@@ -93,7 +126,8 @@ public class ListaDespesaFragment extends Fragment {
                 }));
     }
 
-    public void carregaDespesas(List<Despesa> lista){
+    public void carregaDespesas(List<Despesa> lista, Calendar data){
+        dataAtual = data;
         despesas = lista;
         if(adapter != null){
             adapter.setDespesas(despesas);
@@ -112,7 +146,7 @@ public class ListaDespesaFragment extends Fragment {
                 daoDespesa.delete(despesa.get_id());
                 despesas.remove(posicao);
                 adapter.notifyItemRemoved(posicao);
-                totalDespesas.setText(MoneyUtil.valorTotalFrom(despesas));
+                calculaValorDisponivel();
             }
         });
         dialog.setNegativeButton(R.string.opcao_nao, null);

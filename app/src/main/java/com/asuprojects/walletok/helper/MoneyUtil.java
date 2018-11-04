@@ -25,6 +25,10 @@ public class MoneyUtil {
     }
 
     public static String valorTotalFrom(List<?> lista){
+        return BigDecimalConverter.toStringFormatado(valorTotalBigDecimalFrom(lista));
+    }
+
+    public static BigDecimal valorTotalBigDecimalFrom(List<?> lista){
         BigDecimal total = BigDecimal.ZERO;
         for(Object o : lista){
             if(o instanceof Despesa){
@@ -34,7 +38,7 @@ public class MoneyUtil {
                 total = total.add(((Receita) o).getValor());
             }
         }
-        return BigDecimalConverter.toStringFormatado(total);
+        return total;
     }
 
 

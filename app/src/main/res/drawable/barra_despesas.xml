@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape
+            android:shape="rectangle"
+            android:visible="true">
+            <gradient
+                android:startColor="@color/receita_d"
+                android:centerColor="@color/receita"
+                android:endColor="@color/receita_d"
+                android:centerY="0.75"
+                android:angle="90"
+                />
+
+        </shape>
+    </item>
+
+    <item
+        android:id="@android:id/progress">
+        <clip>
+            <shape
+                android:shape="rectangle">
+                <gradient
+                    android:startColor="@color/despesa_d"
+                    android:centerColor="@color/despesa"
+                    android:endColor="@color/despesa_d"
+                    android:centerY="0.75"
+                    android:angle="90"
+                    />
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>
