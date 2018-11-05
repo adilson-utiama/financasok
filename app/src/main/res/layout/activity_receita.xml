@@ -9,10 +9,9 @@
     <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/textInputLayoutValorReceita"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:background="@color/colorPrimary"
         android:gravity="center"
-        android:layout_gravity="top"
         app:layout_anchorGravity="top"
         android:orientation="horizontal">
 
@@ -39,7 +38,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:layout_gravity="center|bottom"
         android:fillViewport="true"
         app:layout_anchor="@id/textInputLayoutValorReceita"
@@ -58,13 +57,13 @@
                 android:layout_width="0dp"
                 android:layout_height="41dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:spinnerMode="dropdown"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="@+id/textInputLayoutDescricaoReceita"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDescricaoReceita"
-                app:layout_constraintVertical_bias="0.23000002" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/campo_data_receita"
@@ -81,15 +80,15 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textInputLayoutDescricaoReceita"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.060000002">
+                app:layout_constraintVertical_bias="0.0">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/campo_descricao_receita"
@@ -97,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/edit_hint_descri_o_max_30_caracteres"
                     android:inputType="textCapSentences"
-                    android:maxLength="30"/>
+                    android:maxLength="30" />
 
             </android.support.design.widget.TextInputLayout>
 

@@ -9,12 +9,12 @@
     <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/textInputLayoutValorReceita"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
+        android:layout_gravity="top"
         android:background="@color/colorPrimary"
         android:gravity="center"
-        android:layout_gravity="top"
-        app:layout_anchorGravity="top"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_anchorGravity="top">
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:layout_gravity="center|bottom"
         android:fillViewport="true"
         app:layout_anchor="@id/textInputLayoutValorReceita"
@@ -53,39 +53,14 @@
             android:layout_marginBottom="20dp"
             android:fitsSystemWindows="true">
 
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/campo_spinner_receita"
-                android:layout_width="0dp"
-                android:layout_height="41dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="16dp"
-                android:spinnerMode="dropdown"
-                android:theme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintStart_toStartOf="@+id/textInputLayoutDescricaoReceita"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDescricaoReceita"
-                app:layout_constraintVertical_bias="0.19" />
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/campo_data_receita"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_corner_background"
-                android:focusable="true"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/campo_spinner_receita"
-                app:layout_constraintEnd_toEndOf="@+id/textInputLayoutDescricaoReceita"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="@+id/campo_spinner_receita" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textInputLayoutDescricaoReceita"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +86,7 @@
                 app:layout_constraintGuide_percent="0.57" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textView_categoria"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tx_categoria"
@@ -119,8 +94,22 @@
                 app:layout_constraintBottom_toTopOf="@+id/campo_spinner_receita"
                 app:layout_constraintStart_toStartOf="@+id/campo_spinner_receita" />
 
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/campo_spinner_receita"
+                android:layout_width="0dp"
+                android:layout_height="41dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="32dp"
+                android:spinnerMode="dropdown"
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="@+id/textInputLayoutDescricaoReceita"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDescricaoReceita"
+                app:layout_constraintVertical_bias="0.0" />
+
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/textView_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -128,7 +117,19 @@
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/campo_data_receita"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="@+id/textView" />
+                app:layout_constraintTop_toTopOf="@+id/textView_categoria" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/campo_data_receita"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner_background"
+                android:focusable="true"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/campo_spinner_receita"
+                app:layout_constraintEnd_toEndOf="@+id/textInputLayoutDescricaoReceita"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toTopOf="@+id/campo_spinner_receita" />
 
             <TextView
                 android:id="@+id/text_pagamento"
@@ -143,8 +144,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:checkedButton="@+id/pag_dinheiro"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
