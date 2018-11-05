@@ -1,10 +1,13 @@
 package com.asuprojects.walletok.ui;
 
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
@@ -15,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
@@ -71,7 +75,7 @@ public class DespesaActivity extends AppCompatActivity{
 
     private void cofiguraComponentes() {
         configuraToolbar();
-        descricao = findViewById(R.id.campo_descricao_receita);
+        descricao = findViewById(R.id.campo_descricao_despesa);
         configuraCampoValor();
         configuraSpinnerCategoria();
         configuraFabSalvar();
@@ -79,7 +83,7 @@ public class DespesaActivity extends AppCompatActivity{
     }
 
     private void configuraBtnData() {
-        btnData = findViewById(R.id.campo_data_receita);
+        btnData = findViewById(R.id.campo_data_despesa);
         btnData.setText(CalendarUtil.toStringFormatadaPelaRegiao(Calendar.getInstance()));
         btnData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +100,7 @@ public class DespesaActivity extends AppCompatActivity{
     }
 
     private void configuraFabSalvar() {
-        FloatingActionButton btnSalvar = findViewById(R.id.btn_salvar_receita);
+        FloatingActionButton btnSalvar = findViewById(R.id.btn_salvar_despesa);
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,7 +133,7 @@ public class DespesaActivity extends AppCompatActivity{
     }
 
     private void configuraSpinnerCategoria() {
-        spinner = findViewById(R.id.campo_spinner_receita);
+        spinner = findViewById(R.id.campo_spinner_despesa);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.categoria_despesas,
                 android.R.layout.simple_spinner_item);
@@ -138,7 +142,7 @@ public class DespesaActivity extends AppCompatActivity{
     }
 
     private void configuraCampoValor() {
-        valor = findViewById(R.id.campo_valor_receita);
+        valor = findViewById(R.id.campo_valor_despesa);
         valor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -204,20 +208,63 @@ public class DespesaActivity extends AppCompatActivity{
         return true;
     }
 
-    public void onRadioButtonClicked(View view) {
+    public void onOperacaoCartaoSelecionado(View view){
         boolean checked = ((RadioButton) view).isChecked();
+        TextInputLayout campoParcelas = findViewById(R.id.campo_parcelas);
+        switch(view.getId()){
+            case R.id.operacao_debito:
+                if(checked){
+                    campoParcelas.setVisibility(View.GONE);
+                    btnData.setEnabled(true);
+                    btnData.setAlpha(1F);
+                }
+                break;
+            case R.id.operacao_credito:
+                if(checked){
+                    campoParcelas.setVisibility(View.VISIBLE);
+                    campoParcelas.animate().setDuration(500).alpha(1F);
+                    btnData.setEnabled(false);
+                    btnData.setAlpha(0.5F);
+                }
+                break;
+        }
+    }
+
+    public void onPagamentoSelecionado(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        final TextView semCartao = findViewById(R.id.link_cartao_nao_cadastrado);
+        final ConstraintLayout painelCartao = findViewById(R.id.painelCartao);
+
         switch(view.getId()) {
             case R.id.pag_dinheiro:
                 if (checked)
                     pagamento = Pagamento.DINHEIRO;
+//                    semCartao.animate().setDuration(500).alpha(0);
+//                    semCartao.setOnClickListener(null);
+                    painelCartao.setVisibility(View.GONE);
+                    painelCartao.animate().setDuration(500).alpha(0);
                     break;
             case R.id.pag_cartao:
                 if (checked)
                     pagamento = Pagamento.CARTAO;
+                    painelCartao.setVisibility(View.VISIBLE);
+                    painelCartao.animate().setDuration(500).alpha(1F);
+//                    semCartao.setVisibility(View.VISIBLE);
+//                    semCartao.animate().setDuration(500).alpha(1F);
+//                    semCartao.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Toast.makeText(DespesaActivity.this, "Cadastrando novo cartao...", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                     break;
             case R.id.pag_outros:
                 if(checked)
                     pagamento = Pagamento.OUTROS;
+//                    semCartao.animate().setDuration(500).alpha(0);
+//                    semCartao.setOnClickListener(null);
+                    painelCartao.setVisibility(View.GONE);
+                    painelCartao.animate().setDuration(500).alpha(0);
                     break;
         }
     }

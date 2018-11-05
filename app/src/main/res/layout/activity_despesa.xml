@@ -7,9 +7,9 @@
     android:theme="@style/AppTheme">
 
     <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/textInputLayoutValorReceita"
+        android:id="@+id/textInputLayoutValorDespesa"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:layout_gravity="top"
         android:background="@color/colorPrimary"
         android:gravity="center"
@@ -24,7 +24,7 @@
             android:textSize="32sp" />
 
         <EditText
-            android:id="@+id/campo_valor_receita"
+            android:id="@+id/campo_valor_despesa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -39,10 +39,10 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
         android:layout_gravity="center|bottom"
+        android:layout_marginTop="100dp"
         android:fillViewport="true"
-        app:layout_anchor="@id/textInputLayoutValorReceita"
+        app:layout_anchor="@id/textInputLayoutValorDespesa"
         app:layout_anchorGravity="bottom|center_horizontal">
 
         <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -55,12 +55,12 @@
 
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/textInputLayoutDescricaoReceita"
+                android:id="@+id/textInputLayoutDescricaoDespesa"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
                 app:layout_constraintVertical_bias="0.0">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/campo_descricao_receita"
+                    android:id="@+id/campo_descricao_despesa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/edit_hint_descri_o_max_30_caracteres"
@@ -91,21 +91,22 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tx_categoria"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/campo_spinner_receita"
-                app:layout_constraintStart_toStartOf="@+id/campo_spinner_receita" />
+                app:layout_constraintBottom_toTopOf="@+id/campo_spinner_despesa"
+                app:layout_constraintStart_toStartOf="@+id/campo_spinner_despesa" />
 
             <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/campo_spinner_receita"
+                android:id="@+id/campo_spinner_despesa"
                 android:layout_width="0dp"
-                android:layout_height="41dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/bg_dropdown"
                 android:spinnerMode="dropdown"
                 android:theme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintStart_toStartOf="@+id/textInputLayoutDescricaoReceita"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDescricaoReceita"
+                app:layout_constraintStart_toStartOf="@+id/textInputLayoutDescricaoDespesa"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDescricaoDespesa"
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
@@ -115,21 +116,21 @@
                 android:layout_marginStart="8dp"
                 android:text="@string/tx_data"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/campo_data_receita"
+                app:layout_constraintBottom_toTopOf="@+id/campo_data_despesa"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toTopOf="@+id/textView_categoria" />
 
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/campo_data_receita"
+                android:id="@+id/campo_data_despesa"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corner_background"
                 android:focusable="true"
                 android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/campo_spinner_receita"
-                app:layout_constraintEnd_toEndOf="@+id/textInputLayoutDescricaoReceita"
+                app:layout_constraintBottom_toBottomOf="@+id/campo_spinner_despesa"
+                app:layout_constraintEnd_toEndOf="@+id/textInputLayoutDescricaoDespesa"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="@+id/campo_spinner_receita" />
+                app:layout_constraintTop_toTopOf="@+id/campo_spinner_despesa" />
 
             <TextView
                 android:id="@+id/text_pagamento"
@@ -144,21 +145,21 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="40dp"
                 android:checkedButton="@+id/pag_dinheiro"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/campo_data_receita"
-                app:layout_constraintStart_toStartOf="@+id/campo_spinner_receita"
-                app:layout_constraintTop_toBottomOf="@+id/campo_data_receita"
-                app:layout_constraintVertical_bias="0.26999998">
+                app:layout_constraintEnd_toEndOf="@+id/campo_data_despesa"
+                app:layout_constraintStart_toStartOf="@+id/campo_spinner_despesa"
+                app:layout_constraintTop_toBottomOf="@+id/campo_data_despesa"
+                app:layout_constraintVertical_bias="0.0">
 
                 <RadioButton
                     android:id="@+id/pag_dinheiro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:onClick="onRadioButtonClicked"
+                    android:onClick="onPagamentoSelecionado"
                     android:text="@string/radiobutton_opcao_dinheiro" />
 
                 <RadioButton
@@ -166,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:onClick="onRadioButtonClicked"
+                    android:onClick="onPagamentoSelecionado"
                     android:text="@string/radiobutton_opcao_cartao" />
 
                 <RadioButton
@@ -174,19 +175,129 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:onClick="onRadioButtonClicked"
+                    android:onClick="onPagamentoSelecionado"
                     android:text="@string/radiobutton_opcao_outros" />
             </RadioGroup>
+
+            <TextView
+                android:id="@+id/link_cartao_nao_cadastrado"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Nenhum cartão cadastrado. Cadastrar um?"
+                android:alpha="0"
+                android:textAlignment="center"
+                android:visibility="gone"
+                android:textColor="@color/valor_negativo_d"
+                app:layout_constraintEnd_toEndOf="@+id/radioGroup"
+                app:layout_constraintStart_toStartOf="@+id/radioGroup"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/painelCartao"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:visibility="gone"
+                android:alpha="0"
+                app:layout_constraintEnd_toEndOf="@id/radioGroup"
+                app:layout_constraintStart_toStartOf="@id/radioGroup"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+                <TextView
+                    android:id="@+id/textView_operacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Operação"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/operacao_cartao"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textView_operacao">
+
+                    <RadioButton
+                        android:id="@+id/operacao_debito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onOperacaoCartaoSelecionado"
+                        android:text="DEBITO" />
+
+                    <RadioButton
+                        android:id="@+id/operacao_credito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onOperacaoCartaoSelecionado"
+                        android:text="CREDITO" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/textView_selecione_cartao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Selecione Cartão"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/operacao_cartao" />
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spinner_cartao"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_dropdown"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/guideline2"
+                    app:layout_constraintStart_toStartOf="@+id/textView_selecione_cartao"
+                    app:layout_constraintTop_toBottomOf="@id/textView_selecione_cartao" />
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/guideline2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.57" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/campo_parcelas"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone"
+                    android:alpha="0"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinner_cartao"
+                    app:layout_constraintEnd_toEndOf="@+id/operacao_cartao"
+                    app:layout_constraintStart_toStartOf="@id/guideline2"
+                    app:layout_constraintTop_toTopOf="@+id/spinner_cartao">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint="Parcelas" />
+                </android.support.design.widget.TextInputLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_salvar_receita"
+        android:id="@+id/btn_salvar_despesa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/textInputLayoutValorReceita"
+        app:layout_anchor="@id/textInputLayoutValorDespesa"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/fab_add" />
 
