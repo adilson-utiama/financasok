@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,52 +24,111 @@
                 android:id="@+id/bloco_total_despesas"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@color/despesa"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:background="@color/despesa"
                 android:padding="5dp"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayoutCompat2"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintEnd_toStartOf="@+id/bloco_total_despesa_credito"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/despesas_proximo_mes">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/tx_total_de_despesas"
                     android:textColor="@android:color/white"
-                    android:text="@string/tx_total_de_despesas" />
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/valor_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:text="R$ 500,00" />
+                    android:text="R$ 500,00"
+                    android:textColor="@android:color/white" />
 
             </android.support.v7.widget.LinearLayoutCompat>
 
             <android.support.v7.widget.LinearLayoutCompat
-                android:id="@+id/linearLayoutCompat2"
+                android:id="@+id/bloco_total_despesa_credito"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@color/credito"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="5dp"
-                android:background="@color/receita"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/bloco_total_despesas">
+                app:layout_constraintBottom_toBottomOf="@+id/bloco_total_despesas"
+                app:layout_constraintEnd_toStartOf="@+id/bloco_total_disponivel"
+                app:layout_constraintStart_toEndOf="@+id/bloco_total_despesas"
+                app:layout_constraintTop_toTopOf="@+id/bloco_total_despesas">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Cartão/Crédito"
                     android:textColor="@android:color/white"
-                    android:text="@string/tx_valor_dispon_vel" />
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/valor_total_credito"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R$ 500,00"
+                    android:textColor="@android:color/white" />
+
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/bloco_total_disponivel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/receita"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/bloco_total_despesa_credito"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/bloco_total_despesa_credito"
+                app:layout_constraintTop_toTopOf="@+id/bloco_total_despesa_credito">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tx_valor_dispon_vel"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/valor_disponivel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:text="R$ 2.500,00" />
+                    android:text="R$ 2.500,00"
+                    android:textColor="@android:color/white" />
 
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/despesas_proximo_mes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/tx_total_despesas_proximo_mes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Despesas para o proximo mes"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/total_despesas_proximo_mes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R$ 1.500,00"
+                    android:textColor="@android:color/white" />
             </android.support.v7.widget.LinearLayoutCompat>
 
         </android.support.constraint.ConstraintLayout>

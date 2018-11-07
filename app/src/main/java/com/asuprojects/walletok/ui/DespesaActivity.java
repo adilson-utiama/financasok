@@ -14,6 +14,9 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -57,6 +60,9 @@ public class DespesaActivity extends AppCompatActivity{
 
     private Pagamento pagamento = Pagamento.DINHEIRO;
 
+    private TextView semCartao;
+    private ConstraintLayout painelCartao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +76,9 @@ public class DespesaActivity extends AppCompatActivity{
         if(intent.hasExtra(EDITAR_DESPESA)){
             intentEdicaoDespesa(intent);
         }
+
+        semCartao = findViewById(R.id.link_cartao_nao_cadastrado);
+        painelCartao = findViewById(R.id.painelCartao);
 
     }
 
@@ -208,63 +217,26 @@ public class DespesaActivity extends AppCompatActivity{
         return true;
     }
 
-    public void onOperacaoCartaoSelecionado(View view){
-        boolean checked = ((RadioButton) view).isChecked();
-        TextInputLayout campoParcelas = findViewById(R.id.campo_parcelas);
-        switch(view.getId()){
-            case R.id.operacao_debito:
-                if(checked){
-                    campoParcelas.setVisibility(View.GONE);
-                    btnData.setEnabled(true);
-                    btnData.setAlpha(1F);
-                }
-                break;
-            case R.id.operacao_credito:
-                if(checked){
-                    campoParcelas.setVisibility(View.VISIBLE);
-                    campoParcelas.animate().setDuration(500).alpha(1F);
-                    btnData.setEnabled(false);
-                    btnData.setAlpha(0.5F);
-                }
-                break;
-        }
-    }
-
     public void onPagamentoSelecionado(View view) {
         boolean checked = ((RadioButton) view).isChecked();
-        final TextView semCartao = findViewById(R.id.link_cartao_nao_cadastrado);
-        final ConstraintLayout painelCartao = findViewById(R.id.painelCartao);
-
         switch(view.getId()) {
             case R.id.pag_dinheiro:
                 if (checked)
                     pagamento = Pagamento.DINHEIRO;
-//                    semCartao.animate().setDuration(500).alpha(0);
-//                    semCartao.setOnClickListener(null);
                     painelCartao.setVisibility(View.GONE);
-                    painelCartao.animate().setDuration(500).alpha(0);
+                    painelCartao.animate().setDuration(500).alpha(0).scaleY(0);
                     break;
             case R.id.pag_cartao:
                 if (checked)
                     pagamento = Pagamento.CARTAO;
                     painelCartao.setVisibility(View.VISIBLE);
-                    painelCartao.animate().setDuration(500).alpha(1F);
-//                    semCartao.setVisibility(View.VISIBLE);
-//                    semCartao.animate().setDuration(500).alpha(1F);
-//                    semCartao.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Toast.makeText(DespesaActivity.this, "Cadastrando novo cartao...", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
+                    painelCartao.animate().setDuration(500).alpha(1F).scaleY(1);
                     break;
             case R.id.pag_outros:
                 if(checked)
                     pagamento = Pagamento.OUTROS;
-//                    semCartao.animate().setDuration(500).alpha(0);
-//                    semCartao.setOnClickListener(null);
                     painelCartao.setVisibility(View.GONE);
-                    painelCartao.animate().setDuration(500).alpha(0);
+                    painelCartao.animate().setDuration(500).alpha(0).scaleY(0);
                     break;
         }
     }

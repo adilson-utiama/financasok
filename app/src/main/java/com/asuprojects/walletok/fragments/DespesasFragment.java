@@ -2,6 +2,7 @@ package com.asuprojects.walletok.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatSpinner;
@@ -25,6 +26,7 @@ import java.util.List;
 
 public class DespesasFragment extends Fragment {
 
+    public static final String DATA_ATUAL = "DATA_ATUAL";
     private List<Despesa> despesas;
     private DespesaDAO daoDespesa;
 
@@ -49,6 +51,10 @@ public class DespesasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_despesas, container, false);
 
         dataAtual = Calendar.getInstance();
+        if(savedInstanceState != null){
+            dataAtual = (Calendar) savedInstanceState.getSerializable(DATA_ATUAL);
+        }
+
         mesSelecao = dataAtual.get(Calendar.MONTH);
         anoAtual = dataAtual.get(Calendar.YEAR);
         meses = view.getResources().getStringArray(R.array.meses);
@@ -92,6 +98,12 @@ public class DespesasFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(DATA_ATUAL, dataAtual);
+        super.onSaveInstanceState(outState);
+    }
+
     private void selecaoMes(Calendar data){
         despesas = daoDespesa.getAllDespesasFrom(data);
         centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
@@ -107,7 +119,7 @@ public class DespesasFragment extends Fragment {
             tx.commit();
         } else {
             ListaDespesaFragment listaDespesaFragment = new ListaDespesaFragment();
-            listaDespesaFragment.carregaDespesas(despesas, dataAtual);
+            listaDespesaFragment.carregaDespesas(dataAtual);
             tx.replace(R.id.frameLayoutDespesa, listaDespesaFragment);
             tx.commit();
         }

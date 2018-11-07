@@ -152,8 +152,8 @@
     <string name="nenhum_backup_realizado_ate_o_momento">Nenhum Backup realizado ate o momento</string>
     <string name="diretorio_de_arquivos_exportados">Diretorio de arquivos exportados</string>
     <string name="nenhum_dado_exportado_ate_o_momento">Nenhum dado exportado ate o momento</string>
-    <string name="tx_total_de_despesas">Total de Despesas:</string>
-    <string name="tx_valor_dispon_vel">Valor Disponível:</string>
+    <string name="tx_total_de_despesas">Total de Despesas</string>
+    <string name="tx_valor_dispon_vel">Disponível</string>
     <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
     <string name="admob_banner_block_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="tx_login_invalido">Usuario ou senha invalido!</string>

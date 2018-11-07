@@ -15,8 +15,11 @@ import android.widget.TextView;
 import com.asuprojects.walletok.R;
 import com.asuprojects.walletok.dao.DespesaDAO;
 import com.asuprojects.walletok.dao.ReceitaDAO;
+import com.asuprojects.walletok.helper.MoneyUtil;
 import com.asuprojects.walletok.model.Despesa;
 import com.asuprojects.walletok.model.Receita;
+import com.asuprojects.walletok.model.Tipo;
+import com.asuprojects.walletok.model.enums.Pagamento;
 import com.asuprojects.walletok.util.BigDecimalConverter;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -53,6 +56,8 @@ public class GraficoFragment extends Fragment
 
     private TextView valorTotal;
     private TextView valorDisponivel;
+    private TextView valorTotalCredito;
+    private TextView valorDespesasProximoMes;
 
     private LinearLayoutCompat graficoContainer;
 
@@ -81,16 +86,36 @@ public class GraficoFragment extends Fragment
 
         valorTotal = view.findViewById(R.id.valor_total);
         valorDisponivel = view.findViewById(R.id.valor_disponivel);
+        valorTotalCredito = view.findViewById(R.id.valor_total_credito);
+        valorDespesasProximoMes = view.findViewById(R.id.total_despesas_proximo_mes);
 
         despesasDoMes = daoDespesa.getAllDespesasFrom(dataSelecionada);
+
+        Calendar proximoMes = Calendar.getInstance();
+        proximoMes.setTime(dataSelecionada.getTime());
+        proximoMes.add(Calendar.MONTH, 1);
+        BigDecimal despesasProximoMes = MoneyUtil.valorTotalBigDecimalFrom(daoDespesa.getAllDespesasFrom(proximoMes));
+        valorDespesasProximoMes.setText(BigDecimalConverter.toStringFormatado(despesasProximoMes));
+
         receitasDoMes = daoReceita.getAllReceitasFrom(dataSelecionada);
 
-        Log.i("LISTAS", "onCreateView: " + despesasDoMes.size() + " / " + receitasDoMes.size());
+        BigDecimal totalCredito = valorTotalPorTipoPagamento(despesasDoMes, Pagamento.CARTAO);
+        valorTotalCredito.setText(BigDecimalConverter.toStringFormatado(totalCredito));
 
         calculaValorTotal();
         gerarGrafico();
 
         return view;
+    }
+
+    private BigDecimal valorTotalPorTipoPagamento(List<Despesa> despesas, Pagamento formaPagamento) {
+        BigDecimal total = BigDecimal.ZERO;
+        for(Despesa d : despesas){
+            if(d.getPagamento().equals(formaPagamento)){
+                total = total.add(d.getValor());
+            }
+        }
+        return total;
     }
 
     @Override

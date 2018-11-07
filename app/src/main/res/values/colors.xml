@@ -11,6 +11,8 @@
     <color name="despesa">#f57c00</color>
     <color name="despesa_d">#9c5204</color>
 
+    <color name="credito">#e64409</color>
+
     <color name="valor_negativo">#ff2626</color>
     <color name="valor_negativo_d">#bc1c1c</color>
 </resources>

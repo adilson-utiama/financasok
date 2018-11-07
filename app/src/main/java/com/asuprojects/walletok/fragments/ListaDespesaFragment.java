@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -36,6 +37,7 @@ import java.util.List;
 public class ListaDespesaFragment extends Fragment {
 
     public static final String EDITAR_DESPESA = "EDITAR_DESPESA";
+    private static final String DATA_ATUAL = "DATA_ATUAL";
     private DespesaAdapter adapter;
 
     private DespesaDAO daoDespesa;
@@ -59,11 +61,16 @@ public class ListaDespesaFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lista_despesa, container, false);
 
+        if(savedInstanceState != null){
+            dataAtual = (Calendar) savedInstanceState.getSerializable(DATA_ATUAL);
+        }
+
         containerDespesas = view.findViewById(R.id.lista_despesas_container);
         containerDespesas.setAlpha(0);
         containerDespesas.animate().setDuration(500).alpha(1F).setListener(null);
 
         daoDespesa = new DespesaDAO(getContext());
+        despesas = daoDespesa.getAllDespesasFrom(dataAtual);
 
         configuraRecyclerView(view);
 
@@ -76,6 +83,12 @@ public class ListaDespesaFragment extends Fragment {
         calculaValorDisponivel();
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(DATA_ATUAL, dataAtual);
+        super.onSaveInstanceState(outState);
     }
 
     private void calculaValorDisponivel() {
@@ -126,9 +139,9 @@ public class ListaDespesaFragment extends Fragment {
                 }));
     }
 
-    public void carregaDespesas(List<Despesa> lista, Calendar data){
+    public void carregaDespesas(Calendar data){
         dataAtual = data;
-        despesas = lista;
+        despesas = new DespesaDAO(getActivity()).getAllDespesasFrom(data);
         if(adapter != null){
             adapter.setDespesas(despesas);
         } else {

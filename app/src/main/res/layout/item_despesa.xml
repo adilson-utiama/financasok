@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="5dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/item_despesa"
@@ -14,67 +14,73 @@
 
         <TextView
             android:id="@+id/despesa_categoria"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/rounded_tab_despesa"
             android:text="Categoria"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@+id/icon_pag"
+            app:layout_constraintStart_toStartOf="@+id/despesa_descricao"
+            app:layout_constraintTop_toBottomOf="@+id/despesa_descricao" />
 
         <TextView
             android:id="@+id/despesa_data"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:text="10/10/2018"
-            app:layout_constraintBottom_toBottomOf="@+id/despesa_categoria"
-            app:layout_constraintEnd_toStartOf="@+id/icon_pag"
-            app:layout_constraintStart_toEndOf="@+id/despesa_categoria"
-            app:layout_constraintTop_toTopOf="@+id/despesa_categoria" />
+            android:textColor="@android:color/darker_gray"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_pag"
+            app:layout_constraintStart_toEndOf="@+id/icon_pag"
+            app:layout_constraintTop_toTopOf="@+id/icon_pag" />
 
         <TextView
             android:id="@+id/despesa_descricao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="Descricao"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/despesa_valor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/despesa_categoria" />
+            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/despesa_valor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
             android:text="R$ 1,00"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/despesa_descricao"
-            app:layout_constraintEnd_toStartOf="@+id/icon_pag"
-            app:layout_constraintTop_toTopOf="@+id/despesa_descricao" />
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/icon_pag"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
             android:alpha="0.5"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/despesa_categoria"
+            app:layout_constraintTop_toBottomOf="@+id/despesa_categoria"
             app:srcCompat="@drawable/ic_pagamento_outros" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+            android:background="@drawable/rounded_tab_despesa_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

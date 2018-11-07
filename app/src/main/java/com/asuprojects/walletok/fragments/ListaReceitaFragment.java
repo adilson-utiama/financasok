@@ -4,6 +4,7 @@ package com.asuprojects.walletok.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -23,11 +24,13 @@ import com.asuprojects.walletok.helper.RecyclerItemClickListener;
 import com.asuprojects.walletok.model.Receita;
 import com.asuprojects.walletok.ui.ReceitaActivity;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class ListaReceitaFragment extends Fragment {
 
     public static final String EDITAR_RECEITA = "EDITAR_RECEITA";
+    private static final String DATA_ATUAL = "DATA_ATUAL";
     private ReceitaAdapter adapter;
 
     private List<Receita> receitas;
@@ -35,6 +38,8 @@ public class ListaReceitaFragment extends Fragment {
 
     private TextView valorTotalReceita;
     private LinearLayoutCompat listaReceitaContainer;
+
+    private Calendar dataAtual;
 
     public ListaReceitaFragment() {
         // Required empty public constructor
@@ -46,11 +51,16 @@ public class ListaReceitaFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_lista_receita, container, false);
 
+        if(savedInstanceState != null){
+            dataAtual = (Calendar) savedInstanceState.getSerializable(DATA_ATUAL);
+        }
+
         listaReceitaContainer = view.findViewById(R.id.lista_receitas_container);
         listaReceitaContainer.setAlpha(0);
         listaReceitaContainer.animate().setDuration(500).alpha(1F).setListener(null);
 
         dao = new ReceitaDAO(getContext());
+        receitas = dao.getAllReceitasFrom(dataAtual);
 
         configuraRecyclerView(view);
 
@@ -58,6 +68,12 @@ public class ListaReceitaFragment extends Fragment {
         valorTotalReceita.setText(MoneyUtil.valorTotalFrom(receitas));
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(DATA_ATUAL, dataAtual);
+        super.onSaveInstanceState(outState);
     }
 
     private void configuraRecyclerView(View view) {
@@ -96,8 +112,9 @@ public class ListaReceitaFragment extends Fragment {
         startActivity(intent);
     }
 
-    public void carregaReceitas(List<Receita> lista){
-        receitas = lista;
+    public void carregaReceitas(Calendar data){
+        dataAtual = data;
+        receitas = new ReceitaDAO(getActivity()).getAllReceitasFrom(data);
         if(adapter != null){
             adapter.setReceitas(receitas);
         } else {

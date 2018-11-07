@@ -2,6 +2,7 @@ package com.asuprojects.walletok.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import java.util.List;
 
 public class ReceitasFragment extends Fragment {
 
+    public static final String DATA_ATUAL = "DATA_ATUAL";
     private List<Receita> receitas;
     private ReceitaDAO dao;
 
@@ -45,8 +47,12 @@ public class ReceitasFragment extends Fragment {
         dao = new ReceitaDAO(getContext());
 
         dataAtual = Calendar.getInstance();
+        if(savedInstanceState != null){
+            dataAtual = (Calendar) savedInstanceState.getSerializable(DATA_ATUAL);
+        }
         mesSelecao = dataAtual.get(Calendar.MONTH);
         anoAtual = dataAtual.get(Calendar.YEAR);
+
         meses = view.getResources().getStringArray(R.array.meses);
 
         arrowLeft = view.findViewById(R.id.receitas_arrow_left);
@@ -87,6 +93,12 @@ public class ReceitasFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(DATA_ATUAL, dataAtual);
+        super.onSaveInstanceState(outState);
+    }
+
     private void trocaFragment(List<Receita> lista){
         FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
         if(lista.isEmpty()){
@@ -96,7 +108,7 @@ public class ReceitasFragment extends Fragment {
             tx.commit();
         } else {
             ListaReceitaFragment listaReceitaFragment = new ListaReceitaFragment();
-            listaReceitaFragment.carregaReceitas(lista);
+            listaReceitaFragment.carregaReceitas(dataAtual);
             tx.replace(R.id.frameLayoutRececita, listaReceitaFragment);
             tx.commit();
         }
@@ -104,7 +116,6 @@ public class ReceitasFragment extends Fragment {
 
     private void selecaoMes(Calendar data){
         receitas = dao.getAllReceitasFrom(data);
-        String valorTotal = MoneyUtil.valorTotalFrom(receitas);
         centerText.setText(meses[mesSelecao].concat(" / ").concat(String.valueOf(anoAtual)));
         trocaFragment(receitas);
     }

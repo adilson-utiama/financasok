@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ResumoFragment extends Fragment {
 
-    public static final String MES_SELECAO = "MES";
+    public static final String DATA_ATUAL = "DATA_ATUAL";
     private List<Despesa> despesasDoMes;
     private DespesaDAO daoDespesa;
 
@@ -43,13 +43,10 @@ public class ResumoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_resumo, container, false);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.getSerializable(MES_SELECAO) != null){
-                mesSelecao = (int) savedInstanceState.getSerializable(MES_SELECAO);
-            }
-        }
-
         dataAtual = Calendar.getInstance();
+        if(savedInstanceState != null) {
+             dataAtual = (Calendar) savedInstanceState.getSerializable(DATA_ATUAL);
+        }
         mesSelecao = dataAtual.get(Calendar.MONTH);
         anoAtual = dataAtual.get(Calendar.YEAR);
 
@@ -102,7 +99,7 @@ public class ResumoFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(MES_SELECAO, mesSelecao + 1);
+        outState.putSerializable(DATA_ATUAL, dataAtual);
         super.onSaveInstanceState(outState);
     }
 

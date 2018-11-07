@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center|bottom"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:fillViewport="true"
         app:layout_anchor="@id/textInputLayoutValorDespesa"
         app:layout_anchorGravity="bottom|center_horizontal">
@@ -185,8 +185,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Nenhum cartão cadastrado. Cadastrar um?"
-                android:alpha="0"
                 android:textAlignment="center"
+                android:alpha="0"
                 android:visibility="gone"
                 android:textColor="@color/valor_negativo_d"
                 app:layout_constraintEnd_toEndOf="@+id/radioGroup"
@@ -206,48 +206,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup">
 
                 <TextView
-                    android:id="@+id/textView_operacao"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Operação"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <RadioGroup
-                    android:id="@+id/operacao_cartao"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textView_operacao">
-
-                    <RadioButton
-                        android:id="@+id/operacao_debito"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onOperacaoCartaoSelecionado"
-                        android:text="DEBITO" />
-
-                    <RadioButton
-                        android:id="@+id/operacao_credito"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onOperacaoCartaoSelecionado"
-                        android:text="CREDITO" />
-                </RadioGroup>
-
-                <TextView
                     android:id="@+id/textView_selecione_cartao"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Selecione Cartão"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/operacao_cartao" />
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/spinner_cartao"
@@ -272,19 +236,18 @@
                     android:id="@+id/campo_parcelas"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:visibility="gone"
-                    android:alpha="0"
                     app:layout_constraintBottom_toBottomOf="@+id/spinner_cartao"
-                    app:layout_constraintEnd_toEndOf="@+id/operacao_cartao"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/guideline2"
                     app:layout_constraintTop_toTopOf="@+id/spinner_cartao">
 
                     <android.support.design.widget.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:hint="Parcelas" />
+                        android:hint="Parcelas"
+                        android:inputType="number" />
                 </android.support.design.widget.TextInputLayout>
 
             </android.support.constraint.ConstraintLayout>
