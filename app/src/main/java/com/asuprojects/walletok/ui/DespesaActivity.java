@@ -13,6 +13,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -47,6 +48,7 @@ public class DespesaActivity extends AppCompatActivity{
     public static final String EDITAR_DESPESA = "EDITAR_DESPESA";
     public static final double VALOR_MINIMO = 0.1;
     public static final String TAB_NUMBER = "TAB_NUMBER";
+    public static final String CARTAO_CHECADO = "CARTAO_CHECADO";
     private TextInputEditText descricao;
     private EditText valor;
     private AppCompatSpinner spinner;
@@ -59,6 +61,7 @@ public class DespesaActivity extends AppCompatActivity{
     private double valorDecimal;
 
     private Pagamento pagamento = Pagamento.DINHEIRO;
+    private boolean opcaoCartaoChecado;
 
     private TextView semCartao;
     private ConstraintLayout painelCartao;
@@ -70,6 +73,10 @@ public class DespesaActivity extends AppCompatActivity{
 
         dao = new DespesaDAO(getApplicationContext());
 
+        if(savedInstanceState != null){
+            opcaoCartaoChecado = savedInstanceState.getBoolean(CARTAO_CHECADO, false);
+        }
+
         cofiguraComponentes();
 
         Intent intent = getIntent();
@@ -80,6 +87,22 @@ public class DespesaActivity extends AppCompatActivity{
         semCartao = findViewById(R.id.link_cartao_nao_cadastrado);
         painelCartao = findViewById(R.id.painelCartao);
 
+        if(opcaoCartaoChecado){
+            painelCartao.setVisibility(View.VISIBLE);
+            painelCartao.setAlpha(1F);
+            Log.i("RADIOBUTTON", "onCreate: opcao cartao CHECKED");
+        }else{
+            painelCartao.setVisibility(View.GONE);
+            painelCartao.setAlpha(0);
+            Log.i("RADIOBUTTON", "onCreate: opcao cartao NAO CHECKED");
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(CARTAO_CHECADO, opcaoCartaoChecado);
+        super.onSaveInstanceState(outState);
     }
 
     private void cofiguraComponentes() {
@@ -196,6 +219,7 @@ public class DespesaActivity extends AppCompatActivity{
             radioGroup.check(R.id.pag_dinheiro);
         }else if(despesa.getPagamento().equals(Pagamento.CARTAO)){
             radioGroup.check(R.id.pag_cartao);
+            opcaoCartaoChecado = true;
         }else{
             radioGroup.check(R.id.pag_outros);
         }
@@ -223,18 +247,21 @@ public class DespesaActivity extends AppCompatActivity{
             case R.id.pag_dinheiro:
                 if (checked)
                     pagamento = Pagamento.DINHEIRO;
+                    opcaoCartaoChecado = false;
                     painelCartao.setVisibility(View.GONE);
                     painelCartao.animate().setDuration(500).alpha(0).scaleY(0);
                     break;
             case R.id.pag_cartao:
                 if (checked)
                     pagamento = Pagamento.CARTAO;
+                    opcaoCartaoChecado = true;
                     painelCartao.setVisibility(View.VISIBLE);
                     painelCartao.animate().setDuration(500).alpha(1F).scaleY(1);
                     break;
             case R.id.pag_outros:
                 if(checked)
                     pagamento = Pagamento.OUTROS;
+                    opcaoCartaoChecado = false;
                     painelCartao.setVisibility(View.GONE);
                     painelCartao.animate().setDuration(500).alpha(0).scaleY(0);
                     break;
