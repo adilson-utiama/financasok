@@ -132,7 +132,7 @@
     <string name="edit_hint_digite_a_resposta">Digite a Resposta</string>
     <string name="btn_cadastro_senha">Cadastro</string>
     <string name="dinheiro_simbolo">R$</string>
-    <string name="edit_hint_valor">Valor</string>
+    <string name="edit_hint_valor">0,00</string>
     <string name="edit_hint_descri_o_max_30_caracteres">Descrição (max 30 caracteres)</string>
     <string name="tx_categoria">Categoria</string>
     <string name="tx_data">Data</string>

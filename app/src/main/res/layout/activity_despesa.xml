@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -10,11 +11,11 @@
         android:id="@+id/textInputLayoutValorDespesa"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_gravity="top"
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_gravity="top"
-        app:layout_anchorGravity="top">
+        app:layout_anchorGravity="top|center">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,14 +24,14 @@
             android:textColor="@android:color/white"
             android:textSize="32sp" />
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/campo_valor_despesa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:foregroundGravity="center_vertical"
             android:hint="@string/edit_hint_valor"
             android:inputType="numberDecimal|text"
-            android:textAlignment="textStart"
             android:textColor="@android:color/white"
             android:textSize="32sp" />
 
@@ -40,11 +41,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center|bottom"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="150dp"
         android:fillViewport="true"
-        android:fitsSystemWindows="true"
-        app:layout_anchor="@id/textInputLayoutValorDespesa"
-        app:layout_anchorGravity="bottom|center_horizontal">
+        android:fitsSystemWindows="true">
 
         <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -61,7 +60,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -185,11 +183,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:alpha="0"
                 android:text="Nenhum cartão cadastrado. Cadastrar um?"
                 android:textAlignment="center"
-                android:alpha="0"
-                android:visibility="gone"
                 android:textColor="@color/valor_negativo_d"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/radioGroup"
                 app:layout_constraintStart_toStartOf="@+id/radioGroup"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
@@ -259,6 +257,7 @@
         android:id="@+id/btn_salvar_despesa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         app:layout_anchor="@id/textInputLayoutValorDespesa"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/fab_add" />

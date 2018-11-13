@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,7 +51,7 @@ public class DespesaActivity extends AppCompatActivity{
     public static final String TAB_NUMBER = "TAB_NUMBER";
     public static final String CARTAO_CHECADO = "CARTAO_CHECADO";
     private TextInputEditText descricao;
-    private EditText valor;
+    private AppCompatEditText valor;
     private AppCompatSpinner spinner;
     private AppCompatButton btnData;
 
@@ -90,11 +91,9 @@ public class DespesaActivity extends AppCompatActivity{
         if(opcaoCartaoChecado){
             painelCartao.setVisibility(View.VISIBLE);
             painelCartao.setAlpha(1F);
-            Log.i("RADIOBUTTON", "onCreate: opcao cartao CHECKED");
         }else{
             painelCartao.setVisibility(View.GONE);
             painelCartao.setAlpha(0);
-            Log.i("RADIOBUTTON", "onCreate: opcao cartao NAO CHECKED");
         }
 
     }

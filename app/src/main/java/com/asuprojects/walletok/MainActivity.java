@@ -253,9 +253,10 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         if (drawerLayout.isDrawerOpen(Gravity.START)) {
             drawerLayout.closeDrawer(Gravity.START);
-        } else {
-            super.onBackPressed();
         }
+//        else {
+//            super.onBackPressed();
+//        }
         if (mAdView != null) {
             container.removeView(mAdView);
             mAdView.destroy();
