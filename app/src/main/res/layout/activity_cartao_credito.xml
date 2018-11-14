@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -30,16 +30,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Informe Emissor do cartão"
-                android:inputType="text" />
+                android:inputType="text|textCapSentences" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinner_bandeira_cartao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/bg_dropdown"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="@+id/inputLayout_emissor"
@@ -52,85 +52,87 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.53" />
 
-        <EditText
-            android:id="@+id/editText"
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editText_dia_fatura"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:ems="10"
+            android:ems="3"
+            android:textAlignment="center"
             android:hint="Informe Dia"
             android:inputType="number"
-            app:layout_constraintBottom_toBottomOf="@+id/spinner"
+            app:layout_constraintBottom_toBottomOf="@+id/spinner_bandeira_cartao"
             app:layout_constraintEnd_toEndOf="@+id/inputLayout_emissor"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toTopOf="@+id/spinner" />
+            app:layout_constraintTop_toTopOf="@+id/spinner_bandeira_cartao" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textView_vencimento_fatura"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:layout_marginStart="8dp"
-            android:text="Dia Vencimento Fatura"
+            android:text="Vencimento Fatura"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/editText"
-            app:layout_constraintStart_toStartOf="@+id/editText" />
+            app:layout_constraintBottom_toTopOf="@+id/editText_dia_fatura"
+            app:layout_constraintStart_toStartOf="@+id/editText_dia_fatura" />
 
-        <EditText
-            android:id="@+id/editText2"
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editText_limite_credito"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:layout_marginStart="8dp"
+            android:ems="8"
             android:inputType="number"
-            app:layout_constraintBottom_toBottomOf="@+id/textView5"
-            app:layout_constraintStart_toEndOf="@+id/textView5"
-            app:layout_constraintTop_toTopOf="@+id/textView5" />
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_simbolo_moeda"
+            app:layout_constraintStart_toEndOf="@+id/textView_simbolo_moeda"
+            app:layout_constraintTop_toTopOf="@+id/textView_simbolo_moeda" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/textView_limite_credito"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
             android:text="Informe o limite de credito para este cartão"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintStart_toStartOf="@+id/textView_simbolo_moeda"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_bandeira_cartao" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/textView_simbolo_moeda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="TextView"
             android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="@+id/spinner"
-            app:layout_constraintTop_toBottomOf="@+id/textView4"
-            tools:text="R$" />
+            android:text="R$"
+            app:layout_constraintStart_toStartOf="@+id/spinner_bandeira_cartao"
+            app:layout_constraintTop_toBottomOf="@+id/textView_limite_credito" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/textView_bandeira_cartao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selecione bandeira do cartão"
+            android:text="Bandeira do cartão"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/spinner"
-            app:layout_constraintStart_toStartOf="@+id/spinner" />
+            app:layout_constraintBottom_toTopOf="@+id/spinner_bandeira_cartao"
+            app:layout_constraintStart_toStartOf="@+id/spinner_bandeira_cartao" />
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_cadastrar_cartao"
+            android:id="@+id/btn_adiciona_cartao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:text="Cadastrar"
+            android:text="Adicionar"
             android:textColor="@android:color/white"
             android:background="@drawable/rounded_corner_background"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/editText"
-            app:layout_constraintStart_toStartOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+            app:layout_constraintEnd_toEndOf="@+id/editText_dia_fatura"
+            app:layout_constraintStart_toStartOf="@+id/textView_simbolo_moeda"
+            app:layout_constraintTop_toBottomOf="@+id/editText_limite_credito" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

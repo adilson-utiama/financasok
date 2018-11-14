@@ -103,6 +103,17 @@
             fab:fab_label="@string/adiciona_receita"
             fab:fab_size="mini" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_adiciona_carta_credito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_credit_card_white"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="#2945fc"
+            fab:fab_colorRipple="#3216e2"
+            fab:fab_label="Adicionar Cartão Credito"
+            fab:fab_size="mini" />
+
 
     </com.github.clans.fab.FloatingActionMenu>
 

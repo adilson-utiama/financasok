@@ -58,7 +58,9 @@
         <activity
             android:name=".ui.ExportarArquivoActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".ui.CartaoCreditoActivity"></activity>
+        <activity
+            android:name=".ui.CartaoCreditoActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

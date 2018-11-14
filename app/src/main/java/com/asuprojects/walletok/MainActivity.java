@@ -37,6 +37,7 @@ import com.asuprojects.walletok.fragments.ReceitasFragment;
 import com.asuprojects.walletok.fragments.ResumoFragment;
 import com.asuprojects.walletok.model.enums.Extensao;
 import com.asuprojects.walletok.service.FileService;
+import com.asuprojects.walletok.ui.CartaoCreditoActivity;
 import com.asuprojects.walletok.ui.ConfiguracoesActivity;
 import com.asuprojects.walletok.ui.DespesaActivity;
 import com.asuprojects.walletok.ui.ExportarArquivoActivity;
@@ -113,6 +114,14 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DespesaActivity.class);
                 startActivityForResult(intent, ADD_DESPESA);
+                fabMenu.close(true);
+            }
+        });
+        FloatingActionButton fabCartaoCredito = findViewById(R.id.fab_adiciona_carta_credito);
+        fabCartaoCredito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CartaoCreditoActivity.class));
                 fabMenu.close(true);
             }
         });
